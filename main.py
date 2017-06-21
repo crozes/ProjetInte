@@ -72,6 +72,12 @@ def simulateSales(requested_glasses):
   
   return sales  
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ @app.route("/")
+ def getDayInfo():
+     print("hello word")
+    
+     return hello word
+ 
  
 @app.route("/dayinfo")
 def getDayInfo():
