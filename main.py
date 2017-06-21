@@ -106,9 +106,9 @@ def postSimple():
     # game over
     data = request.get_json()
     
-    print(int(data))
+    print(data)
     
-    return int(data)   
+    return data   
 
 ### To deleted
 @app.route("/")
