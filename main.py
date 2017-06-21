@@ -108,7 +108,7 @@ def postSimple():
     
     print(data)
     
-    return data   
+    return json.dumps(data), 200, {'Content-Type' : 'application/json'}   
 
 ### To deleted
 @app.route("/")
