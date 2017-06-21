@@ -102,7 +102,7 @@ def postOrder():
     
 ### To deleted    
 @app.route('/posttest', methods=['POST'])
-def postOrder():
+def postSimple():
     # game over
     data = request.get_json()
     
