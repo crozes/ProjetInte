@@ -1,9 +1,10 @@
 #!/usr/bin/env python2.7
 
 from flask import Flask, request
+from db import Db
 from flask_cors import CORS
+import json, os, psycopg2, urlparse
 import random
-import json
 
 app = Flask(__name__)
 app.debug = True
@@ -119,7 +120,13 @@ def getHelloWord():
 ### To deleted
 @app.route("/coucou")
 def getCoucou():
-    return "Coucou"
+    db = Db()
+    result = db.select("SELECT * FROM Test")
+    db.close()
+    
+    resp = make_response(json.dumps(result))
+    resp.mimetype = 'application/json'
+    return resp
 
 if __name__ == "__main__":
     app.run()
