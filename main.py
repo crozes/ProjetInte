@@ -74,6 +74,20 @@ def simulateSales(requested_glasses):
     return sales  
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+
+
+
+##################################################################
+
+@app.route('/debug/db/reset')
+def route_dbinit():
+    """Cette route sert à initialiser (ou nettoyer) la base de données."""
+    db = Db()
+    db.executeFile("database_reset.sql")
+    db.close()
+    return "Done."
+  
+  
 @app.route("/dayinfo")
 def getDayInfo():
     global day
@@ -121,7 +135,7 @@ def getHelloWord():
 @app.route("/coucou")
 def getCoucou():
     db = Db()
-    result = db.select("SELECT * FROM public.\"Test\"")
+    result = db.select("SELECT nom_test FROM public.\"Test\"")
     db.close()
     
     resp = make_response(json.dumps(result))
