@@ -121,7 +121,7 @@ def getHelloWord():
 @app.route("/coucou")
 def getCoucou():
     db = Db()
-    result = db.select("SELECT * FROM public.Test")
+    result = db.select("SELECT * FROM public.\"Test\"")
     db.close()
     
     resp = make_response(json.dumps(result))
