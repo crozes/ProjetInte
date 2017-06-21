@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 from db import Db
 from flask_cors import CORS
 import json, os, psycopg2, urlparse
