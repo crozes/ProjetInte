@@ -107,7 +107,7 @@ def postSimple():
     # game over
     data = request.get_json()
     
-    print(data)
+    print(json.dumps(data))
     
     return json.dumps(data), 200, {'Content-Type' : 'application/json'}   
 
