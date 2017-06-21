@@ -1,4 +1,4 @@
 Flask
 Flask-Cors
 requests
-gunicorn==19.6.0
+gunicorn
