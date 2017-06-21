@@ -60,25 +60,18 @@ def moveToNextDay():
 # En fonction de la meteo un nombre de ventes est choisi aleatoirement et le
 # budget est mis a jour.
 def simulateSales(requested_glasses):
-  global budget
+    global budget
   
-  proba = random.uniform(SALES_MIN[current_weather], SALES_MAX[current_weather])
-  sales = int(requested_glasses * proba)
+    proba = random.uniform(SALES_MIN[current_weather], SALES_MAX[current_weather])
+    sales = int(requested_glasses * proba)
   
-  expenses = requested_glasses * COST_PER_GLASS
-  earnings = sales * PRICE_PER_GLASS
+    expenses = requested_glasses * COST_PER_GLASS
+    earnings = sales * PRICE_PER_GLASS
   
-  budget += earnings - expenses
+    budget += earnings - expenses
   
-  return sales  
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- @app.route("/")
- def getDayInfo():
-     print("hello word")
-    
-     return hello word
- 
- 
+    return sales  
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 @app.route("/dayinfo")
 def getDayInfo():
     global day
@@ -90,22 +83,26 @@ def getDayInfo():
     
 @app.route('/order', methods=['POST'])
 def postOrder():
-  # game over
-  if budget < COST_PER_GLASS:
+    # game over
+    if budget < COST_PER_GLASS:
     # http status 412 = "Precondition Failed"
-    return '"Insufficient funds."', 412, {'Content-Type' : 'application/json'}
+        return '"Insufficient funds."', 412, {'Content-Type' : 'application/json'}
   
-  data = request.get_json()
-  # if not game over...
-  sales = simulateSales(float(data['requested_glasses']))
+    data = request.get_json()
+    # if not game over...
+    sales = simulateSales(float(data['requested_glasses']))
   
-  #TODO
+    #TODO
   
-  moveToNextDay()
+    moveToNextDay()
   
-  data = { "sales": sales }
-  return json.dumps(data), 200, {'Content-Type' : 'application/json'}
+    data = { "sales": sales }
+    return json.dumps(data), 200, {'Content-Type' : 'application/json'}
 
+@app.route("/")
+def getHelloWord():
+    print("hello word")
+    return "hello word"
 
 if __name__ == "__main__":
     app.run()
