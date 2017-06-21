@@ -104,5 +104,9 @@ def getHelloWord():
     print("hello word")
     return "hello word"
 
+@app.route("/coucou")
+def getCoucou():
+    return "Coucou"
+
 if __name__ == "__main__":
     app.run()
