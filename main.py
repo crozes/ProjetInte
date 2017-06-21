@@ -71,6 +71,7 @@ def simulateSales(requested_glasses):
     budget += earnings - expenses
   
     return sales  
+    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 @app.route("/dayinfo")
 def getDayInfo():
@@ -98,12 +99,24 @@ def postOrder():
   
     data = { "sales": sales }
     return json.dumps(data), 200, {'Content-Type' : 'application/json'}
+    
+### To deleted    
+@app.route('/posttest', methods=['POST'])
+def postOrder():
+    # game over
+    data = request.get_json()
+    
+    print(int(data))
+    
+    return int(data)   
 
+### To deleted
 @app.route("/")
 def getHelloWord():
     print("hello word")
     return "hello word"
 
+### To deleted
 @app.route("/coucou")
 def getCoucou():
     return "Coucou"
