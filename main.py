@@ -99,7 +99,7 @@ def postOrder():
     data = { "sales": sales }
     return json.dumps(data), 200, {'Content-Type' : 'application/json'}
 
-@app.route("/")
+@app.route("/coucou")
 def getHelloWord():
     print("hello word")
     return "hello word"
