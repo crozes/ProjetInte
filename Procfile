@@ -1,1 +1,1 @@
-web: python -b "0.0.0.0:$PORT" main.py --log-file -
+web: python main.py --log-file -
