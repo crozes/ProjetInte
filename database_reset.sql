@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS public.Test;
 -- Table: Player
 ------------------------------------------------------------
 CREATE TABLE public.Player(
-	Player_ID                  BIGINT NOT NULL ,
+	Player_ID                  SERIAL NOT NULL ,
 	Player_name                VARCHAR (25)  ,
 	Player_banque              FLOAT   ,
 	Player_profit_depuis_impot FLOAT   ,
@@ -27,7 +27,7 @@ CREATE TABLE public.Player(
 -- Table: Ingredient
 ------------------------------------------------------------
 CREATE TABLE public.Ingredient(
-	Ingredient_ID    BIGINT NOT NULL ,
+	Ingredient_ID    SERIAL NOT NULL ,
 	Ingredient_name  VARCHAR (25)  ,
 	Ingredient_cost FLOAT   ,
 	Ingredient_hasAlcohol BOOL   ,
@@ -40,7 +40,7 @@ CREATE TABLE public.Ingredient(
 -- Table: Recipe
 ------------------------------------------------------------
 CREATE TABLE public.Recipe(
-	Recipe_ID         BIGINT NOT NULL ,
+	Recipe_ID         SERIAL NOT NULL ,
 	Recipe_name       VARCHAR (25)  ,
 	Recipe_isCold     BOOL   ,
 	Recipe_hasAlcohol BOOL   ,
@@ -55,7 +55,7 @@ CREATE TABLE public.Recipe(
 -- Table: MapItem
 ------------------------------------------------------------
 CREATE TABLE public.MapItem(
-	MapItem_ID               BIGINT NOT NULL ,
+	MapItem_ID               SERIAL NOT NULL ,
 	MapItem_kind             VARCHAR (25)  ,
 	MapItem_X                INT   ,
 	MapItem_Y                INT   ,
@@ -71,7 +71,7 @@ CREATE TABLE public.MapItem(
 -- Table: meteo
 ------------------------------------------------------------
 CREATE TABLE public.Meteo(
-	Meteo_ID   BIGINT NOT NULL   ,
+	Meteo_ID   SERIAL NOT NULL   ,
 	Temps      VARCHAR (25)   ,
 	Meteo_date DATE   ,
 	CONSTRAINT prk_constraint_meteo PRIMARY KEY (Meteo_ID)
@@ -117,7 +117,7 @@ CREATE TABLE public.Resultat_vente(
 -- Table: Test
 ------------------------------------------------------------
 CREATE TABLE public.Test(
-	id_test   BIGINT NOT NULL   ,
+	id_test   SERIAL NOT NULL   ,
 	nom_test  VARCHAR (25)   ,
 	CONSTRAINT prk_constraint_test PRIMARY KEY (id_test)
 )WITHOUT OIDS;
