@@ -81,7 +81,7 @@ def simulateSales(requested_glasses):
 
 @app.route('/debug/db/reset')
 def route_dbinit():
-    """Cette route sert à initialiser (ou nettoyer) la base de données."""
+    #Initialisation/RAS base de donnee
     db = Db()
     db.executeFile("database_reset.sql")
     db.close()
