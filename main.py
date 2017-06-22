@@ -19,6 +19,9 @@ PRICE_PER_GLASS = 0.35 # le prix de vente
 # les conditions meteo
 WEATHER_VALUES = ["SUNNY AND HOT", "SUNNY", "CLOUDY", "RAINY"]
 
+# Time
+TIME = 0
+
 # la probabilite maximale (entre 0 et 1) de vente pour chaque condition meteo.
 SALES_MAX = {
   "SUNNY AND HOT" : 1.0, 
@@ -115,6 +118,29 @@ def postOrder():
     data = { "sales": sales }
     return json.dumps(data), 200, {'Content-Type' : 'application/json'}
     
+### Get all recette
+@app.route("/allrecette")
+def getAllRecette():
+    db = Db()
+    result = db.select("SELECT * FROM public.\"Recipe\"")
+    db.close()
+    
+    resp = make_response(json.dumps(result))
+    resp.mimetype = 'application/json'
+    return resp
+
+@app.route('/postIngredient', methods=['POST']) 
+def postIngredient():
+    data = request.get_json()
+    print data
+    if data == None :
+        print "None :" + request.get_data()
+        return request.get_data(), 400, {'Content-Type' : 'application/json'}
+    else :
+        db = Db()
+        db.close()
+        
+            
 ### To deleted    
 @app.route('/posttest', methods=['POST'])
 def postSimple():
