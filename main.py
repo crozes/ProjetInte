@@ -139,7 +139,7 @@ def postAddIngredient() :
         return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
     else :
         print data 
-        query = "INSERT INTO pulbic.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
+        query = "INSERT INTO public.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
         db = Db()
         result = db.execute(query)
         db.close()
