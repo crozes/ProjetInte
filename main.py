@@ -138,11 +138,10 @@ def postAddIngredient() :
         print request.get_data()
         return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
     else :
-        print data['pseudo'] 
+        print data 
         query = "INSERT INTO pulbic.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
-        
         db = Db()
-        result = db.select("SELECT * FROM public.\"Recipe\"")
+        result = db.select(query)
         db.close()
         return json.dumps(time),201,{'Content-Type' : 'application/json'}        
    
