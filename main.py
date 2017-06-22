@@ -19,9 +19,6 @@ PRICE_PER_GLASS = 0.35 # le prix de vente
 # les conditions meteo
 WEATHER_VALUES = ["SUNNY AND HOT", "SUNNY", "CLOUDY", "RAINY"]
 
-# Time
-TIME = 0
-
 # la probabilite maximale (entre 0 et 1) de vente pour chaque condition meteo.
 SALES_MAX = {
   "SUNNY AND HOT" : 1.0, 
@@ -40,6 +37,8 @@ SALES_MIN = {
 
 ################################################################################
 ##### Global variables
+
+time = 0                                          #Time
 
 day = 1                                           # compteur de jour
 
@@ -77,28 +76,60 @@ def simulateSales(requested_glasses):
     return sales  
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+# Return if value is a int
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 
+######################~GET~###############################
 
-##################################################################
-
+## Reset BD
 @app.route('/debug/db/reset')
 def route_dbinit():
-    #Initialisation/RAS base de donnee
+    # Initialisation/RAS base de donnee
     db = Db()
     db.executeFile("database_reset.sql")
     db.close()
     return "Done."
-  
-  
+
+## GET HOUR
+@app.route('/getHour')
+def getHour():
+    # Variable global Hour
+    global time
+    data = {"time": time}
+    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+
+## GET DAYINFO
 @app.route("/dayinfo")
 def getDayInfo():
+    # Return Fake day Info
     global day
     global budget
-
     data = { "day": day, "budget": budget, "weather": current_weather }
-    
     return json.dumps(data),201,{'Content-Type' : 'application/json'}
+
+######################~POST~###############################  
+
+## POST HOUR
+@app.route('/postHour', methods=['POST'])
+def postHour() :
+    global time
+    print request.get_data() 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postHour"',400,{'Content-Type' : 'application/json'}
+    else :
+        print data['time'] 
+        time = data['time']
+        return json.dumps(time),201,{'Content-Type' : 'application/json'}
+   
+  
     
 @app.route('/order', methods=['POST'])
 def postOrder():
@@ -147,7 +178,6 @@ def postIngredient():
 def postSimple():
     # game over
     data = request.get_json()
-    print data
     if data == None :
         print "None :" + request.get_data()
         return request.get_data(), 400, {'Content-Type' : 'application/json'} 
@@ -168,9 +198,10 @@ def getCoucou():
     result = db.select("SELECT nom_test FROM public.\"Test\"")
     db.close()
     
-    resp = make_response(json.dumps(result))
+    resp = make_response(json.dumps(result)) 
     resp.mimetype = 'application/json'
     return resp
 
 if __name__ == "__main__":
     app.run()
+    
