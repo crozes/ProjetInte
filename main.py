@@ -122,7 +122,7 @@ def postSimple():
     data = request.get_json()
     
     if data == None :
-        return json.get_data(), 400, {'Content-Type' : 'application/json'} 
+        return request.get_data(), 400, {'Content-Type' : 'application/json'} 
     else :
         print(json.dumps(data))
         return json.dumps(data), 200, {'Content-Type' : 'application/json'}   
