@@ -120,6 +120,7 @@ def postOrder():
 def postSimple():
     # game over
     data = request.get_json()
+    print data
     if data == None :
         print "None :" + request.get_data()
         return request.get_data(), 400, {'Content-Type' : 'application/json'} 
