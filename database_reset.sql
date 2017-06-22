@@ -1,16 +1,14 @@
 ------------------------------------------------------------
 --        Script Postgre 
 ------------------------------------------------------------
-DROP TABLE IF EXISTS public.Player;
-DROP TABLE IF EXISTS public.Ingredient;
-DROP TABLE IF EXISTS public.Recipe;
-DROP TABLE IF EXISTS public.MapItem;
-DROP TABLE IF EXISTS public.Meteo;
-DROP TABLE IF EXISTS public.Achete_recette;
-DROP TABLE IF EXISTS public.A_besoin_pour_recette;
 DROP TABLE IF EXISTS public.Resultat_vente;
-
-
+DROP TABLE IF EXISTS public.A_besoin_pour_recette;
+DROP TABLE IF EXISTS public.Achete_recette;
+DROP TABLE IF EXISTS public.Meteo;
+DROP TABLE IF EXISTS public.MapItem;
+DROP TABLE IF EXISTS public.Recipe;
+DROP TABLE IF EXISTS public.Ingredient;
+DROP TABLE IF EXISTS public.Player;
 
 ------------------------------------------------------------
 -- Table: Player
