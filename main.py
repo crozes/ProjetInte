@@ -119,7 +119,7 @@ def getDayInfo():
 @app.route('/postHour', methods=['POST'])
 def postHour() :
     global time
-    print request.get_data() 
+    #print request.get_data() 
     data = request.get_json() 
     if data == None :
         print request.get_data()
@@ -128,6 +128,23 @@ def postHour() :
         print data['time'] 
         time = data['time']
         return json.dumps(time),201,{'Content-Type' : 'application/json'}
+        
+## POST Ingredient
+@app.route('/postIngredient', methods=['POST'])
+def postAddIngredient() :
+    print request.get_data() 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
+    else :
+        print data['pseudo'] 
+        query = "INSERT INTO pulbic.Ingredient (Ingredient_id, )"data['pseudo']
+        
+        db = Db()
+        result = db.select("SELECT * FROM public.\"Recipe\"")
+        db.close()
+        return json.dumps(time),201,{'Content-Type' : 'application/json'}        
    
   
     
@@ -195,7 +212,7 @@ def getHelloWord():
 @app.route("/coucou")
 def getCoucou():
     db = Db()
-    result = db.select("SELECT nom_test FROM public.\"Test\"")
+    result = db.select("SELECT nom_test FROM public.Test")
     db.close()
     
     resp = make_response(json.dumps(result)) 
