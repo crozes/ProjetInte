@@ -141,9 +141,9 @@ def postAddIngredient() :
         print data 
         query = "INSERT INTO pulbic.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
         db = Db()
-        result = db.select(query)
+        result = db.execute(query)
         db.close()
-        return json.dumps(time),201,{'Content-Type' : 'application/json'}        
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}        
    
   
     
