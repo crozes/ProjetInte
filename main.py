@@ -119,9 +119,14 @@ def postOrder():
 @app.route('/posttest', methods=['POST'])
 def postSimple():
     # game over
+    print request.get_json()
     data = request.get_json()
+    print data
+    
     
     if data == None :
+        print request.get_data()
+        print "NONE !"
         return request.get_data(), 400, {'Content-Type' : 'application/json'} 
     else :
         print(json.dumps(data))
