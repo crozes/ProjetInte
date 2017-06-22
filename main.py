@@ -138,6 +138,7 @@ def postIngredient():
         return request.get_data(), 400, {'Content-Type' : 'application/json'}
     else :
         db = Db()
+        db.execute(data);
         db.close()
         
             

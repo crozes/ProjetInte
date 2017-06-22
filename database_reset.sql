@@ -28,7 +28,9 @@ CREATE TABLE public.Player(
 CREATE TABLE public.Ingredient(
 	Ingredient_ID    SERIAL NOT NULL ,
 	Ingredient_name  VARCHAR (25)  ,
-	Ingredient_price FLOAT   ,
+	Ingredient_cost FLOAT   ,
+	Ingredient_hasAlcohol BOOL   ,
+	Ingredient_isCold BOOL
 	CONSTRAINT prk_constraint_Ingredient PRIMARY KEY (Ingredient_ID)
 )WITHOUT OIDS;
 
