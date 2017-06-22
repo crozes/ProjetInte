@@ -1,3 +1,3 @@
-DROP TABLE IF EXISTS prets;
-CREATE TABLE prets (quoi varchar);
+DROP TABLE IF EXISTS test;
+CREATE TABLE test (quoi varchar);
 INSERT INTO prets (quoi) VALUES ('test');
