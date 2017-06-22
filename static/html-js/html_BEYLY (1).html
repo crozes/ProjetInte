@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset = "UTF-8" />
+		<title>Partiel 2017</title>
+		<link rel="stylesheet" href="css_BEYLY.css" />
+	</head>
+	
+	<body>
+		<header>
+		</header>
+
+		<main>
+
+			<fieldset>
+				<legend>GET day info</legend>
+				Jour # <span id="jour"></span>
+				Méteo  <span id="meteo"></span>
+				Vous avez <span id="argent"></span> EUR <BR>
+				<button id="refresh">Rafraichir</button><BR>
+			</fieldset>
+
+			<fieldset>
+				<legend>POST Order</legend>
+				Nombre de verres à préparer: <input id="nbVerre" type="text" /> <BR>
+				<button id="sendInfo">Envoyer</button><BR>
+				Nombre de verres vendus : <span id="verreVendu"></span>
+			</fieldset>
+
+			<script src="http://perso.imerir.com/pgrabolosa/jquery.js"></script>
+			<script type="text/javascript">
+			$('#refresh').on('click', function(){
+
+				$.ajax("http://127.0.0.1//dayinfo").done(function(data){
+
+					var myData = JSON.stringify(data);
+					var day = myData["day"];
+					var weather = myData["weather"];
+					var money = myData["budget"];
+
+					$('#jour').val(day);
+					$('#meteo').val(weather);
+					$('#argent').val(money);
+
+				});
+			});
+
+
+			$('#sendInfo').on('click', function(){
+				var nombreVerre = $('nbVerre').val();
+				var request = {"requested_glasses": nombreVerre};
+				$.ajax("http://127.0.0.1//order").done(function(data){
+					var nb = data["sales"];
+					$('#verreVendu').val(nb);
+				});
+			});
+
+			</script>
+		</main>
+	</body>
+</html>

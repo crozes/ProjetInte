@@ -1,0 +1,115 @@
+.weather{
+	color: white
+}
+.fontImage{
+	height: 320px;
+	width: 350px;
+}
+
+.titre_tab{
+	padding: 15px;
+}
+
+.money{
+	font-size: 120%;
+}
+
+.perso{
+	position: absolute;
+	width: 5px;
+	height: 5px;
+	border: 1px solid black;
+	border-radius: 50%;
+	background: blue;
+}
+
+.case{
+	width: 25px;
+	height: 25px;
+	display: inline-block;
+	background-color: #ccc;
+	/*border: 1px solid black;*/
+	margin-top: -4px;
+}
+
+.buttonMoins{
+	color: red;
+}
+
+.buttonPlus{
+	color: green;
+}
+
+.divEnvoie{
+	margin-top: 15px;
+}
+
+.btn.active {                
+	display: none;		
+}
+
+.btn span:nth-of-type(1)  {            	
+	display: none;
+}
+.btn span:last-child  {            	
+	display: block;		
+}
+
+.btn.active  span:nth-of-type(1)  {            	
+	display: block;		
+}
+.btn.active span:last-child  {            	
+	display: none;			
+}
+
+.pagination>li {
+display: inline;
+padding:0px !important;
+margin:0px !important;
+border:none !important;
+}
+.modal-backdrop {
+  z-index: -1 !important;
+}
+/*
+Fix to show in full screen demo
+*/
+iframe
+{
+    height:700px !important;
+}
+
+.btn {
+display: inline-block;
+padding: 6px 12px !important;
+margin-bottom: 0;
+font-size: 14px;
+font-weight: 400;
+line-height: 1.42857143;
+text-align: center;
+white-space: nowrap;
+vertical-align: middle;
+-ms-touch-action: manipulation;
+touch-action: manipulation;
+cursor: pointer;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+background-image: none;
+border: 1px solid transparent;
+border-radius: 4px;
+}
+
+.btn-primary {
+color: #fff !important;
+background: #428bca !important;
+border-color: #357ebd !important;
+box-shadow:none !important;
+}
+.btn-danger {
+color: #fff !important;
+background: #d9534f !important;
+border-color: #d9534f !important;
+box-shadow:none !important;
+}
