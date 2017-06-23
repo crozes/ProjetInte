@@ -239,7 +239,9 @@ def postNewPlayer() :
         db.execute(query_addPlayer)
         db.close()
         
-        return json.dumps(query_addPlayer),200,{'Content-Type' : 'application/json'}                      
+        data = {"IsAccepted" : True}
+        
+        return json.dumps(data),201,{'Content-Type' : 'application/json'}                      
 
 ######################~/POST~###############################  
 
