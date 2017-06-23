@@ -117,6 +117,7 @@ def getDayInfo():
     # Return Fake day Info
     global day
     global budget
+    global current_weather
     data = { "day": day, "budget": budget, "weather": current_weather }
     return json.dumps(data),200,{'Content-Type' : 'application/json'}
     
