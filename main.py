@@ -208,13 +208,14 @@ def postTemps() :
 ## POST NewPlayer
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
-    print request.get_data()  #{"Player_name" : "Toto"}
-    data = jsonify(request.get_data())
-    #request.get_json() 
+    #print request.get_data()  #{"Player_name" : "Toto"}
+    #data = jsonify(request.get_data())
+    data = request.get_json(force=True) 
     print "test"
     print data
+    print data['Player_name']
     if data == None :
-        print request.get_data()
+        #print request.get_data()
         return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
     else :
         print data #{u'Player_name': u'Toto'}
