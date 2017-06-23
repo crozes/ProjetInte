@@ -43,7 +43,7 @@ time = 0                                          #Time
 
 day = 1                                           # compteur de jour
 
-#budget = 1.0                                     # compteur de jour
+budget = 1.0                                     # compteur de jour
 current_weather = random.choice(WEATHER_VALUES)   # meteo du jour
 
 weather = []
