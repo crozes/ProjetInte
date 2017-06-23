@@ -112,6 +112,8 @@ def getHour():
     result = db.select(query)
     db.close()
     
+    print result
+    
     for date in result :
         time = date['meteo.date']
         
