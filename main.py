@@ -227,7 +227,8 @@ def postNewPlayer() :
         #resp = make_response(json.dumps(result)) 
         
         for player in result :
-            print player['Player_name'] #Player_name
+            print data.get(player['Player_name'])
+            
             if player['Player_name'].upper() == data['Player_name'].upper() :
                 data = {"IsAccepted" : False}
                 db.close()
