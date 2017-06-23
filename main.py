@@ -219,7 +219,9 @@ def postNewPlayer() :
         
         db = Db()
         result = db.select(query_getName)
+        print result
         dumpsResult = json.dumps(result)
+        print dumpsResult
         #resp = make_response(json.dumps(result))
         
         for player in dumpsResult :
