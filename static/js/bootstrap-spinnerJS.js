@@ -1,16 +1,35 @@
-$(document).on('click', '.number-spinner button', function () {    
-    var btn = $(this),
-        oldValue = btn.closest('.number-spinner').find('input').val().trim(),
-        newVal = 0;
-    
-    if (btn.attr('data-dir') == 'up') {
-        newVal = parseInt(oldValue) + 1;
-    } else {
-        if (oldValue > 1) {
-            newVal = parseInt(oldValue) - 1;
-        } else {
-            newVal = 0;
-        }
+$(document).on('click','#pubMoins',function(){
+    var oldValue = $('#inputPub').val();
+    var valueParse = parseInt(oldValue);
+    if(valueParse == 0){
+
     }
-    btn.closest('.number-spinner').find('input').val(newVal);
+    else{
+        var newValue = valueParse - 1;
+        $('#inputPub').val(newValue);
+        pubChange();
+    }
 });
+
+$(document).on('click','#pubPlus',function(){
+    var oldValue = $('#inputPub').val();
+    var valueParse = parseInt(oldValue);
+    var newValue = valueParse + 1;
+    $('#inputPub').val(newValue);
+    pubChange();
+});
+
+$.ajax('http://ponderosaproject.herokuapp.com/coucou').done(function(data){
+    for(var i in data){
+        $(document).on('click','#prodPlus_' + i,function(){
+            /*var oldValue = $('#inputProd_' + i).val();
+            var valueParse = parseInt(oldValue);
+            var newValue = valueParse + 1;
+            $('#inputProd_' + i).val(newValue);
+            prodChange(i);*/
+            
+        });
+        //alert(i);
+    }
+});
+

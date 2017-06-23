@@ -112,3 +112,15 @@ background: #d9534f !important;
 border-color: #d9534f !important;
 box-shadow:none !important;
 }
+
+#add, #clear{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.list {
+	font-family:"Trebuchet MS";
+    font-size:20px;
+	color:#000000;
+    cursor:pointer;
+}
