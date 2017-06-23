@@ -209,7 +209,8 @@ def postTemps() :
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
     print request.get_data()  #{"Player_name" : "Toto"}
-    data = request.get_json() 
+    data = jsonify(request.get_data())
+    #request.get_json() 
     print "test"
     print data
     if data == None :
