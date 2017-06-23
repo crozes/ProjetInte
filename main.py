@@ -208,13 +208,15 @@ def postTemps() :
 ## POST NewPlayer
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
-    print request.get_data() 
+    print request.get_data()  #{"Player_name" : "Toto"}
     data = request.get_json() 
+    print "test"
+    print data
     if data == None :
         print request.get_data()
         return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
     else :
-        print data 
+        print data #{u'Player_name': u'Toto'}
         query_getName = "SELECT Player_name FROM public.Player"
         
         db = Db()
@@ -224,10 +226,9 @@ def postNewPlayer() :
         #print dumpsResult
         #resp = make_response(json.dumps(result)) 
         
-        for player in data :
-            print player
-            print "in for : "+ player['player_name']
-            if player['player_name'].upper() == data['Player_name'].upper() :
+        for player in result :
+            print player['Player_name'] #Player_name
+            if player['Player_name'].upper() == data['Player_name'].upper() :
                 data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
