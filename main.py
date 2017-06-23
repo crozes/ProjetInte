@@ -225,6 +225,7 @@ def postNewPlayer() :
         #resp = make_response(json.dumps(result)) 
         
         for player in dumpsResult :
+            print player
             print "in for : "+player['player_name']
             if player['player_name'].upper() == data['Player_name'].upper() :
                 data = {"IsAccepted" : False}
