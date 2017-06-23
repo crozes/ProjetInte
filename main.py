@@ -107,9 +107,15 @@ def route_dbinit():
 @app.route('/getHour')
 def getHour():
     # Variable global Hour
-    global time
-    data = {"time": time}
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}
+    query = "SELECT Meteo_date FROM public.Meteo ORDER BY Meteo_ID DESC LIMIT 1"
+    db = Db()
+    result = db.select(query)
+    db.close()
+    
+    for date in result :
+        time = date['meteo.date']
+        
+    return json.dumps(time),200,{'Content-Type' : 'application/json'}    
 
 ## GET DAYINFO
 @app.route("/dayinfo")
@@ -208,8 +214,6 @@ def postTemps() :
 ## POST NewPlayer
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
-    #print request.get_data()  #{"Player_name" : "Toto"}
-    #data = jsonify(request.get_data())
     data = request.get_json(force=True) 
     print "test"
     print data
@@ -218,18 +222,14 @@ def postNewPlayer() :
         #print request.get_data()
         return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
     else :
-        print data #{u'Player_name': u'Toto'}
+        #print data #{u'Player_name': u'Toto'}
         query_getName = "SELECT Player_name FROM public.Player"
         
         db = Db()
         result = db.select(query_getName)
-        print result
-        #dumpsResult = json.dumps(result)
-        #print dumpsResult
-        #resp = make_response(json.dumps(result)) 
         
         for player in result :
-            print player['player_name'] #Player_name
+            #print player['player_name'] #Player_name
             if player['player_name'].upper() == data['Player_name'].upper() :
                 data = {"IsAccepted" : False}
                 db.close()
