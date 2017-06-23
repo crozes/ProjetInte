@@ -271,7 +271,7 @@ def postSimple():
 @app.route("/")
 def getHelloWord():
     print("hello word")
-    return "hello word"
+    return "hello word" 
 
 ### To deleted
 @app.route("/coucou")
