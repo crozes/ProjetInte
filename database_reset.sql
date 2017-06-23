@@ -60,8 +60,8 @@ CREATE TABLE public.MapItem(
 	MapItem_X                INT   ,
 	MapItem_Y                INT   ,
 	MapItem_surface          FLOAT   ,
-	Achete_publicite_date    DATE   ,
-	Achete_publicite_prix_m2 FLOAT   ,
+	Acquerir_date    		 INT   ,
+	Acquerir_prix 			 FLOAT   ,
 	Player_ID                INT   ,
 	CONSTRAINT prk_constraint_MapItem PRIMARY KEY (MapItem_ID)
 )WITHOUT OIDS;
