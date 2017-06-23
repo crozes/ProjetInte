@@ -43,7 +43,7 @@ time = 0                                          #Time
 
 day = 1                                           # compteur de jour
 
-#budget = 1.0                                     # compteur de jour
+budget = 1.0                                     # compteur de jour
 current_weather = random.choice(WEATHER_VALUES)   # meteo du jour
 
 weather = []
@@ -117,6 +117,7 @@ def getDayInfo():
     # Return Fake day Info
     global day
     global budget
+    global current_weather
     data = { "day": day, "budget": budget, "weather": current_weather }
     return json.dumps(data),200,{'Content-Type' : 'application/json'}
     
@@ -207,21 +208,29 @@ def postTemps() :
 ## POST NewPlayer
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
-    print request.get_data() 
-    data = request.get_json() 
+    #print request.get_data()  #{"Player_name" : "Toto"}
+    #data = jsonify(request.get_data())
+    data = request.get_json(force=True) 
+    print "test"
+    print data
+    print data['Player_name']
     if data == None :
-        print request.get_data()
+        #print request.get_data()
         return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
     else :
-        print data 
+        print data #{u'Player_name': u'Toto'}
         query_getName = "SELECT Player_name FROM public.Player"
         
         db = Db()
         result = db.select(query_getName)
-        resp = make_response(json.dumps(result))
+        print result
+        #dumpsResult = json.dumps(result)
+        #print dumpsResult
+        #resp = make_response(json.dumps(result)) 
         
-        for player in resp :
-            if player['Player_name'].upper() == data['Player_name'].upper() :
+        for player in result :
+            print player['player_name'] #Player_name
+            if player['player_name'].upper() == data['Player_name'].upper() :
                 data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
@@ -230,7 +239,9 @@ def postNewPlayer() :
         db.execute(query_addPlayer)
         db.close()
         
-        return json.dumps(query_addPlayer),200,{'Content-Type' : 'application/json'}                      
+        data = {"IsAccepted" : True}
+        
+        return json.dumps(data),201,{'Content-Type' : 'application/json'}                      
 
 ######################~/POST~###############################  
 
@@ -271,7 +282,7 @@ def postSimple():
 @app.route("/")
 def getHelloWord():
     print("hello word")
-    return "hello word"
+    return "hello word" 
 
 ### To deleted
 @app.route("/coucou")
