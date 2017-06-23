@@ -37,14 +37,18 @@ SALES_MIN = {
 
 ################################################################################
 ##### Global variables
+nbr_player = 0                                    #nbr_Joueur
 
 time = 0                                          #Time
 
 day = 1                                           # compteur de jour
 
-budget = 1.0                                      # compteur de jour
+#budget = 1.0                                     # compteur de jour
 current_weather = random.choice(WEATHER_VALUES)   # meteo du jour
-vendu = 0
+
+weather = []
+prevision_day = []
+#vendu = 0
 
 ################################################################################
 ##### Logique de jeu
@@ -56,8 +60,8 @@ def moveToNextDay():
   global day
   day += 1
   
-  global current_weather
-  current_weather = random.choice(WEATHER_VALUES)
+  #global current_weather
+  #current_weather = random.choice(WEATHER_VALUES)
   
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # En fonction de la meteo un nombre de ventes est choisi aleatoirement et le
@@ -77,13 +81,16 @@ def simulateSales(requested_glasses):
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 # Return if value is a int
-def RepresentsInt(s):
-    try: 
-        int(s)
-        return True
-    except ValueError:
-        return False
-
+def actPlayer(request_player):
+    global nbr_player
+    if request_player == "new" :
+        nbr_player +=1
+    elif request_player == "out":
+        nbr_player -= 1
+    else :
+        print "bad argument in actPlayer()"
+        return 1
+         
 
 ######################~GET~###############################
 
@@ -102,7 +109,7 @@ def getHour():
     # Variable global Hour
     global time
     data = {"time": time}
-    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}
 
 ## GET DAYINFO
 @app.route("/dayinfo")
@@ -111,11 +118,39 @@ def getDayInfo():
     global day
     global budget
     data = { "day": day, "budget": budget, "weather": current_weather }
-    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}
+    
+### GET RECETTE
+@app.route("/allRecette")
+def getAllRecette():
+    db = Db()
+    result = db.select("SELECT * FROM public.Recipe")
+    db.close()
+    
+    resp = make_response(json.dumps(result))
+    resp.mimetype = 'application/json'
+    return resp 
+    
+## GET NBR PLAYER
+@app.route("/nbrPlayer")
+def getNbrPlayer():
+    global nbr_player
+    data = {"nbrPlayer" : nbr_player}
+    return json.dumps(data),200,{'Content-Type' : 'application/json'} 
+    
+## GET TEMPS
+@app.route("/getTemps")
+def getTemps():
+    global current_weather
+    data = {"nbrPlayer" : nbr_player}
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}          
+
+######################~/GET~###############################
+
 
 ######################~POST~###############################  
 
-## POST HOUR
+## POST Hour
 @app.route('/postHour', methods=['POST'])
 def postHour() :
     global time
@@ -132,21 +167,76 @@ def postHour() :
 ## POST Ingredient
 @app.route('/postIngredient', methods=['POST'])
 def postAddIngredient() :
-    print request.get_data() 
+    #print request.get_data() 
     data = request.get_json() 
     if data == None :
         print request.get_data()
         return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
     else :
-        print data 
+        #print data 
+        #TODO
         query = "INSERT INTO public.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
         db = Db()
         result = db.execute(query)
         db.close()
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}        
-   
-  
-    
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}
+        
+## POST Temps
+@app.route('/postTemps', methods=['POST'])
+def postTemps() :
+    global time, weather, prevision_day
+    print request.get_data() 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
+    else :
+        print data 
+        
+        time = data['timestamp']
+        forecast = data['weather']
+        
+        for info in forecast :
+            prevision_day.append(info['dfn'])
+            weather.append(info['weather']) 
+            
+        #TODO
+        
+        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
+        
+## POST NewPlayer
+@app.route('/newPlayer', methods=['POST'])
+def postNewPlayer() :
+    print request.get_data() 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
+    else :
+        print data 
+        query_getName = "SELECT Player_name FROM public.Player"
+        
+        db = Db()
+        result = db.select(query_getName)
+        resp = make_response(json.dumps(result))
+        
+        for player in resp :
+            if player['Player_name'].upper() == data['Player_name'].upper() :
+                data = {"IsAccepted" : False}
+                db.close()
+                return json.dumps(data),200,{'Content-Type' : 'application/json'}
+                
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['Player_name']+"\',100,0)"
+        db.execute(query_addPlayer)
+        db.close()
+        
+        return json.dumps(query_addPlayer),200,{'Content-Type' : 'application/json'}                      
+
+######################~/POST~###############################  
+
+
+######################~TEST~###############################    
+### To deleted
 @app.route('/order', methods=['POST'])
 def postOrder():
     # game over
@@ -163,31 +253,7 @@ def postOrder():
     moveToNextDay()
   
     data = { "sales": sales }
-    return json.dumps(data), 200, {'Content-Type' : 'application/json'}
-    
-### Get all recette
-@app.route("/allrecette")
-def getAllRecette():
-    db = Db()
-    result = db.select("SELECT * FROM public.\"Recipe\"")
-    db.close()
-    
-    resp = make_response(json.dumps(result))
-    resp.mimetype = 'application/json'
-    return resp
-
-@app.route('/postIngredient', methods=['POST']) 
-def postIngredient():
-    data = request.get_json()
-    print data
-    if data == None :
-        print "None :" + request.get_data()
-        return request.get_data(), 400, {'Content-Type' : 'application/json'}
-    else :
-        db = Db()
-        db.execute(data);
-        db.close()
-        
+    return json.dumps(data), 201, {'Content-Type' : 'application/json'}    
             
 ### To deleted    
 @app.route('/posttest', methods=['POST'])
@@ -217,6 +283,9 @@ def getCoucou():
     resp = make_response(json.dumps(result)) 
     resp.mimetype = 'application/json'
     return resp
+
+######################~/TEST~###############################    
+
 
 if __name__ == "__main__":
     app.run()
