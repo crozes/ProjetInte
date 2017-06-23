@@ -1,0 +1,45 @@
+#backGris{
+    position: absolute;
+    z-index: 3;
+    height: 600px;
+    width: 2000px;
+    background-color: rgba(100,100,100,0.9);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@import url(http://fonts.googleapis.com/css?family=Roboto:400);
+
+
+.container {
+    padding: 25px;
+    position: absolute;
+}
+
+.form-login {
+    background-color: #EDEDED;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 15px;
+    border-color:#d2d2d2;
+    border-width: 5px;
+    box-shadow:0 1px 0 #cfcfcf;
+    margin-top: 150px;
+}
+
+h2 { 
+ border:0 solid #fff; 
+ border-bottom-width:1px;
+ padding-bottom:10px;
+ text-align: center;
+}
+
+.form-control {
+    border-radius: 10px;
+}
+
+.wrapper {
+    text-align: center;
+}
