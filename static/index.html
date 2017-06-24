@@ -162,7 +162,7 @@
 
             						<h2>Achat de panneaux publicitaire</h2>
             						<div class="col-sm-12">
-										<button type="button" id="add" class="btn btn-info col-sm-12">Ajouter un panneaux</button>
+										<button type="button" id="add" onclick="addPanneau()" class="btn btn-info col-sm-12">Ajouter un panneaux</button>
              							<table class="col-sm-12 tablePub">
              								<thead>
              									<tr>
@@ -245,22 +245,8 @@
 
 
 	<script type="text/javascript">
-				
-				//document.addEventListener('DOMCOntentLoaded', getDayInfo());
 
 				var CurrentDay = 1;
-				var PrixPubGlobal = 50;
-
-				
-    			function addPubToRecap(prix, index){
-    				$('#recapAchat').append('<tr id="pub_' + index + '"><td>Pub</td><td>' + prix +'€</td></tr>');
-    			}
-    				
-    				
-
-    			function prodChange(value){
-    				alert(value);
-    			}
 
 				function newPlayer(){
 					var pseudoJoueur = $('#pseudo').val();
@@ -388,15 +374,12 @@
 								classValue = 0;
 							}
 
-							$("#BuyMP").append('<tr list_' + classValue + '"><td class="col-sm-6">' + maDataGet.nom_test + '</td><td>5€</td><td class="col-sm-4"><div><div class="input-group number-spinner"><span class="input-group-btn"><button id="prodMoins_' + i + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + i + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button id="prodPlus_' + i + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+							$("#BuyMP").append('<tr list_' + classValue + '"><td class="col-sm-6">' + maDataGet.nom_test + '</td><td>5€</td><td class="col-sm-4"><div><div class="input-group number-spinner"><span class="input-group-btn"><button onclick="prodMoins(' + i +') id="prodMoins_' + i + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + i + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + i +')" id="prodPlus_' + i + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
 
 						}
 						$('#datatable').dataTable();
-    
-     					//$("[data-toggle=tooltip]").tooltip();
 					});
 				}
-
 
 	</script>
   </body>
