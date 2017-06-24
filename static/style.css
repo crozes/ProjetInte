@@ -23,12 +23,12 @@
 }
 
 .case{
-	width: 25px;
-	height: 25px;
+	width: 15px;
+	height: 15px;
 	display: inline-block;
 	background-color: #ccc;
 	/*border: 1px solid black;*/
-	margin-top: -4px;
+	margin-top: -10px;
 }
 
 .buttonMoins{
@@ -114,8 +114,7 @@ box-shadow:none !important;
 }
 
 #add, #clear{
-	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 .list {
@@ -144,4 +143,23 @@ td
 
 .tablePub{
 margin-bottom: 25px;
+}
+
+#buttonBuyItems{
+	margin-top: 20px;
+}
+
+.theadTable, .tbodyTable { display: block; }
+
+.tbodyTable {
+    height: 200px;       /* Just for the demo          */
+    overflow-y: auto;    /* Trigger vertical scroll    */
+    overflow-x: hidden;  /* Hide the horizontal scroll */
+}
+
+.recapTable{
+	width: 100%;
+}
+td{
+	width: 20%;
 }

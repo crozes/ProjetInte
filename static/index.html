@@ -17,12 +17,13 @@
 	<script language="JavaScript" src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
 	<script language="JavaScript" src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" type="text/javascript"></script>
 	<script language="JavaScript" src="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script>
-	<script src="js/bootstrap-pub.js"></script>
-	<script src="js/bootstrap-panneau.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css">
+
+	<script src="js/bootstrap-produit.js"></script>
+	<script src="js/bootstrap-panneau.js"></script>
 	<link href="css/bootstrap-Meteo.css" rel="stylesheet">
     <link href="css/weather-icons.css" rel="stylesheet">
     <link href="css/bootstrap-Spinner.css" rel="stylesheet">
@@ -229,16 +230,19 @@
 					<font id="recapBudget"></font>
 				</p>
 				<h3>Achats</h3>
-				<table id="recapTable">
-					<thead>
-						<tr>
-							<td>Produit</td>
-							<td>Prix</td>
+				<table  class="col-sm-12" id="recapTable">
+					<thead class="theadTable">
+						<tr class="col-sm-12">
+							<td class="listTitre">Produit</td>
+							<td class="listTitre">Prix</td>
 						</tr>
 					</thead>
-					<tbody id="recapAchat">
+					<tbody class="col-sm-12 tbodyTable" id="recapAchat">
 					</tbody>
 				</table>
+				<BR>
+				SOLDE: <font id="budgetTotal">5000</font> - <font id="achatTotal">1000</font> = <font id="resultat">4000€</font>
+				<button type="button" id="buttonBuyItems" onclick="buyItems()" class="btn btn-info col-sm-12">Passer commande</button>	
 			</div>
 		</div>
 	</div>
@@ -251,6 +255,8 @@
 				function newPlayer(){
 					var pseudoJoueur = $('#pseudo').val();
 					var dataToSend = {'Player_name': pseudoJoueur};
+					$('#recapPseudo').empty();
+					$('#recapPseudo').append(pseudoJoueur);
 					alert(JSON.stringify(dataToSend));
 					$('#backGris').hide();
 					$.ajax("http://ponderosaproject.herokuapp.com/newPlayer",{
@@ -263,6 +269,7 @@
                 				$('#backGris').hide();
                 				//Affiche les info de la journée
                 				getDayInfo();
+
             				} else if(response.IsAccepted == false) {
                 				//error si le pseudo est déjà pris par qulqu'un d'autre.
                 				//$('#backGris').show();
@@ -306,10 +313,16 @@
 
 						$('#money').empty();
 						$('#money').append('' + budget);
+						$('#recapBudget').empty();
+						$('#recapBudget').append('' + budget);
 						$('#weather').empty();
 						$('#weather').append('' + weather);
+						$('#recapMeteo').empty();
+						$('#recapMeteo').append('' + weather);
 						$('#numJourCourrant').empty();
 						$('#numJourCourrant').append('' + day);
+						$('#recapJour').empty();
+						$('#recapJour').append('' + day);
 						$('#moment').empty();
 						$('#moment').append('' + momentOfDay);
 
@@ -374,7 +387,7 @@
 								classValue = 0;
 							}
 
-							$("#BuyMP").append('<tr list_' + classValue + '"><td class="col-sm-6">' + maDataGet.nom_test + '</td><td>5€</td><td class="col-sm-4"><div><div class="input-group number-spinner"><span class="input-group-btn"><button onclick="prodMoins(' + i +') id="prodMoins_' + i + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + i + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + i +')" id="prodPlus_' + i + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+							$("#BuyMP").append('<tr list_' + classValue + '"><td id="nomProd_' + i + '" class="col-sm-6">' + maDataGet.nom_test + '</td><td>5€</td><td class="col-sm-4"><div><div class="input-group number-spinner"><span class="input-group-btn"><button onclick="prodMoins(' + i +')" id="prodMoins_' + i + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + i + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + i +')" id="prodPlus_' + i + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
 
 						}
 						$('#datatable').dataTable();
