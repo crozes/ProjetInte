@@ -21,9 +21,9 @@
 	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
 	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css">
-
-	<script src="js/bootstrap-produit.js"></script>
 	<script src="js/bootstrap-panneau.js"></script>
+	<script src="js/bootstrap-produit.js"></script>
+	
 	<link href="css/bootstrap-Meteo.css" rel="stylesheet">
     <link href="css/weather-icons.css" rel="stylesheet">
     <link href="css/bootstrap-Spinner.css" rel="stylesheet">
@@ -136,11 +136,10 @@
     				<div class="well">
         				<ul class="nav nav-tabs">
           					<li class="active"><a href="#Stats" data-toggle="tab">Statistiques</a></li>
-          					<li><a href="#Cost" data-toggle="tab">Coûts</a></li>
+          					<li><a href="#Story" data-toggle="tab">Historique</a></li>
           					<li><a href="#Map" data-toggle="tab" onclick="displayMap(20,20)">Carte</a></li>
           					<li><a href="#Actions" data-toggle="tab" onclick="getActions()">Actions</a></li>
           					<li><a href="#Player" data-toggle="tab" >Joueur en partie</a></li>
-          					Budget : <font id="money"></font>
         				</ul>
 
         				<div id="myTabContent" class="tab-content">
@@ -149,8 +148,8 @@
 									<legend class="titre_tab">Toute les statistiques</legend>
 								</fieldset>
           					</div>
-          					<div class="tab-pane fade" id="Cost">
-        						Cout matiere premiere et pub : 
+          					<div class="tab-pane fade" id="Story">
+        						<h2>Historique des achats / vente</h2>
           					</div>
           					<div class="tab-pane fade" id="Map">
             					Carte du jeu :
@@ -202,6 +201,9 @@
 											
 										</tbody>
 									</table>
+									<section>
+										<button class="js-trigger-overlay" type="button">Passer commande</button>
+  									</section>		
 								</fieldset>
           					</div>
           					<div class="tab-pane fade" id="Player">
@@ -240,9 +242,16 @@
 					<tbody class="col-sm-12 tbodyTable" id="recapAchat">
 					</tbody>
 				</table>
-				<BR>
-				SOLDE: <font id="budgetTotal">5000</font> - <font id="achatTotal">1000</font> = <font id="resultat">4000€</font>
-				<button type="button" id="buttonBuyItems" onclick="buyItems()" class="btn btn-info col-sm-12">Passer commande</button>	
+				<font class="recapEnd">
+				SOLDE: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
+				</font>
+				<label class="btn btn-lg btn-success active">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked>
+                <i class="fa fa-check"></i> Pago
+            </label>
+            <section>
+				<button class="js-trigger-overlay" type="button">Passer commande</button>
+  			</section>	
 			</div>
 		</div>
 	</div>
@@ -311,8 +320,6 @@
 						var weather = data['weather'];
 						var momentOfDay = data['moment'];
 
-						$('#money').empty();
-						$('#money').append('' + budget);
 						$('#recapBudget').empty();
 						$('#recapBudget').append('' + budget);
 						$('#weather').empty();
