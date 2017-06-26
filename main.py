@@ -192,7 +192,7 @@ def getMap():
     
     for player in resultRank:
         ranking.append(player['player_name'])
-        
+        print player['player_name']
         #-----------------------PLAYER_INFO-----------------------
         #infos joueur de base
         queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \"%s\";" % (player['player_name'],)
