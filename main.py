@@ -108,7 +108,7 @@ def getMap():
         drinksOffered=[]
         
         for recette in resultPlayerRecipes:
-            uneRecette={"name":recette['r.recipe_name'],"price":recette['r.recipe_sell_price'],"hasAlcohol":recette['i.ingredient_hasalcohol'],"isCold":recette['i.ingredient_iscold']}
+            uneRecette={"name":recette['r.recipe_name'],"price":recette['r.recipe_price'],"hasAlcohol":recette['i.ingredient_hasalcohol'],"isCold":recette['i.ingredient_iscold']}
             drinksOffered.append(uneRecette)
         
         
