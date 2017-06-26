@@ -2,6 +2,8 @@
 --        Script Postgre 
 ------------------------------------------------------------
 
+DROP TABLE IF EXISTS public.Stocker;
+DROP TABLE IF EXISTS public.Vendre;
 DROP TABLE IF EXISTS public.Avoir;
 DROP TABLE IF EXISTS public.Composer;
 DROP TABLE IF EXISTS public.Weather;
@@ -15,11 +17,13 @@ DROP TABLE IF EXISTS public.Test;
 --        Script Postgre 
 ------------------------------------------------------------
 
+
+
 ------------------------------------------------------------
 -- Table: Player
 ------------------------------------------------------------
 CREATE TABLE public.Player(
-	Player_id        BIGSERIAL NOT NULL ,
+	Player_id        BIGSERIAL  NOT NULL ,
 	Player_name      VARCHAR (255)  ,
 	Player_cash      FLOAT   ,
 	Player_profit    FLOAT   ,
@@ -33,9 +37,10 @@ CREATE TABLE public.Player(
 -- Table: Recipe
 ------------------------------------------------------------
 CREATE TABLE public.Recipe(
-	Recipe_id    BIGSERIAL NOT NULL ,
-	Recipe_name  VARCHAR (255)  ,
-	Recipe_price FLOAT   ,
+	Recipe_id            BIGSERIAL  NOT NULL ,
+	Recipe_name          VARCHAR (255)  ,
+	Recipe_price         FLOAT   ,
+	Recipe_pricePurchase FLOAT   ,
 	CONSTRAINT prk_constraint_Recipe PRIMARY KEY (Recipe_id)
 )WITHOUT OIDS;
 
@@ -44,7 +49,7 @@ CREATE TABLE public.Recipe(
 -- Table: Ingredient
 ------------------------------------------------------------
 CREATE TABLE public.Ingredient(
-	Ingredient_id         BIGSERIAL NOT NULL ,
+	Ingredient_id         BIGSERIAL  NOT NULL ,
 	Ingredient_name       VARCHAR (255)  ,
 	Ingredient_isCold     BOOL   ,
 	Ingredient_hasAlcohol BOOL   ,
@@ -57,11 +62,11 @@ CREATE TABLE public.Ingredient(
 -- Table: MapItem
 ------------------------------------------------------------
 CREATE TABLE public.MapItem(
-	MapItem_id        BIGSERIAL NOT NULL ,
+	MapItem_id        BIGSERIAL  NOT NULL ,
 	MapItem_kind      VARCHAR (255)  ,
 	MapItem_latitude  FLOAT   ,
 	MapItem_longitude FLOAT   ,
-	MapItem_surface   FLOAT   ,
+	MapItem_rayon     FLOAT   ,
 	Player_id         INT   ,
 	CONSTRAINT prk_constraint_MapItem PRIMARY KEY (MapItem_id)
 )WITHOUT OIDS;
@@ -71,7 +76,7 @@ CREATE TABLE public.MapItem(
 -- Table: Weather
 ------------------------------------------------------------
 CREATE TABLE public.Weather(
-	Weather_id        BIGSERIAL NOT NULL ,
+	Weather_id        BIGSERIAL  NOT NULL ,
 	Weather_timestamp INT   ,
 	Weather_temps     VARCHAR (255)  ,
 	Weather_dnf       INT   ,
@@ -93,11 +98,38 @@ CREATE TABLE public.Avoir(
 -- Table: Composer
 ------------------------------------------------------------
 CREATE TABLE public.Composer(
-	Compose_qte   INT			,
+	Compose_qte   INT   ,
 	Ingredient_id INT  NOT NULL ,
 	Recipe_id     INT  NOT NULL ,
 	CONSTRAINT prk_constraint_Composer PRIMARY KEY (Ingredient_id,Recipe_id)
 )WITHOUT OIDS;
+
+
+------------------------------------------------------------
+-- Table: Vendre
+------------------------------------------------------------
+CREATE TABLE public.Vendre(
+	Vendre_meteo VARCHAR (255)  ,
+	Vendre_qte   INT   ,
+	Vendre_fail  INT   ,
+	Vendre_prix  FLOAT   ,
+	Vendre_date  INT   ,
+	Player_id    INT  NOT NULL ,
+	Recipe_id    INT  NOT NULL ,
+	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id,Recipe_id)
+)WITHOUT OIDS;
+
+
+------------------------------------------------------------
+-- Table: Stocker
+------------------------------------------------------------
+CREATE TABLE public.Stocker(
+	Stock_qte INT   ,
+	Player_id INT  NOT NULL ,
+	Recipe_id INT  NOT NULL ,
+	CONSTRAINT prk_constraint_Stocker PRIMARY KEY (Player_id,Recipe_id)
+)WITHOUT OIDS;
+
 
 
 ALTER TABLE public.MapItem ADD CONSTRAINT FK_MapItem_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
@@ -105,6 +137,10 @@ ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Player_id FOREIGN KEY (Player_i
 ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Ingredient_id FOREIGN KEY (Ingredient_id) REFERENCES public.Ingredient(Ingredient_id);
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
+ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
+ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
+ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
+ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 
 
 
