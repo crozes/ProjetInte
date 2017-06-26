@@ -18,7 +18,9 @@ CREATE TABLE public.Player(
 	Player_ID                  SERIAL NOT NULL ,
 	Player_name                VARCHAR (25)  ,
 	Player_banque              FLOAT   ,
-	Player_profit_depuis_impot FLOAT   ,
+	Player_profit		       FLOAT   ,
+	Player_latitude			   INT   ,
+	Player_longitude		   INT   ,
 	CONSTRAINT prk_constraint_Player PRIMARY KEY (Player_ID)
 )WITHOUT OIDS;
 
@@ -27,11 +29,11 @@ CREATE TABLE public.Player(
 -- Table: Ingredient
 ------------------------------------------------------------
 CREATE TABLE public.Ingredient(
-	Ingredient_ID    SERIAL NOT NULL ,
-	Ingredient_name  VARCHAR (25)  ,
-	Ingredient_cost FLOAT   ,
-	Ingredient_hasAlcohol BOOL   ,
-	Ingredient_isCold BOOL ,
+	Ingredient_ID    		SERIAL NOT NULL ,
+	Ingredient_name  		VARCHAR (25)  ,
+	Ingredient_cost 		FLOAT   ,
+	Ingredient_hasAlcohol	BOOL   ,
+	Ingredient_isCold 		BOOL ,
 	CONSTRAINT prk_constraint_Ingredient PRIMARY KEY (Ingredient_ID)
 )WITHOUT OIDS;
 
@@ -71,9 +73,10 @@ CREATE TABLE public.MapItem(
 -- Table: meteo
 ------------------------------------------------------------
 CREATE TABLE public.Meteo(
-	Meteo_ID   		SERIAL NOT NULL   ,
-	Meteo_Temps 	VARCHAR (25)   ,
-	Meteo_Date 		INT   ,
+	Meteo_ID   			SERIAL NOT NULL   ,
+	Meteo_Timestamp 	INT   ,
+	Meteo_Temps 		VARCHAR (25)   ,
+	Meteo_Dnf			INT   ,
 	CONSTRAINT prk_constraint_meteo PRIMARY KEY (Meteo_ID)
 )WITHOUT OIDS;
 
@@ -145,8 +148,4 @@ INSERT INTO public.Test(
 
 INSERT INTO public.Test(
 	id_test, nom_test)
-	VALUES (3, 'Jus');			
-
-INSERT INTO public.Meteo(
-	Meteo_Temps, Meteo_Date)
-	VALUES ('NONE', 0);		
+	VALUES (3, 'Jus');				
