@@ -146,8 +146,4 @@ INSERT INTO public.Test(
 
 INSERT INTO public.Test(
 	id_test, nom_test)
-	VALUES (3, 'Jus');			
-
-INSERT INTO public.Meteo(
-	Meteo_Temps, Meteo_Date)
-	VALUES ('NONE', 0);		
+	VALUES (3, 'Jus');				

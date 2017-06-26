@@ -141,7 +141,9 @@ def getAllRecette():
 ## GET NBR PLAYER
 @app.route("/nbrPlayer")
 def getNbrPlayer():
-    #TODO
+    db = Db()
+    result = DB.select("COUNT")
+    db.close()
     return json.dumps(data),200,{'Content-Type' : 'application/json'} 
     
 ## GET TEMPS
@@ -211,15 +213,13 @@ def postAction():
 ## POST Temps
 @app.route('/metrology', methods=['POST'])
 def postTemps() :
-    #global time, weather, prevision_day
     print request.get_data() 
     data = request.get_json(force=True) 
     if data == None :
         print request.get_data()
         return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
     else :
-        print data 
-        
+        #print data 
         time = data['timestamp']
         temps = data['Temps']
         cpt = 1
