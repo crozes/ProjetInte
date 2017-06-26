@@ -152,6 +152,7 @@ def getTemps():
     
 ## GET MAP
 @app.route("/getMap")
+def getMap():
     data = {"nbrPlayer" : nbr_player}
     query = "SELECT Meteo_date FROM public.Meteo ORDER BY Meteo_ID DESC LIMIT 1"
     db = Db()
