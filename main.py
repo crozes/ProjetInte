@@ -35,6 +35,13 @@ SALES_MIN = {
   "RAINY"         : 0.0
 }
 
+
+CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
+
+REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
+
+REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
+
 ################################################################################
 ##### Global variables
 nbr_player = 0                                    #nbr_Joueur
@@ -171,7 +178,7 @@ def getTemps():
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
-@app.route("/map")
+@app.route("/map", methods=['GET'])
 def getMap():
     queryRank = "SELECT player_name, player_banque FROM player ORDER BY player_banque;"
     db = Db()
@@ -179,21 +186,76 @@ def getMap():
     db.close()
     ranking=[]
     player=[]
-    for rank in result :
+    playersInfo= []
+    itemsByPlayers=[]
+    drinksByPlayer=[]
+    
+    for player in resultRank['player_name']:
         ranking.append(rank)
-        queryPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
+        
+        #-----------------------PLAYERINFO-----------------------
+        #infos joueur de base
+        queryPlayerInfo = "SELECT * FROM player WHERE player_name=%s;" % (player)
         db = Db()
-        resultPlayer = db.select(queryPlayer)
+        resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
+        
+        #nb verres vendus pour le joueur rank
+        queryPlayerSales = "SELECT SUM(resultat_vente_faite)AS nbVentesDepuisDebut FROM player,resultat_vente WHERE player.player_id=%s AND resultat_vente.player_id=%s ;" % (resultPlayerInfo['player_id'],resultPlayerInfo['player_id'])
+        db = Db()
+        resultPlayerSales = db.select(queryPlayerSales)
+        db.close()
+        
+        #recettes du joueur rank
+        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id=%s AND resultat_vente.player_id=%s AND recipe.player_id;" % (resultPlayerInfo['player_id'],resultPlayerInfo['player_id'],resultPlayerInfo['player_id'])
+        db = Db()
+        resultPlayerRecipes = db.select(queryPlayerRecipes)
+        db.close()
+        
+        drinksOffered=[]
+        
+        for recette in resultPlayerRecipes:
+            uneRecette={"name":recette['recipe.recipe_name'],"price":recette['recipe.recipe_sell_price'],"hasAlcohol":recette['recipe.recipe_hasalcohol'],"isCold":recette['recipe.recipe_iscold']}
+            drinksOffered.append(uneRecette)
+        
+        
+        info={"cash":playerInfo['player_banque'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
+        
+        playersInfo.append({rank:info});
+        
+        #-----------------------ITEMSBYPLAYER-----------------------
+        
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE ;" % (rank)
+        db = Db()
+        resultPlayerInfo = db.select(queryItemsByPlayers)
+        db.close()
+        
+        queryDrinksByPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
+        db = Db()
+        resultDrinksByPlayer= db.select(queryDrinksByPlayer)
+        db.close()
+        
+        
+        
+        for item in itemsPlayer:
+            itemsByPlayers.append()
+        
+    
+    map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
     
     Map = {"map" : map}
     return json.dumps(Map),200,{'Content-Type' : 'application/json'}
 
 
 ## GET PLAYER'S MAP
-@app.route("/map/<string:playerName>")
-def getPlayerSMap():
-    playerSMap={}
+@app.route("/map/<string:playerName>", methods=['GET'])
+def getPlayerSMap(playerName):
+    queryPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
+    db = Db()
+    resultPlayer = db.select(queryPlayer)
+    db.close()
+        map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
+    playerSMap={"map":map,}
     return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
 
 @app.route("/players")
