@@ -158,6 +158,8 @@ def getTemps():
     resp = make_response(json.dumps(result))
     resp.mimetype = 'application/json'
     
+    print resp
+    
     data = {"timestamp" : 24, "weather" : "sunny"}
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
@@ -274,6 +276,8 @@ def postNewPlayer() :
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['name']+"\',100,0)"
         db.execute(query_addPlayer)
         db.close()
+        
+        #TODO Add Latitude et tout 
         
         data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True}] }] }
         
