@@ -158,8 +158,8 @@ def getTemps():
     resp = make_response(json.dumps(result))
     resp.mimetype = 'application/json'
     
-    print resp
-    #return json.dumps(data),200,{'Content-Type' : 'application/json'}          
+    data = {"timestamp" : 24, "weather" : "sunny"}
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
 @app.route("/map")
