@@ -237,26 +237,13 @@ INSERT INTO public.Composer(
 	VALUES (2,6,2);
 	
 INSERT INTO public.Player(
-	Player_name, Player_cash, Player_profit, Player_logitude, Player_latitude)
+	Player_name, Player_cash, Player_profit, Player_longitude, Player_latitude)
 	VALUES ('Toto',100,0,25,56);
 	
 INSERT INTO public.MapItem(
-	MapItem_kind, MapItem_latitude, MapItem_logitude, MapItem_rayon)
-	VALUES ('stand',25,56,10);
-	
-INSERT INTO public.Posseder(
-	Player_id, MapItem_id)
-	VALUES (1,1);
+	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id)
+	VALUES ('stand',25,56,10,1);
 
 INSERT INTO public.Avoir(
 	Player_id, Recipe_id)
 	VALUES (1,1);	
-	
-		
-	
-				
-		
-			
-
-
-								
