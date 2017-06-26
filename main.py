@@ -196,7 +196,7 @@ def postAddIngredient() :
         #TODO
         query = "INSERT INTO public.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
         db = Db()
-        result = db.execute(query)
+        db.execute(query)
         db.close()
         return json.dumps(query),201,{'Content-Type' : 'application/json'}
         
@@ -214,10 +214,12 @@ def postTemps() :
         
         time = data['timestamp']
         forecast = data['weather']
+        cpt = 1
         
-        for info in forecast :
-            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES (3,'rainny',1) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = 'rainny', Meteo_Date = 1"
-        
+        for temps in forcast :
+            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES ("+cpt+",'"+temps['weather']+"',"+temps[dnf]+") ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = '"+temps['weather']+"', Meteo_Date = "+temps[dnf]
+            db.execute(query)
+            cpt ++;
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
