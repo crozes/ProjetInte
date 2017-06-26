@@ -155,10 +155,10 @@ def getTemps():
     
     #TODO
     
+    print json.dumps(result)
+    
     resp = make_response(json.dumps(result))
     resp.mimetype = 'application/json'
-    
-    print resp
     
     data = {"timestamp" : 24, "weather" : "sunny"}
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
