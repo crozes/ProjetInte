@@ -279,7 +279,8 @@ def postNewPlayer() :
         for player in result :
             #print player['player_name'] #Player_name
             if player['player_name'].upper() == data['name'].upper() :
-                return 
+                query = ""
+                result = "" 
                 #data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
@@ -291,7 +292,7 @@ def postNewPlayer() :
         
         #TODO Add Latitude et tout 
         
-        data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True}] }] }
+        data = {"name" : "Toto", "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
