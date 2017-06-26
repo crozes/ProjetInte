@@ -195,19 +195,19 @@ def getMap():
         print player['player_name']
         #-----------------------PLAYER_INFO-----------------------
         #infos joueur de base
-        queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \'%s\';" % (player['player_name'],)
+        queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \'%s\';" % (player['player_name'])
         db = Db()
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
         
         #nb verres vendus pour le joueur rank
-        queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (int(resultPlayerInfo['player_id']),)
+        queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
         db.close()
         
         #recettes du joueur player
-        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id = %d AND resultat_vente.player_id=recipe.player_id;" % (resultPlayerInfo['player_id'],)
+        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id = %d AND resultat_vente.player_id=recipe.player_id;" % (resultPlayerInfo['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -225,7 +225,7 @@ def getMap():
         
         #-----------------------ITEMS_BY_PLAYER-----------------------
         
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id ;" % (player['player_id'],)
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
