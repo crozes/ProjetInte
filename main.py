@@ -113,7 +113,6 @@ def getHour():
     db.close()
     
     for date in result :
-        print date
         time = date['meteo_date']
         
     return json.dumps(time),200,{'Content-Type' : 'application/json'}    
@@ -168,8 +167,15 @@ def postHour() :
         print request.get_data()
         return '"None in postHour"',400,{'Content-Type' : 'application/json'}
     else :
-        print data['time'] 
-        time = data['time']
+        time = data['timestamp']
+        temps = data['temps']
+        
+        query = "INSERT INTO public.Meteo(Meteo_Temps, Meteo_Date)VALUES (\'"+temps['weather']+"\',"+data['timestamp']+");"
+        
+        db = Db()
+        result = db.execute(query)
+        db.close()
+        
         return json.dumps(time),201,{'Content-Type' : 'application/json'}
         
 ## POST Ingredient
@@ -192,7 +198,7 @@ def postAddIngredient() :
 ## POST Temps
 @app.route('/postTemps', methods=['POST'])
 def postTemps() :
-    global time, weather, prevision_day
+    #global time, weather, prevision_day
     print request.get_data() 
     data = request.get_json() 
     if data == None :
@@ -205,10 +211,8 @@ def postTemps() :
         forecast = data['weather']
         
         for info in forecast :
-            prevision_day.append(info['dfn'])
-            weather.append(info['weather']) 
-            
-        #TODO
+            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES (3,'rainny',1) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = 'rainny', Meteo_Date = 1"
+        
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
