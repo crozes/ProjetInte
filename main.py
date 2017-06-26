@@ -157,6 +157,8 @@ def getTemps():
     result = db.select("SELECT * FROM public.Meteo")
     db.close()
     
+    print "result : "+result
+    
     timestamp = result['Meteo_Timestamp']
     print "timestamp :" + timestamp
     #weather = result['Meteo_Temps']
