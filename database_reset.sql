@@ -46,9 +46,7 @@ CREATE TABLE public.Recipe(
 	Recipe_name       VARCHAR (25)  ,
 	Recipe_isCold     BOOL   ,
 	Recipe_hasAlcohol BOOL   ,
-	Recipe_sell_price INT   ,
-	Cree_recette_date DATE   ,
-	Player_ID         INT   ,
+	Recipe_sell_price FLOAT   ,
 	CONSTRAINT prk_constraint_Recipe PRIMARY KEY (Recipe_ID)
 )WITHOUT OIDS;
 
@@ -148,4 +146,23 @@ INSERT INTO public.Test(
 
 INSERT INTO public.Test(
 	id_test, nom_test)
-	VALUES (3, 'Jus');				
+	VALUES (3, 'Jus');
+	
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Citron', 0.40, False, False);
+	
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Galçon', 0.05, False, True);
+	
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Eau Gazeuse', 0.30, False, False);
+	
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Sucre', 0.30, False, False);	
+
+
+								

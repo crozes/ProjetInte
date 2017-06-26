@@ -13,29 +13,6 @@ CORS(app)
 ################################################################################
 ##### Quelques constantes
 
-COST_PER_GLASS  = 0.15 # le cout de production
-PRICE_PER_GLASS = 0.35 # le prix de vente
-
-# les conditions meteo
-WEATHER_VALUES = ["SUNNY AND HOT", "SUNNY", "CLOUDY", "RAINY"]
-
-# la probabilite maximale (entre 0 et 1) de vente pour chaque condition meteo.
-SALES_MAX = {
-  "SUNNY AND HOT" : 1.0, 
-  "SUNNY"         : 0.8,
-  "CLOUDY"        : 0.5,
-  "RAINY"         : 0.1
-}
-
-# la probabilite minimale (entre 0 et 1) de vente pour chaque condition meteo.
-SALES_MIN = {
-  "SUNNY AND HOT" : 0.6, 
-  "SUNNY"         : 0.2,
-  "CLOUDY"        : 0.0,
-  "RAINY"         : 0.0
-}
-
-
 CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
 
 REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
@@ -51,7 +28,6 @@ time = 0                                          #Time
 day = 1                                           # compteur de jour
 
 budget = 1.0                                     # compteur de jour
-current_weather = random.choice(WEATHER_VALUES)   # meteo du jour
 
 weather = []
 prevision_day = []
@@ -87,7 +63,7 @@ def simulateSales(requested_glasses):
     return sales  
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-# Return if value is a int
+# 
 def actPlayer(request_player):
     global nbr_player
     if request_player == "new" :
@@ -124,17 +100,6 @@ def getHour():
         time = date['meteo_date']
         
     return json.dumps(time),200,{'Content-Type' : 'application/json'}    
-
-#A SUPPRIMER
-## GET DAYINFO
-@app.route("/dayinfo")
-def getDayInfo():
-    # Return Fake day Info
-    global day
-    global budget
-    global current_weather
-    data = { "day": day, "budget": budget, "weather": current_weather }
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}
 
 #A SUPPRIMER    
 ### GET RECETTE
@@ -200,7 +165,7 @@ def getMap():
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
         
-        #nb verres vendus pour le joueur rank
+        #nb verres vendus pour le joueur rank 
         queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
@@ -269,6 +234,7 @@ def getPlayerSMap(playerName):
 def getPlayerTest():
     data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
     return json.dumps(data),200,{'Content-Type' : 'application/json'}
+    
 ######################~/GET~###############################
 
 
@@ -350,7 +316,7 @@ def postNewPlayer() :
             if player['player_name'] == data['name'] :
                 query = "SELECT Player_latitude, Player_longitude, Player_banque, Player_profit FROM public.Player WHERE public.Player LIKE "+ data['name']
                 res = db.select(query)
-                data = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{""}]  }
+                data = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_banque'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
                 #data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
