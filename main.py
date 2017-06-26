@@ -29,22 +29,7 @@ def route_dbinit():
     db = Db()
     db.executeFile("database_reset.sql")
     db.close()
-    return "Done."
-
-#A SUPPRIMER
-## GET HOUR
-@app.route('/getHour')
-def getHour():
-    # Variable global Hour
-    query = "SELECT Meteo_date FROM public.Meteo ORDER BY Meteo_ID DESC LIMIT 1"
-    db = Db()
-    result = db.select(query)
-    db.close()
-    
-    for date in result :
-        time = date['meteo_date']
-        
-    return json.dumps(time),200,{'Content-Type' : 'application/json'}    
+    return "Done."    
 
 #A SUPPRIMER    
 ### GET RECETTE
@@ -56,30 +41,21 @@ def getAllRecette():
     
     resp = make_response(json.dumps(result))
     resp.mimetype = 'application/json'
-    return resp 
-
-#A SUPPRIMER
-## GET NBR PLAYER
-@app.route("/nbrPlayer")
-def getNbrPlayer():
-    db = Db()
-    result = DB.select("COUNT")
-    db.close()
-    return json.dumps(data),200,{'Content-Type' : 'application/json'} 
+    return resp  
     
 ## GET TEMPS
 @app.route("/metrology")
 def getTemps():
     db = Db()
-    result = db.select("SELECT * FROM public.Meteo")
+    result = db.select("SELECT * FROM public.Weather")
     db.close()
     
     timestamp = 0
     meteoPrevision = []
     
     for forcast in result :
-        timestamp = forcast['meteo_timestamp']
-        donnee = {"weather" : forcast['meteo_temps'], "dnf" : forcast['meteo_dnf']}
+        timestamp = forcast['weather_timestamp']
+        donnee = {"weather" : forcast['weather_temps'], "dnf" : forcast['weather_dnf']}
         meteoPrevision.append(donnee)
     
     data = {"timestamp" : timestamp, "weather" : meteoPrevision}
@@ -186,28 +162,6 @@ def getPlayerTest():
 
 
 ######################~POST~###############################  
-
-## POST Hour
-@app.route('/postHour', methods=['POST'])
-def postHour() :
-    global time
-    #print request.get_data() 
-    data = request.get_json() 
-    if data == None :
-        print request.get_data()
-        return '"None in postHour"',400,{'Content-Type' : 'application/json'}
-    else :
-        time = data['timestamp']
-        temps = data['temps']
-        
-        query = "INSERT INTO public.Meteo(Meteo_Temps, Meteo_Date)VALUES (\'"+temps['weather']+"\',"+data['timestamp']+");"
-        
-        db = Db()
-        db.execute(query)
-        db.close()
-        
-        return json.dumps(time),201,{'Content-Type' : 'application/json'}
-        
         
 ## POST Sales
 @app.route('/sales', methods=['POST'])
@@ -221,7 +175,7 @@ def postAction():
     #TODO
     return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
         
-## POST Temps
+## POST Metrology
 @app.route('/metrology', methods=['POST'])
 def postTemps() :
     #print request.get_data() 
@@ -236,7 +190,7 @@ def postTemps() :
         cpt = 1
         
         for forcast in temps :
-            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = \'%s\', Meteo_Timestamp = %s, Meteo_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
+            query = "INSERT INTO public.Weather (Weather_id, Weather_timestamp, Weather_temps, Weather_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Weather_id) DO UPDATE SET Weather_temps = \'%s\', Weather_timestamp = %s, Weather_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
             db = Db()
             db.execute(query)
             db.close()
@@ -261,23 +215,35 @@ def postNewPlayer() :
         for player in result :
             #print player['player_name'] #Player_name
             if player['player_name'] == data['name'] :
-                query = "SELECT Player_latitude, Player_longitude, Player_banque, Player_profit FROM public.Player WHERE public.Player LIKE "+ data['name']
-                res = db.select(query)
-                data = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_banque'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
-                #data = {"IsAccepted" : False}
-                db.close()
-                return json.dumps(data),200,{'Content-Type' : 'application/json'}
+                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit FROM public.Player WHERE public.Player.Player_name LIKE "+ data['name']
+                res_query = db.select(query)
                 
-        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['name']+"\',100,0)"
+                for res in res_query :
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_banque'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
+                #data = {"IsAccepted" : False}
+                
+                db.close()
+                return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
+        
+        
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100,0,"+random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])+","+random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])+")"
         db.execute(query_addPlayer)
+        query_select = db.select('SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE '+ data['name'])
+        
+        for res in query_select :
+            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES (\'stand\',"+res['player_latitude']+","+res['player_longitude']+",10,"+res['player_id']+")"
+            db.execute(query_addPlayer)
+            query = "INSERT INTO public.Avoir (Player_id, Ingredient_id) VALUES ("+res['player_id']+",1)"
+            db.execute(query_addPlayer)
+        
         
         db.close()
         
-        #TODO Add Latitude et tout 
+        #TODO datafinal
         
-        data = {"name" : "Toto", "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
+        data_final = {"name" : data['name'], "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
         
-        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
+        return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
         
 ## POST Ingredient
 @app.route('/postIngredient', methods=['POST'])

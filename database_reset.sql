@@ -179,7 +179,29 @@ INSERT INTO public.Ingredient(
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
-	VALUES ('Sucre', 0.30, False, False);	
+	VALUES ('Sucre', 0.30, False, False);
+	
+INSERT INTO public.Recipe(
+	Recipe_name, Recipe_price, Recipe_pricePurchase)
+	VALUES ('Limonade', 5.00, 0);
+	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (2,1,1);
+	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (4,2,1);
+	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (1,3,1);
+	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (2,4,1);	
+	
+			
 
 
 								
