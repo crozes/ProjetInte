@@ -125,7 +125,7 @@ def getMap():
         
         
         for item in resultPlayerInfo:
-            locationMapItem = {"latitude":item['mapitem_y'],"longitude":item['mapitem_x']}
+            locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_surface']}
             unItem = {player['player_name']:unMapItem}
             itemsByPlayers.append(unItem)
