@@ -145,7 +145,7 @@ def getNbrPlayer():
     return json.dumps(data),200,{'Content-Type' : 'application/json'} 
     
 ## GET TEMPS
-@app.route("/getTemps")
+@app.route("/metrology")
 def getTemps():
     db = Db()
     result = db.select("SELECT * FROM public.Meteo")
@@ -195,25 +195,21 @@ def postHour() :
         
         return json.dumps(time),201,{'Content-Type' : 'application/json'}
         
-## POST Ingredient
-@app.route('/postIngredient', methods=['POST'])
-def postAddIngredient() :
-    #print request.get_data() 
-    data = request.get_json() 
-    if data == None :
-        print request.get_data()
-        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
-    else :
-        #print data 
-        #TODO
-        query = "INSERT INTO public.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
-        db = Db()
-        db.execute(query)
-        db.close()
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}
+        
+## POST Sales
+@app.route('/sales', methods=['POST'])
+def postSales():
+    #TODO
+    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
+    
+## POST Action
+@app.route('/actions/<playerName>', methods=['POST'])
+def postAction():
+    #TODO
+    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
         
 ## POST Temps
-@app.route('/postTemps', methods=['POST'])
+@app.route('/metrology', methods=['POST'])
 def postTemps() :
     #global time, weather, prevision_day
     print request.get_data() 
@@ -229,14 +225,14 @@ def postTemps() :
         cpt = 1
         
         for forcast in temps :
-            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES (%d,%d,\'%s\',%d) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = \'%s\', Meteo_Timestamp = %d, Meteo_Dnf = %d" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
+            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = \'%s\', Meteo_Timestamp = %s, Meteo_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
             db.execute(query)
             cpt += 1;
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
-## POST NewPlayer
-@app.route('/newPlayer', methods=['POST'])
+## POST Player
+@app.route('/player', methods=['POST'])
 def postNewPlayer() :
     data = request.get_json(force=True) 
     if data == None :
@@ -251,7 +247,7 @@ def postNewPlayer() :
         
         for player in result :
             #print player['player_name'] #Player_name
-            if player['player_name'].upper() == data['Player_name'].upper() :
+            if player['name'].upper() == data['name'].upper() :
                 data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
@@ -262,7 +258,24 @@ def postNewPlayer() :
         
         data = {"IsAccepted" : True}
         
-        return json.dumps(data),201,{'Content-Type' : 'application/json'}                      
+        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
+        
+## POST Ingredient
+@app.route('/postIngredient', methods=['POST'])
+def postAddIngredient() :
+    #print request.get_data() 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
+    else :
+        #print data 
+        #TODO
+        query = "INSERT INTO public.Ingredient (Ingredient_name, Ingredient_cost, Ingredient_hasAlcohol, Ingredient_isCold) VALUES (\'"+data['name']+"\',\'"+data['cost']+"\',"+data['hasAlcohol']+","+data['isCold']+")"
+        db = Db()
+        db.execute(query)
+        db.close()
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}                             
 
 ######################~/POST~###############################  
 
