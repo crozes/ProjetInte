@@ -265,8 +265,9 @@ def postNewPlayer() :
         
         for player in result :
             #print player['player_name'] #Player_name
-            if player['name'].upper() == data['name'].upper() :
-                data = {"IsAccepted" : False}
+            if player['Player_name'].upper() == data['name'].upper() :
+                return 
+                #data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
                 
