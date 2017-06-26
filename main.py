@@ -225,7 +225,7 @@ def postTemps() :
         print data 
         
         time = data['timestamp']
-        forecast = data['weather']
+        forecast = data['temps']
         cpt = 1
         
         for temps in forcast :
