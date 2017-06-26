@@ -107,7 +107,7 @@ def getMap():
             drinksOffered.append(uneRecette)
         
         
-        info={"cash":player['player_banque'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
+        info={"cash":player['player_cash'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
         
         playersInfo.append({player['player_name']:info});
         
@@ -219,7 +219,7 @@ def postNewPlayer() :
                 res_query = db.select(query)
                 
                 for res in res_query :
-                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_banque'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
                 #data = {"IsAccepted" : False}
                 
                 db.close()
