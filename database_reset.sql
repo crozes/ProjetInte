@@ -72,8 +72,8 @@ CREATE TABLE public.MapItem(
 ------------------------------------------------------------
 CREATE TABLE public.Meteo(
 	Meteo_ID   			SERIAL NOT NULL   ,
-	Meteo_Temps 		VARCHAR (25)   ,
 	Meteo_Timestamp 	INT   ,
+	Meteo_Temps 		VARCHAR (25)   ,
 	Meteo_Dnf			INT   ,
 	CONSTRAINT prk_constraint_meteo PRIMARY KEY (Meteo_ID)
 )WITHOUT OIDS;

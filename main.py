@@ -225,11 +225,11 @@ def postTemps() :
         print data 
         
         time = data['timestamp']
-        forecast = data['temps']
+        temps = data['Temps']
         cpt = 1
         
-        for temps in forcast :
-            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES ("+cpt+",'"+temps['weather']+"',"+temps[dnf]+") ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = '"+temps['weather']+"', Meteo_Date = "+temps[dnf]
+        for forcast in temps :
+            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES ("+cpt+","+time+",'"+forcast['weather']+"',"+forcast['dnf']+") ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = '"+forcast['weather']+"', Meteo_Timestamp = "+time+", Meteo_Dnf = "+forcast['dnf']
             db.execute(query)
             cpt += 1;
         
