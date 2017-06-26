@@ -195,7 +195,7 @@ def getMap():
         print player['player_name']
         #-----------------------PLAYER_INFO-----------------------
         #infos joueur de base
-        queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \"%s\";" % (player['player_name'],)
+        queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \'%s\';" % (player['player_name'],)
         db = Db()
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
