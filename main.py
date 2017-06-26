@@ -229,7 +229,7 @@ def postAction():
 ## POST Temps
 @app.route('/metrology', methods=['POST'])
 def postTemps() :
-    print request.get_data() 
+    #print request.get_data() 
     data = request.get_json(force=True) 
     if data == None :
         print request.get_data()
