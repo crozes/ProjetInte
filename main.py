@@ -147,8 +147,17 @@ def getNbrPlayer():
 ## GET TEMPS
 @app.route("/getTemps")
 def getTemps():
+    db = Db()
+    result = db.select("SELECT * FROM public.Meteo")
+    db.close()
+    
     #TODO
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}          
+    
+    resp = make_response(json.dumps(result))
+    resp.mimetype = 'application/json'
+    
+    print resp
+    #return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
 @app.route("/getMap")
