@@ -151,6 +151,11 @@ def getTemps():
     global current_weather
     data = {"nbrPlayer" : nbr_player}
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
+    
+## GET MAP
+@app.route("/getMap")
+	data = {"nbrPlayer" : nbr_player}
+	return json.dumps(data),200,{'Content-Type' : 'application/json'}
 
 ######################~/GET~###############################
 
