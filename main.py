@@ -250,7 +250,7 @@ def postTemps() :
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
 ## POST Player
-@app.route('/player', methods=['POST'])
+@app.route('/players', methods=['POST'])
 def postNewPlayer() :
     data = request.get_json(force=True) 
     if data == None :
