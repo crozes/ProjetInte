@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+# -*- coding: utf-8 -*-
 
 from flask import Flask, request, make_response
 from db import Db
@@ -86,7 +87,7 @@ def getMap():
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
         
-        #ventes joueur player depuis le début
+        #ventes joueur player depuis le debut
         queryPlayerSales = "SELECT SUM(v.vendre_qte*v.vendre_prix) AS nbVentesDepuisDebut FROM player AS p,vendre AS v WHERE p.player_id = %d AND v.player_id=p.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
