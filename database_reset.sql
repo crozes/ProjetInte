@@ -39,7 +39,6 @@ CREATE TABLE public.Player(
 CREATE TABLE public.Recipe(
 	Recipe_id            BIGSERIAL  NOT NULL ,
 	Recipe_name          VARCHAR (255)  ,
-	Recipe_price         FLOAT   ,
 	Recipe_pricePurchase FLOAT   ,
 	CONSTRAINT prk_constraint_Recipe PRIMARY KEY (Recipe_id)
 )WITHOUT OIDS;
@@ -181,10 +180,22 @@ INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
 	VALUES ('Sucre', 0.30, False, False);
 	
-INSERT INTO public.Recipe(
-	Recipe_name, Recipe_price, Recipe_pricePurchase)
-	VALUES ('Limonade', 5.00, 0);
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Rhum', 0.80, False, False);
+
+INSERT INTO public.Ingredient(
+	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
+	VALUES ('Menthe', 0.40, False, False);
 	
+INSERT INTO public.Recipe(
+	Recipe_name, Recipe_pricePurchase)
+	VALUES ('Limonade', 0);
+	
+INSERT INTO public.Recipe(
+	Recipe_name, Recipe_pricePurchase)
+	VALUES ('Mojito', 100);		
+
 INSERT INTO public.Composer(
 	Compose_qte, Ingredient_id, Recipe_id)
 	VALUES (2,1,1);
@@ -200,7 +211,51 @@ INSERT INTO public.Composer(
 INSERT INTO public.Composer(
 	Compose_qte, Ingredient_id, Recipe_id)
 	VALUES (2,4,1);	
+
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (3,1,2);
+
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (5,2,2);
+
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (1,3,2);
+
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (2,4,2);
 	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (1,5,2);
+	
+INSERT INTO public.Composer(
+	Compose_qte, Ingredient_id, Recipe_id)
+	VALUES (2,6,2);
+	
+INSERT INTO public.Player(
+	Player_name, Player_cash, Player_profit, Player_logitude, Player_latitude)
+	VALUES ('Toto',100,0,25,56);
+	
+INSERT INTO public.MapItem(
+	MapItem_kind, MapItem_latitude, MapItem_logitude, MapItem_rayon)
+	VALUES ('stand',25,56,10);
+	
+INSERT INTO public.Posseder(
+	Player_id, MapItem_id)
+	VALUES (1,1);
+
+INSERT INTO public.Avoir(
+	Player_id, Recipe_id)
+	VALUES (1,1);	
+	
+		
+	
+				
+		
 			
 
 

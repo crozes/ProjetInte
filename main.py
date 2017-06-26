@@ -244,9 +244,11 @@ def postNewPlayer() :
         
         db.close()
         
-        #TODO datafinal
+        query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit,  FROM WHERE public.Player.Player_name p LIKE"+data['name']
         
-        data_final = {"name" : data['name'], "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
+        query_drink = "SELECT * FROM public.Recipe, public.Ingredient WHERE public.Recipe.Recipe_id = 1 "
+        for res in query :
+            data_final = {"name" : data['name'], "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
         
         return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
         
