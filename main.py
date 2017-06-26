@@ -214,7 +214,7 @@ def postTemps() :
         for temps in forcast :
             query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES ("+cpt+",'"+temps['weather']+"',"+temps[dnf]+") ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = '"+temps['weather']+"', Meteo_Date = "+temps[dnf]
             db.execute(query)
-            cpt ++;
+            cpt += 1;
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
