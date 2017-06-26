@@ -259,6 +259,7 @@ def getPlayerSMap(playerName):
     playerSMap={"map":map,}
     return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
 '''
+ 
 @app.route("/players")
 def getPlayerTest():
     data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
@@ -341,9 +342,10 @@ def postNewPlayer() :
         
         for player in result :
             #print player['player_name'] #Player_name
-            if player['player_name'].upper() == data['name'].upper() :
-                query = ""
-                result = "" 
+            if player['player_name'] == data['name'] :
+                query = "SELECT Player_latitude, Player_longitude, Player_banque, Player_profit FROM public.Player WHERE public.Player LIKE "+ data['name']
+                res = db.select(query)
+                data = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{""}]  }
                 #data = {"IsAccepted" : False}
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
