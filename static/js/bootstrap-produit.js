@@ -38,24 +38,8 @@ function prodPlus(num){
     
 }
 
-function modifSolde(nombrePanneau){
-    /*
-    //ancienne valeur du solde
-    $('#achatTotal').empty();
-    var soldeParse = parseInt(oldSolde);
+function modifSolde(){
 
-    //Valeur calculé
-    for(var i = 0; i < 100; i++){
-        $('#pub_' + i).val();
-    }
-    var newsolde = soldeParse + addVal - sousVal;
-    $('#achatTotal').text(newsolde);
-
-    var budget = $('#recapBudget').text();
-    $('#budgetTotal').text(budget);
-    var budgetParse = parseInt(budget);
-    var resultat = budgetParse - newsolde;
-    $('#resultat').text(resultat);*/
     var total = 0;
     for(var i = 0 ; i < 30 ; i++){
         var valuePub = $('#prixPub_' + i).text();
@@ -71,7 +55,6 @@ function modifSolde(nombrePanneau){
             total += prodParse;
         }
     }
-    //alert(total);
 
     $('#achatTotal').text(total);
 

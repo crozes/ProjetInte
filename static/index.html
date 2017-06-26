@@ -60,7 +60,7 @@
 						<article>
 
 							<div class="info">
-								<div class="city"><span>Jour :</span> <font id="numJourCourrant"></font> / <font id="moment"></font></div>
+								<div class="city"><span>Jour :</span> <font id="numJourCourrant">1</font> / <font id="moment"></font></div>
 								<div class="night" id="weather"></div>
 								<div class="temp" id="hour"></div>
 
@@ -87,45 +87,7 @@
 					</div>
 
 					<div class="days">
-						<div class="row row-no-gutter">
-							<div class="col-md-4">
-								<div class="day">
-									<h1>JOUR 2</h1>
-									<h1>AM</h1>
-									<img 
-    								src="SVG/14_2.svg" 
-    								alt="prev1"
-    								height="87px"
-    								width="80px" 
-    							/>
-								</div>
-							</div>
-
-							<div class="col-md-4">
-								<div class="day">
-									<h1>JOUR 2</h1>
-									<h1>PM</h1>
-									<img 
-    								src="SVG/18_2.svg" 
-    								alt="prev2"
-    								height="87px"
-    								width="80px" 
-    							/>
-								</div>
-							</div>
-
-							<div class="col-md-4">
-								<div class="day">
-									<h1>JOUR 3</h1>
-									<h1>AM</h1>
-									<img 
-    								src="SVG/2_2.svg" 
-    								alt="prev3"
-    								height="87px"
-    								width="80px" 
-    							/>
-								</div>
-							</div>
+						<div id="prevision" class="row row-no-gutter">
 
 						</div>
 					</div>
@@ -138,7 +100,7 @@
           					<li class="active"><a href="#Stats" data-toggle="tab">Statistiques</a></li>
           					<li><a href="#Story" data-toggle="tab">Historique</a></li>
           					<li><a href="#Map" data-toggle="tab" onclick="displayMap(20,20)">Carte</a></li>
-          					<li><a href="#Actions" data-toggle="tab" onclick="getActions()">Actions</a></li>
+          					<li><a href="#Actions" data-toggle="tab">Actions</a></li>
           					<li><a href="#Player" data-toggle="tab" >Joueur en partie</a></li>
         				</ul>
 
@@ -149,13 +111,19 @@
 								</fieldset>
           					</div>
           					<div class="tab-pane fade" id="Story">
-        						<h2>Historique des achats / vente</h2>
+        						<h2>Achats réalisés</h2>
+        						<div id="historiqueAchat" class="col-sm-12">
+
+        						</div>
+        						<h2>Ventes réalisés</h2>
+        						<div id="historiqueVente" class="col-sm-12">
+        						</div>
           					</div>
           					<div class="tab-pane fade" id="Map">
             					Carte du jeu :
             					<div id="MapPlace">
 
-									</div>
+								</div>
           					</div>
           					<div class="tab-pane fade" id="Actions">
             					<fieldset>
@@ -193,6 +161,8 @@
 											<tr>
 												<th>Cocktail</th>
 												<th>Prix</th>
+												<th>Alchool</th>
+												<th>Frais</th>
 												<th>Nombre à commander</th>
 											</tr>
 										</thead>
@@ -202,7 +172,7 @@
 										</tbody>
 									</table>
 									<section>
-										<button class="js-trigger-overlay" type="button">Passer commande</button>
+										<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
   									</section>		
 								</fieldset>
           					</div>
@@ -231,6 +201,14 @@
 					Budget :
 					<font id="recapBudget"></font>
 				</p>
+				<p>
+					Ventes :
+					<font id="recapVentes"></font>
+				</p>
+				<p>
+					Profit :
+					<font id="recapProfit"></font>
+				</p>
 				<h3>Achats</h3>
 				<table  class="col-sm-12" id="recapTable">
 					<thead class="theadTable">
@@ -245,12 +223,9 @@
 				<font class="recapEnd">
 				SOLDE: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
 				</font>
-				<label class="btn btn-lg btn-success active">
-                <input type="radio" name="options" id="option1" autocomplete="off" checked>
-                <i class="fa fa-check"></i> Pago
-            </label>
+				
             <section>
-				<button class="js-trigger-overlay" type="button">Passer commande</button>
+				<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
   			</section>	
 			</div>
 		</div>
@@ -260,145 +235,259 @@
 	<script type="text/javascript">
 
 				var CurrentDay = 1;
+				var doOnce = false;
 
 				function newPlayer(){
+
 					var pseudoJoueur = $('#pseudo').val();
-					var dataToSend = {'Player_name': pseudoJoueur};
-					$('#recapPseudo').empty();
-					$('#recapPseudo').append(pseudoJoueur);
+					var dataToSend = {'name': pseudoJoueur};
+
 					alert(JSON.stringify(dataToSend));
-					$('#backGris').hide();
-					$.ajax("http://ponderosaproject.herokuapp.com/newPlayer",{
+
+
+					//Post du nom de joueur sous la forme {'name': 'pseudo'}
+					$.ajax("http://ponderosaproject.herokuapp.com/players",{
 						type: 'POST',
 						contentType: 'application/json',
 						data: JSON.stringify(dataToSend),
 						success: function (response) {
-            				if(response.IsAccepted == true) {
-                				//Success si le pseudo n'est pas déjà prit par quelqu'un d'autre.
-                				$('#backGris').hide();
-                				//Affiche les info de la journée
-                				getDayInfo();
 
-            				} else if(response.IsAccepted == false) {
-                				//error si le pseudo est déjà pris par qulqu'un d'autre.
-                				//$('#backGris').show();
-                				alert('Pseudo incorrect: Déjà pris');
-            				}
+                			$('#backGris').hide();
+
+                			var myName = response.name;
+
+                			//Modification du pseudo dans l'interface
+							$('#recapPseudo').empty();
+							$('#recapPseudo').append(myName);
+
+							//Set la position du stand du joueur inscrit
+							
+							//set l'heure et le temps
+							getHourWeather();
+							var position = response.location;
+							//set la position du joueur
+							setPlayerPosition(position);
+
+							var info = response.info;
+                			//Affiche les info de la journée
+                			setPlayerInfo(response.info);
         				}
 					});
+					setInterval(getHourWeather, 500);
 				}
 
-				var nbDivX = 0;
-				var nbDivY = 0;
+				function setPlayerPosition(data){
 
-				function displayMap(x,y){
-						nbDivX = 0;
-						nbDivY = 0;
-						$('#MapPlace').empty();
-						for(var i = 0; i < x; i++){
-							for(var j = 0; j < y ; j++){
-								$('#MapPlace').append('<div class="case" id="' + nbDivY + nbDivX + '"></div>');
-								nbDivX +=1;
-							}
-							nbDivY +=1;
-							nbDivX = 0;
-							$('#MapPlace').append('<br/>');
-						}
-
-						for(var i = 0; i < 10 ; i++){
-							var x = Math.floor(Math.random() * 20) + 1 ;
-							var y = Math.floor(Math.random() * 20) + 1 
-							$('#' + x + '' + y).append('<div class="perso"></div>');
-						}
+					for(var index in data){
+						var posString = JSON.stringify(data[index]);
+						var posParse = JSON.parse(posString);
+						
+						var latitude = posParse.latitude;
+						var longitude = posParse.longitude;
+						$('#MapPlace').append('latitude : ' + latitude + 'longitude' + longitude);
+					}
 				}
 
-				function getDayInfo(){
-					$.ajax('http://ponderosaproject.herokuapp.com/dayinfo').done(function(data){
+				function setPlayerInfo(data){
 
-						var day = data['day'];
-						var budget = data['budget'];
-						var weather = data['weather'];
-						var momentOfDay = data['moment'];
+					for(var index in data){
+						var infoString = JSON.stringify(data[index]);
+						var infoParse = JSON.parse(infoString);
 
+						//Toutes mles donnée récupéré
+						var argent = infoParse.cash;
+						var ventes = infoParse.sales;
+						var profit = infoParse.profit;
+						var produits = infoParse.drinksOffered;
+						alert(infoString);
+
+						for(var index2 in produits){
+							var prodString = JSON.stringify(produits[index2]);
+							var prodParse = JSON.parse(prodString);
+
+							//set le tableau dans les actions 
+							var nom = prodParse.name;
+							var prix = prodParse.price;
+							var alchool = prodParse.hasAlcohol;
+							var cold = prodParse.isCold;
+
+							$("#BuyMP").append('<tr list_' + index2 + '"><td id="nomProd_' + index2 + '" class="col-sm-6">' + nom + '</td><td>' + prix + '€</td><td>' + alchool + '</td><td>' + cold + '</td><td class="col-sm-4"><div><div class="input-group number-spinner spinner"><span class="input-group-btn"><button onclick="prodMoins(' + index2 +')" id="prodMoins_' + index2 + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + index2 + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + index2 +')" id="prodPlus_' + index2 + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+
+							//Demarre la table 
+							$('#datatable').dataTable();
+						}
+						
+
+						//Modificartion dans le recap
 						$('#recapBudget').empty();
-						$('#recapBudget').append('' + budget);
-						$('#weather').empty();
-						$('#weather').append('' + weather);
-						$('#recapMeteo').empty();
-						$('#recapMeteo').append('' + weather);
-						$('#numJourCourrant').empty();
-						$('#numJourCourrant').append('' + day);
-						$('#recapJour').empty();
-						$('#recapJour').append('' + day);
-						$('#moment').empty();
-						$('#moment').append('' + momentOfDay);
+						$('#recapBudget').append(argent);
+						$('#recapVentes').empty();
+						$('#recapVentes').append(ventes);
+						$('#recapProfit').empty();
+						$('#recapProfit').append(profit);
+					}
+					
+				}
 
-						switch(weather){
-							case 'CLOUDY':
-								 document.getElementById("logoDay1").src= "SVG/14.svg";
-								 document.getElementById("imageback").src = "images/cloudy.png";
+				function getHourWeather(){
+					$.ajax('http://ponderosaproject.herokuapp.com/metrology').done(function(data){
+						var madata = JSON.stringify(data);
+						var maDataGet = JSON.parse(madata);
+
+						var hour = maDataGet.timestamp;
+						var temps = maDataGet.weather;
+						$('#prevision').empty();
+
+						//Méteo d'aujourd'jui et prévisionnel
+						for(var index in temps){
+							var value = JSON.stringify(temps[index]);
+							var valueParse = JSON.parse(value);
+							var indexMeteo = valueParse.dnf;
+							var meteoTemps = valueParse.weather;
+
+							if(indexMeteo == 0){
+								$('#weather').empty();
+								$('#weather').append(meteoTemps);
+								$('#recapMeteo').empty();
+								$('#recapMeteo').append(meteoTemps);
+
+								switch(meteoTemps){
+								case 'cloudy':
+								 	document.getElementById("logoDay1").src= "SVG/14.svg";
+									document.getElementById("imageback").src = "images/cloudy.png";
+									break;
+								case 'rainny':
+									document.getElementById("logoDay1").src= "SVG/18.svg";
+									document.getElementById("imageback").src = "images/rainy.png";
+									break;
+								case 'sunny':
+									document.getElementById("logoDay1").src= "SVG/8.svg";
+									document.getElementById("imageback").src = "images/sunny.png";
+									break;
+								case 'heatwave':
+									document.getElementById("logoDay1").src= "SVG/2.svg";
+									document.getElementById("imageback").src = "images/heatwave.png";
+									break;
+								case 'thunderstorm':
+									document.getElementById("logoDay1").src= "SVG/16.svg";
+									document.getElementById("imageback").src = "images/thunderstorm.png";
+									break;
+								default:
+									break;
+								}
+							}
+
+							$('#prevision').append('<div class="col-md-4"><div class="day"><h1>JOUR ' + index + '</h1><h1>AM</h1><img id="imageMeteo_' + index + '" src="" alt="prev1"height="87px"width="80px"/></div></div>');
+							
+
+							switch(meteoTemps){
+							case 'cloudy':
+								 document.getElementById("imageMeteo_" + index).src= "SVG/14_2.svg";
 								break;
-							case 'RAINY':
-								 document.getElementById("logoDay1").src= "SVG/18.svg";
-								 document.getElementById("imageback").src = "images/rainy.png";
+							case 'rainny':
+								 document.getElementById("imageMeteo_" + index).src= "SVG/18_2.svg";
 								break;
-							case 'SUNNY':
-								 document.getElementById("logoDay1").src= "SVG/8.svg";
-								 document.getElementById("imageback").src = "images/sunny.png";
+							case 'sunny':
+								 document.getElementById("imageMeteo_" + index).src= "SVG/8_2.svg";
 								break;
-							case 'HEATWAVE':
-								 document.getElementById("logoDay1").src= "SVG/2.svg";
-								 document.getElementById("imageback").src = "images/heatwave.png";
+							case 'heatwave':
+								 document.getElementById("imageMeteo_" + index).src= "SVG/2_2.svg";
 								break;
-							case 'THUNDERSTORM':
-								 document.getElementById("logoDay1").src= "SVG/16.svg";
-								 document.getElementById("imageback").src = "images/thunderstorm.png";
+							case 'thunderstorm':
+								 document.getElementById("imageMeteo_" + index).src= "SVG/16_2.svg";
 								break;
 							default:
 								break;
+							}
+
 						}
-					});
 
-					getHour();
-
-				}
-
-				function getHour(){
-					$.ajax('http://ponderosaproject.herokuapp.com/getHour').done(function(data){
-						var madata = JSON.stringify(data);
-						var maDataGet = JSON.parse(madata);
 						$('#hour').empty();
-						$('#hour').append(maDataGet.time + ':00');
-					});
-					//setInterval(getHour, 5000);
-				}
+						$('#hour').append(hour + ':00');
 
-				function getActions(){
-					
-					$.ajax('http://ponderosaproject.herokuapp.com/coucou').done(function(data){
-						//value[]
-						$('#BuyMP').empty();
-						var classValue = 1;
-						//$("#BuyMP").append('');
-						//$('#BuyMP').load("html/html-spinner.html"); 
 
-						for(var i in data){
-							var madata = JSON.stringify(data[i]);
-							var maDataGet = JSON.parse(madata);
+						//On recup le nombre de jour et on fait le modulo pour connaitre l'heure qui nous reste
+						var nombreJour = hour / 24;
+						var resModulo = hour % 24;
 
-							if(classValue == 0)
-							{
-								classValue = 1;
-							}
-							else{
-								classValue = 0;
-							}
-
-							$("#BuyMP").append('<tr list_' + classValue + '"><td id="nomProd_' + i + '" class="col-sm-6">' + maDataGet.nom_test + '</td><td>5€</td><td class="col-sm-4"><div><div class="input-group number-spinner"><span class="input-group-btn"><button onclick="prodMoins(' + i +')" id="prodMoins_' + i + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + i + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + i +')" id="prodPlus_' + i + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
-
+						if(nombreJour >= 1){
+							CurrentDay = parseInt(nombreJour);
 						}
-						$('#datatable').dataTable();
+
+						//Changement de jour sur l'affichage 
+						$('#numJourCourrant').empty();
+						$('#numJourCourrant').append(CurrentDay);
+
+						$('#recapJour').empty();
+						$('#recapJour').append(CurrentDay);
+
+						//changement d'heure
+						$('#hour').empty();
+						$('#hour').append(resModulo + ':00');
+
+						//On change am ou pm selon l'heure
+						if(resModulo > 12){
+							$('#moment').empty();
+							$('#moment').append('PM');
+						}
+						else{
+							$('#moment').empty();
+							$('#moment').append('AM');
+						}
+						
+
 					});
+					
+				}
+				
+				function passerCommande(){
+
+					//recuêre le resultat des achats
+					var resultat = $('#resultat').text();
+					var resultatParse = parseInt(resultat);
+
+					//Teste si le resultat des achats et positif sinon on ne peut pas acheter
+					if(resultatParse < 0){
+						alert('Pas asser de font pour acheter vos produits. Retirez des achats pour que cela rentre dans votre budget total.');
+					}
+					else{
+
+						$('#recapBudget').empty();
+						$('#recapBudget').append('' + resultatParse);
+
+						//si il y a une commande de plus de 30 
+						for(var i = 0 ; i < 30 ; i++){
+
+							//Teste si la ligne du panneau à cet index existe
+							var x = $('#x_' + i).val();
+							if(x){
+								//On récupere toutes les info de la ligne du panneau
+								var y = $('#y_' + i).val();
+								var surface = $('#surface_' + i).val();
+								var prixPub = $('#tablePrixPub_' + i).text();
+								var prixPubParse = parseInt(prixPub);
+								$('#list').append('<tr id="ValideLine_' + i + '"><td>Panneau ' + i + '</td><td>longitude:' + x + '<BR>latitude:' + y + '</td><td>' + surface + 'm²</td><td>' + prixPub + '</td><td><button type="button" class="btn btn-info btn-circle"><i class="glyphicon glyphicon-ok"></i></button></td></tr>');
+
+								//On supprime le panneaux qui a été renseigné 
+								deletePanneau(i);
+							}
+
+							//On enleve les pub et prod du récapitulatif
+							$('#pub_' + i).remove();
+							$('#prod_' + i).remove();
+							$('#inputProd_' + i).val(0);
+						}
+
+						//On récupere le prix calculé et on le réinitialise
+						//alert(resultParse + '' + achat);
+
+						//Pour pourvoir faire la fonction getActions()
+						doOnce = false;
+			
+						//remet a jour le recapituatif d'achat
+						modifSolde();
+					}
+
 				}
 
 	</script>
