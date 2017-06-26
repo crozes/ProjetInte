@@ -159,7 +159,7 @@ def getTemps():
     
     #print json.dumps(result)
     
-    timestamp = result['timestamp']
+    timestamp = int(result['timestamp'])
     weather = result['weather']
     meteoPrevision = []
     
