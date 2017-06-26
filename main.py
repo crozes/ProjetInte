@@ -18,48 +18,6 @@ CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
 REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
 
 REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
-
-
-################################################################################
-##### Logique de jeu
-
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Incremente le compteur de nombre de jours et selectionne aleatoirement une
-# configuration meteo.
-def moveToNextDay():  
-  global day
-  day += 1
-  
-  #global current_weather
-  #current_weather = random.choice(WEATHER_VALUES)
-  
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# En fonction de la meteo un nombre de ventes est choisi aleatoirement et le
-# budget est mis a jour.
-def simulateSales(requested_glasses):
-    global budget
-  
-    proba = random.uniform(SALES_MIN[current_weather], SALES_MAX[current_weather])
-    sales = int(requested_glasses * proba)
-  
-    expenses = requested_glasses * COST_PER_GLASS
-    earnings = sales * PRICE_PER_GLASS
-  
-    budget += earnings - expenses
-  
-    return sales  
-    
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-# 
-def actPlayer(request_player):
-    global nbr_player
-    if request_player == "new" :
-        nbr_player +=1
-    elif request_player == "out":
-        nbr_player -= 1
-    else :
-        print "bad argument in actPlayer()"
-        return 1
          
 
 ######################~GET~###############################
