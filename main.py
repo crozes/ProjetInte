@@ -168,14 +168,14 @@ def getMap():
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
-    ranking[]
-    player[]
+    ranking=[]
+    player=[]
     for rank in result :
         ranking.append(rank)
         queryPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
         db = Db()
         resultPlayer = db.select(queryPlayer)
-db.close()
+        db.close()
     
     Map = {"map" : map}
     return json.dumps(Map),200,{'Content-Type' : 'application/json'}
