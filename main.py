@@ -86,11 +86,15 @@ def getMap():
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
         
-        #nb verres vendus pour le joueur player 
+        #ventes joueur player 
         queryPlayerSales = "SELECT SUM(v.vendre_qte*v.vendre_prix) AS nbVentesDepuisDebut FROM player AS p,vendre AS v WHERE p.player_id = %d AND v.player_id=p.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
         db.close()
+        
+        overallSales=0
+        for sales in queryPlayerSales:
+            overallSales=sales['nbVentesDepuisDebut']
         
         #recettes du joueur player
         queryPlayerRecipes = "SELECT r.recipe_id, r.recipe_name,r.recipe_price, i.ingredient_iscold, i.ingredient_hasalcohol FROM player AS p,avoir AS a, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id;" % (player['player_id'])
@@ -107,7 +111,7 @@ def getMap():
             drinksOffered.append(uneRecette)
         
         
-        info={"cash":player['player_cash'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
+        info={"cash":player['player_cash'],"sales":overallSales,"profit":0,"drinksOffered":drinksOffered}
         
         playersInfo.append({player['player_name']:info});
         
