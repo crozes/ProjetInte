@@ -162,15 +162,13 @@ def getTemps():
     
     for forcast in result :
         timestamp = forcast['meteo_timestamp']
-        data = {"weather" : forcast['meteo_temps'], "dnf" : forcast['meteo_dnf']}
-        meteoPrevision.append(data)
+        donnee = {"weather" : forcast['meteo_temps'], "dnf" : forcast['meteo_dnf']}
+        meteoPrevision.append(donnee)
     
-    datas = {"timestamp" : timestamp, "weather" : meteoPrevision}
-    
-    print datas
+    data = {"timestamp" : timestamp, "weather" : meteoPrevision}
     
     #data = {"timestamp" : 24, "weather" : "sunny"}
-    return json.dumps(datas),200,{'Content-Type' : 'application/json'}          
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
 @app.route("/map")
