@@ -244,11 +244,16 @@ def postNewPlayer() :
         
         db.close()
         
-        query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit,  FROM WHERE public.Player.Player_name p LIKE"+data['name']
+        recipe = []
         
-        query_drink = "SELECT * FROM public.Recipe, public.Ingredient WHERE public.Recipe.Recipe_id = 1 "
-        for res in query :
-            data_final = {"name" : data['name'], "location" : {"latitude" : 23, "longitude" : 12}, "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
+        #TODO limonade
+        
+        query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE"+data['name']
+        
+        query_select = db.select(query)
+        
+        for res in query_select :
+            data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] }] }
         
         return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
         
