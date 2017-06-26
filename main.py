@@ -141,15 +141,13 @@ def getAllRecette():
 ## GET NBR PLAYER
 @app.route("/nbrPlayer")
 def getNbrPlayer():
-    global nbr_player
-    data = {"nbrPlayer" : nbr_player}
+    #TODO
     return json.dumps(data),200,{'Content-Type' : 'application/json'} 
     
 ## GET TEMPS
 @app.route("/getTemps")
 def getTemps():
-    global current_weather
-    data = {"nbrPlayer" : nbr_player}
+    #TODO
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
