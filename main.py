@@ -191,7 +191,7 @@ def getMap():
     drinksByPlayer=[]
     
     for player in resultRank:
-        ranking.append(rank)
+        ranking.append(player['player_name'])
         
         #-----------------------PLAYER_INFO-----------------------
         #infos joueur de base
