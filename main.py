@@ -93,7 +93,7 @@ def getMap():
         db.close()
         
         overallSales=0
-        for sales in queryPlayerSales:
+        for sales in resultPlayerSales:
             overallSales=sales['nbVentesDepuisDebut']
         
         #recettes du joueur player
