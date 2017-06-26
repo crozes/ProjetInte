@@ -157,14 +157,11 @@ def getTemps():
     result = db.select("SELECT * FROM public.Meteo")
     db.close()
     
-    print result
-    
-    timestamp = result['Meteo_Timestamp']
-    print "timestamp :" + timestamp
-    #weather = result['Meteo_Temps']
+    timestamp = 0
     meteoPrevision = []
     
     for forcast in result :
+        timestamp = result['meteo_timestamp']
         data = {"weather" : forcast['Meteo_Temps'], "dnf" : forcast['Meteo_Dnf']}
         meteoPrevision.append(data)
     
