@@ -178,7 +178,6 @@ def getTemps():
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
-'''
 @app.route("/map", methods=['GET'])
 def getMap():
     queryRank = "SELECT player_name, player_banque FROM player ORDER BY player_banque;"
@@ -258,8 +257,7 @@ def getPlayerSMap(playerName):
         map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
     playerSMap={"map":map,}
     return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
-'''
- 
+
 @app.route("/players")
 def getPlayerTest():
     data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
