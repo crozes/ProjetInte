@@ -172,7 +172,7 @@ def getMap():
         db.close()
         
         #recettes du joueur player
-        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id = %d AND resultat_vente.player_id=recipe.player_id;" % (player['player_id'])
+        queryPlayerRecipes = "SELECT r.recipe_name,r.recipe_iscold,recipe.r_sell_price,r.recipe_hasalcohol FROM player AS p,resultat_vente AS res, recipe AS r WHERE p.player_id = %d AND res.player_id=r.player_id;" % (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -180,7 +180,7 @@ def getMap():
         drinksOffered=[]
         
         for recette in resultPlayerRecipes:
-            uneRecette={"name":recette['recipe.recipe_name'],"price":recette['recipe.recipe_sell_price'],"hasAlcohol":recette['recipe.recipe_hasalcohol'],"isCold":recette['recipe.recipe_iscold']}
+            uneRecette={"name":recette['r.recipe_name'],"price":recette['r.recipe_sell_price'],"hasAlcohol":recette['r.recipe_hasalcohol'],"isCold":recette['r.recipe_iscold']}
             drinksOffered.append(uneRecette)
         
         
