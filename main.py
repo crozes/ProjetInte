@@ -201,7 +201,7 @@ def getMap():
         db.close()
         
         #nb verres vendus pour le joueur rank
-        queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (resultPlayerInfo['player_id'],)
+        queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (int(resultPlayerInfo['player_id']),)
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
         db.close()
