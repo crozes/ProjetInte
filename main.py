@@ -180,7 +180,7 @@ def getTemps():
 ## GET MAP
 @app.route("/map", methods=['GET'])
 def getMap():
-    queryRank = "SELECT player_name, player_banque FROM player ORDER BY player_banque;"
+    queryRank = "SELECT * FROM player ORDER BY player_banque;"
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
