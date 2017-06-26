@@ -160,14 +160,30 @@ def getTemps():
     #return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
-@app.route("/getMap")
+@app.route("/map")
 def getMap():
-    data = {"nbrPlayer" : nbr_player}
-    query = "SELECT Meteo_date FROM public.Meteo ORDER BY Meteo_ID DESC LIMIT 1"
+    queryRank = "SELECT player_name, player_banque FROM player ORDER BY player_banque;"
     db = Db()
-    result = db.select(query)
+    resultRank = db.select(queryRank)
     db.close()
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}
+    ranking[]
+    player[]
+    for rank in result :
+        ranking.append(rank)
+        queryPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
+        db = Db()
+        resultPlayer = db.select(queryPlayer)
+db.close()
+    
+    Map = {"map" : map}
+    return json.dumps(Map),200,{'Content-Type' : 'application/json'}
+
+
+## GET PLAYER'S MAP
+@app.route("/map/<string:playerName>")
+def getPlayerSMap():
+    playerSMap={}
+    return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
 
 ######################~/GET~###############################
 
