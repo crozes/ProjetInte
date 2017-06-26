@@ -98,7 +98,7 @@ def getMap():
             overallSales=sales['nbventesdepuisdebut']
         
         #recettes du joueur player
-        queryPlayerRecipes = "SELECT r.recipe_id, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette, i.ingredient_iscold AS is_cold, i.ingredient_hasalcohol AS has_alcohol FROM player AS p,avoir AS a, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id;" % (player['player_id'])
+        queryPlayerRecipes = "SELECT r.recipe_id, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette, i.ingredient_iscold AS is_cold, i.ingredient_hasalcohol AS has_alcohol FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id;" % (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
