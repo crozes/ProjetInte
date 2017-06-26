@@ -19,19 +19,6 @@ REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
 
 REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
 
-################################################################################
-##### Global variables
-nbr_player = 0                                    #nbr_Joueur
-
-time = 0                                          #Time
-
-day = 1                                           # compteur de jour
-
-budget = 1.0                                     # compteur de jour
-
-weather = []
-prevision_day = []
-#vendu = 0
 
 ################################################################################
 ##### Logique de jeu
