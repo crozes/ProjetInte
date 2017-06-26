@@ -270,7 +270,7 @@ def postNewPlayer() :
                 db.close()
                 return json.dumps(data),200,{'Content-Type' : 'application/json'}
                 
-        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['Player_name']+"\',100,0)"
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['name']+"\',100,0)"
         db.execute(query_addPlayer)
         db.close()
         
