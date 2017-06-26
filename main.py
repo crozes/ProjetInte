@@ -103,6 +103,7 @@ def route_dbinit():
     db.close()
     return "Done."
 
+#A SUPPRIMER
 ## GET HOUR
 @app.route('/getHour')
 def getHour():
@@ -117,6 +118,7 @@ def getHour():
         
     return json.dumps(time),200,{'Content-Type' : 'application/json'}    
 
+#A SUPPRIMER
 ## GET DAYINFO
 @app.route("/dayinfo")
 def getDayInfo():
@@ -126,7 +128,8 @@ def getDayInfo():
     global current_weather
     data = { "day": day, "budget": budget, "weather": current_weather }
     return json.dumps(data),200,{'Content-Type' : 'application/json'}
-    
+
+#A SUPPRIMER    
 ### GET RECETTE
 @app.route("/allRecette")
 def getAllRecette():
@@ -137,7 +140,8 @@ def getAllRecette():
     resp = make_response(json.dumps(result))
     resp.mimetype = 'application/json'
     return resp 
-    
+
+#A SUPPRIMER
 ## GET NBR PLAYER
 @app.route("/nbrPlayer")
 def getNbrPlayer():
@@ -153,14 +157,21 @@ def getTemps():
     result = db.select("SELECT * FROM public.Meteo")
     db.close()
     
-    #TODO
+    #print json.dumps(result)
     
-    print json.dumps(result)
+    timestamp = result['timestamp']
+    weather = result['weather']
+    meteoPrevision = []
     
-    resp = make_response(json.dumps(result))
-    resp.mimetype = 'application/json'
+    for forcast in weather :
+        data = {"weather" : forcast['weather'], "dnf" : forcast['dnf']}
+        meteoPrevision.append(data)
     
-    data = {"timestamp" : 24, "weather" : "sunny"}
+    data = {"timestamp" : timestamp, "weather" : meteoPrevision}
+    
+    print data
+    
+    #data = {"timestamp" : 24, "weather" : "sunny"}
     return json.dumps(data),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
