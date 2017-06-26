@@ -18,7 +18,7 @@ CREATE TABLE public.Player(
 	Player_ID                  SERIAL NOT NULL ,
 	Player_name                VARCHAR (25)  ,
 	Player_banque              FLOAT   ,
-	Player_profit_depuis_impot FLOAT   ,
+	Player_profit		       FLOAT   ,
 	Player_latitude			   INT   ,
 	Player_longitude		   INT   ,
 	CONSTRAINT prk_constraint_Player PRIMARY KEY (Player_ID)
