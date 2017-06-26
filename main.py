@@ -190,7 +190,7 @@ def postHour() :
         query = "INSERT INTO public.Meteo(Meteo_Temps, Meteo_Date)VALUES (\'"+temps['weather']+"\',"+data['timestamp']+");"
         
         db = Db()
-        result = db.execute(query)
+        db.execute(query)
         db.close()
         
         return json.dumps(time),201,{'Content-Type' : 'application/json'}
@@ -226,7 +226,9 @@ def postTemps() :
         
         for forcast in temps :
             query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = \'%s\', Meteo_Timestamp = %s, Meteo_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
+            db = Db()
             db.execute(query)
+            db.close()
             cpt += 1;
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
