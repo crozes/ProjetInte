@@ -19,6 +19,8 @@ CREATE TABLE public.Player(
 	Player_name                VARCHAR (25)  ,
 	Player_banque              FLOAT   ,
 	Player_profit_depuis_impot FLOAT   ,
+	Player_latitude			   INT   ,
+	Player_longitude		   INT   ,
 	CONSTRAINT prk_constraint_Player PRIMARY KEY (Player_ID)
 )WITHOUT OIDS;
 
