@@ -12,7 +12,7 @@ CORS(app)
 
 ################################################################################
 ##### Quelques constantes
-
+ 
 CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
 
 REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
