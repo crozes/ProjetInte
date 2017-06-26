@@ -157,14 +157,13 @@ def getTemps():
     result = db.select("SELECT * FROM public.Meteo")
     db.close()
     
-    #print json.dumps(result)
-    
-    timestamp = int(result['timestamp'])
-    weather = result['weather']
+    timestamp = result['Meteo_Timestamp']
+    print "timestamp :" + timestamp
+    #weather = result['Meteo_Temps']
     meteoPrevision = []
     
-    for forcast in weather :
-        data = {"weather" : forcast['weather'], "dnf" : forcast['dnf']}
+    for forcast in result :
+        data = {"weather" : forcast['Meteo_Temps'], "dnf" : forcast['Meteo_Dnf']}
         meteoPrevision.append(data)
     
     data = {"timestamp" : timestamp, "weather" : meteoPrevision}
@@ -290,6 +289,7 @@ def postNewPlayer() :
                 
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['name']+"\',100,0)"
         db.execute(query_addPlayer)
+        
         db.close()
         
         #TODO Add Latitude et tout 
