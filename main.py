@@ -184,7 +184,7 @@ def getMap():
             drinksOffered.append(uneRecette)
         
         
-        info={"cash":playerInfo['player_banque'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
+        info={"cash":player['player_banque'],"sales":resultPlayerSales['nbVentesDepuisDebut'],"profit":0,"drinksOffered":drinksOffered}
         
         playersInfo.append({player['player_name']:info});
         
