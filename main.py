@@ -165,12 +165,12 @@ def getTemps():
         data = {"weather" : forcast['meteo_temps'], "dnf" : forcast['meteo_dnf']}
         meteoPrevision.append(data)
     
-    data = {"timestamp" : timestamp, "weather" : meteoPrevision}
+    datas = {"timestamp" : timestamp, "weather" : meteoPrevision}
     
-    print data
+    print datas
     
     #data = {"timestamp" : 24, "weather" : "sunny"}
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}          
+    return json.dumps(datas),200,{'Content-Type' : 'application/json'}          
     
 ## GET MAP
 @app.route("/map")
