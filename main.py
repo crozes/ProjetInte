@@ -141,11 +141,13 @@ def getAllRecette():
 ## GET NBR PLAYER
 @app.route("/nbrPlayer")
 def getNbrPlayer():
-    #TODO
+    db = Db()
+    result = DB.select("COUNT")
+    db.close()
     return json.dumps(data),200,{'Content-Type' : 'application/json'} 
     
 ## GET TEMPS
-@app.route("/getTemps")
+@app.route("/metrology")
 def getTemps():
     db = Db()
     result = db.select("SELECT * FROM public.Meteo")
@@ -206,10 +208,75 @@ def postHour() :
         query = "INSERT INTO public.Meteo(Meteo_Temps, Meteo_Date)VALUES (\'"+temps['weather']+"\',"+data['timestamp']+");"
         
         db = Db()
-        result = db.execute(query)
+        db.execute(query)
         db.close()
         
         return json.dumps(time),201,{'Content-Type' : 'application/json'}
+        
+        
+## POST Sales
+@app.route('/sales', methods=['POST'])
+def postSales():
+    #TODO
+    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
+    
+## POST Action
+@app.route('/actions/<playerName>', methods=['POST'])
+def postAction():
+    #TODO
+    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
+        
+## POST Temps
+@app.route('/metrology', methods=['POST'])
+def postTemps() :
+    print request.get_data() 
+    data = request.get_json(force=True) 
+    if data == None :
+        print request.get_data()
+        return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
+    else :
+        #print data 
+        time = data['timestamp']
+        temps = data['Temps']
+        cpt = 1
+        
+        for forcast in temps :
+            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Timestamp, Meteo_Temps, Meteo_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = \'%s\', Meteo_Timestamp = %s, Meteo_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
+            db = Db()
+            db.execute(query)
+            db.close()
+            cpt += 1;
+        
+        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
+        
+## POST Player
+@app.route('/player', methods=['POST'])
+def postNewPlayer() :
+    data = request.get_json(force=True) 
+    if data == None :
+        #print request.get_data()
+        return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
+    else :
+        #print data #{u'Player_name': u'Toto'}
+        query_getName = "SELECT Player_name FROM public.Player"
+        
+        db = Db()
+        result = db.select(query_getName)
+        
+        for player in result :
+            #print player['player_name'] #Player_name
+            if player['name'].upper() == data['name'].upper() :
+                data = {"IsAccepted" : False}
+                db.close()
+                return json.dumps(data),200,{'Content-Type' : 'application/json'}
+                
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['Player_name']+"\',100,0)"
+        db.execute(query_addPlayer)
+        db.close()
+        
+        data = {"IsAccepted" : True}
+        
+        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
 ## POST Ingredient
 @app.route('/postIngredient', methods=['POST'])
@@ -226,59 +293,7 @@ def postAddIngredient() :
         db = Db()
         db.execute(query)
         db.close()
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}
-        
-## POST Temps
-@app.route('/postTemps', methods=['POST'])
-def postTemps() :
-    #global time, weather, prevision_day
-    print request.get_data() 
-    data = request.get_json(force=True) 
-    if data == None :
-        print request.get_data()
-        return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
-    else :
-        print data 
-        
-        time = data['timestamp']
-        forecast = data['weather']
-        cpt = 1
-        
-        for temps in forcast :
-            query = "INSERT INTO public.Meteo (Meteo_ID, Meteo_Temps, Meteo_Date) VALUES ("+cpt+",'"+temps['weather']+"',"+temps[dnf]+") ON CONFLICT (Meteo_ID) DO UPDATE SET Meteo_Temps = '"+temps['weather']+"', Meteo_Date = "+temps[dnf]
-            db.execute(query)
-            cpt += 1;
-        
-        return json.dumps(data),201,{'Content-Type' : 'application/json'} 
-        
-## POST NewPlayer
-@app.route('/newPlayer', methods=['POST'])
-def postNewPlayer() :
-    data = request.get_json(force=True) 
-    if data == None :
-        #print request.get_data()
-        return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
-    else :
-        #print data #{u'Player_name': u'Toto'}
-        query_getName = "SELECT Player_name FROM public.Player"
-        
-        db = Db()
-        result = db.select(query_getName)
-        
-        for player in result :
-            #print player['player_name'] #Player_name
-            if player['player_name'].upper() == data['Player_name'].upper() :
-                data = {"IsAccepted" : False}
-                db.close()
-                return json.dumps(data),200,{'Content-Type' : 'application/json'}
-                
-        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_banque, Player_profit_depuis_impot) VALUES (\'"+data['Player_name']+"\',100,0)"
-        db.execute(query_addPlayer)
-        db.close()
-        
-        data = {"IsAccepted" : True}
-        
-        return json.dumps(data),201,{'Content-Type' : 'application/json'}                      
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}                             
 
 ######################~/POST~###############################  
 
