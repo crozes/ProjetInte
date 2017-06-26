@@ -207,7 +207,7 @@ def getMap():
         db.close()
         
         #recettes du joueur player
-        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id = %d AND resultat_vente.player_id=recipe.player_id;" % (resultPlayerInfo['player_id'])
+        queryPlayerRecipes = "SELECT recipe.recipe_name,recipe.recipe_iscold,recipe.recipe_sell_price,recipe.recipe_hasalcohol FROM player,resultat_vente, recipe WHERE player.player_id = %d AND resultat_vente.player_id=recipe.player_id;" % (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
