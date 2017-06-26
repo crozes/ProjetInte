@@ -154,8 +154,12 @@ def getTemps():
     
 ## GET MAP
 @app.route("/getMap")
-	data = {"nbrPlayer" : nbr_player}
-	return json.dumps(data),200,{'Content-Type' : 'application/json'}
+    data = {"nbrPlayer" : nbr_player}
+    query = "SELECT Meteo_date FROM public.Meteo ORDER BY Meteo_ID DESC LIMIT 1"
+    db = Db()
+    result = db.select(query)
+    db.close()
+    return json.dumps(data),200,{'Content-Type' : 'application/json'}
 
 ######################~/GET~###############################
 
