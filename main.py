@@ -90,7 +90,7 @@ def getTemps():
 ## GET MAP
 @app.route("/map", methods=['GET'])
 def getMap():
-    queryRank = "SELECT * FROM player ORDER BY player_banque;"
+    queryRank = "SELECT * FROM player ORDER BY player_cash;"
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
@@ -102,7 +102,7 @@ def getMap():
     
     for player in resultRank:
         ranking.append(player['player_name'])
-        print player['player_name']
+        print "player name"+player['player_name']
         #-----------------------PLAYER_INFO-----------------------
         #infos joueur de base
         queryPlayerInfo = "SELECT * FROM player WHERE player_name LIKE \'%s\';" % (player['player_name'])
@@ -110,22 +110,24 @@ def getMap():
         resultPlayerInfo = db.select(queryPlayerInfo)
         db.close()
         
-        #nb verres vendus pour le joueur rank 
-        queryPlayerSales = "SELECT SUM(r.resultat_vente_faite)AS nbVentesDepuisDebut FROM player AS p,resultat_vente AS r WHERE p.player_id = %d AND r.player_id=p.player_id ;" % (player['player_id'])
+        #nb verres vendus pour le joueur player 
+        queryPlayerSales = "SELECT SUM(v.vendre_qte*v.vendre_prix) AS nbVentesDepuisDebut FROM player AS p,vendre AS v WHERE p.player_id = %d AND v.player_id=p.player_id ;" % (player['player_id'])
         db = Db()
         resultPlayerSales = db.select(queryPlayerSales)
         db.close()
         
         #recettes du joueur player
-        queryPlayerRecipes = "SELECT r.recipe_name,r.recipe_iscold,recipe.r_sell_price,r.recipe_hasalcohol FROM player AS p,resultat_vente AS res, recipe AS r WHERE p.player_id = %d AND res.player_id=r.player_id;" % (player['player_id'])
+        queryPlayerRecipes = "SELECT r.recipe_id, r.recipe_name,r.recipe_price, i.ingredient_iscold, i.ingredient_hasalcohol FROM player AS p,avoir AS a, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id;" % (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
         
+        
+        
         drinksOffered=[]
         
         for recette in resultPlayerRecipes:
-            uneRecette={"name":recette['r.recipe_name'],"price":recette['r.recipe_sell_price'],"hasAlcohol":recette['r.recipe_hasalcohol'],"isCold":recette['r.recipe_iscold']}
+            uneRecette={"name":recette['r.recipe_name'],"price":recette['r.recipe_sell_price'],"hasAlcohol":recette['i.ingredient_hasalcohol'],"isCold":recette['i.ingredient_iscold']}
             drinksOffered.append(uneRecette)
         
         
@@ -141,9 +143,9 @@ def getMap():
         db.close()
         
         
-        for item in queryItemsByPlayers:
-            locationMapItem = {"latitude":queryItemsByPlayers['mapitem_y'],"longitude":queryItemsByPlayers['mapitem_x']}
-            unMapItem={"kind":queryItemsByPlayers['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":queryItemsByPlayers['mapitem_surface']}
+        for item in resultPlayerInfo:
+            locationMapItem = {"latitude":item['mapitem_y'],"longitude":item['mapitem_x']}
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_surface']}
             unItem = {player['player_name']:unMapItem}
             itemsByPlayers.append(unItem)
         
@@ -151,7 +153,7 @@ def getMap():
         #-----------------------DRINKS_BY_PLAYER-----------------------
         
         for drink in resultPlayerRecipes:
-            uneRecette={"name":recette['recipe.recipe_name'],"price":recette['recipe.recipe_sell_price'],"hasAlcohol":recette['recipe.recipe_hasalcohol'],"isCold":recette['recipe.recipe_iscold']}
+            uneRecette={"name":drink['r.recipe_name'],"price":drink['r.recipe_sell_price'],"hasAlcohol":drink['i.ingredient_hasalcohol'],"isCold":recette['i.ingredient_iscold']}
             unDrink={player['player_name']:uneRecette}
             drinksByPlayer.append(unDrink)
         
