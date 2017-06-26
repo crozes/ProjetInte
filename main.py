@@ -161,8 +161,8 @@ def getTemps():
     meteoPrevision = []
     
     for forcast in result :
-        timestamp = forcast['Meteo_Timestamp']
-        data = {"weather" : forcast['Meteo_Temps'], "dnf" : forcast['Meteo_Dnf']}
+        timestamp = forcast['meteo_timestamp']
+        data = {"weather" : forcast['meteo_temps'], "dnf" : forcast['meteo_dnf']}
         meteoPrevision.append(data)
     
     data = {"timestamp" : timestamp, "weather" : meteoPrevision}
