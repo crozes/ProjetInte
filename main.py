@@ -205,7 +205,7 @@ def postAddIngredient() :
 def postTemps() :
     #global time, weather, prevision_day
     print request.get_data() 
-    data = request.get_json() 
+    data = request.get_json(force=True) 
     if data == None :
         print request.get_data()
         return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
@@ -227,9 +227,6 @@ def postTemps() :
 @app.route('/newPlayer', methods=['POST'])
 def postNewPlayer() :
     data = request.get_json(force=True) 
-    print "test"
-    print data
-    print data['Player_name']
     if data == None :
         #print request.get_data()
         return '"None in postNewPlayer verifier le Header"',400,{'Content-Type' : 'application/json'}
