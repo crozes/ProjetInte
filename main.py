@@ -194,7 +194,7 @@ def getMap():
     for player in resultRank['player_name']:
         ranking.append(rank)
         
-        #-----------------------PLAYER_INFO-----------------------
+        #-----------------------PLAYERINFO-----------------------
         #infos joueur de base
         queryPlayerInfo = "SELECT * FROM player WHERE player_name=%s;" % (player)
         db = Db()
@@ -224,15 +224,13 @@ def getMap():
         
         playersInfo.append({rank:info});
         
-        #-----------------------ITEMS_BY_PLAYER-----------------------
+        #-----------------------ITEMSBYPLAYER-----------------------
         
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %s AND p.player_id = m.player_id;" % (resultPlayerInfo['player_id'])
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE ;" % (rank)
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
         
-        
-        #-----------------------DRINKS_BY_PLAYER-----------------------
         queryDrinksByPlayer = "SELECT * FROM player WHERE player_name=%s;" % (rank)
         db = Db()
         resultDrinksByPlayer= db.select(queryDrinksByPlayer)
@@ -240,8 +238,9 @@ def getMap():
         
         
         
-        for item in resultDrinksByPlayer:
+        for item in itemsPlayer:
             itemsByPlayers.append()
+        
     
     map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
     
