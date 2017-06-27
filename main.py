@@ -204,7 +204,7 @@ def getMap():
         
         drinks=[]
         for drink in resultPlayerKnownRecipes:
-            uneRecette={"name":drink['nom_recette'],"price":prixProduction(drink['nom_recette']),"hasAlcohol":drink['has_alcohol'],"isCold":recette['is_cold']}
+            uneRecette={"name":drink['nom_recette'],"price":prixProduction(drink['nom_recette']),"hasAlcohol":drink['has_alcohol'],"isCold":drink['is_cold']}
             drinks.append(uneRecette)
         drinksByPlayer[player['player_name']]=drinks
         
