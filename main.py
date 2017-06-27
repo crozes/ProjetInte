@@ -208,11 +208,13 @@ def getMap():
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
         
-        
+        mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            itemsByPlayers[player['player_name']]=unMapItem
+            mapitems_player.append(unMapItem)
+            
+        itemsByPlayers[player['player_name']]=mapitems_player
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
@@ -302,10 +304,12 @@ def getPlayerSMap(playerName):
         db.close()
         
         
+        mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            itemsByPlayers[player['player_name']]=unMapItem
+            mapitems_player.append(unMapItem)
+        itemsByPlayers[player['player_name']]=mapitems_player
         
         
         
