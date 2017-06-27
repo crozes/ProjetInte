@@ -342,22 +342,66 @@ def postSales():
         
 ## POST Actions playerName
 @app.route('/actions/<playerName>', methods=['POST'])
-def postActionPlayer() :
+def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
-    data = request.get_json() 
-    if data == None :
+    allData = request.get_json() 
+    if allData == None :
         print request.get_data()
         return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
     else :
-        #print data 
+        
+        data = allData['actions']
+        
+        for actions in data :
+            
+            if actions['kind'] == 'recipe' :
+                data=''
+                
+            elif actions['kind'] == 'ad' :
+                location = actions['location']
+                radius = actions['radius']
+                longitude = ''
+                latitude = ''
+                
+                for locate in location :
+                    longitude = locate['longitude']
+                    latitude = locate['latitude']
+                            
+                query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'"+str(playerName)+"\'"
+                            
+                db = Db()
+                result = db.select(query_select)
+                player_id = ""
+                
+                for id_player in result :
+                    player_id = id_player['player_id']
+                
+                query_insert = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(player_id)+")"
+                db.execute(query)
+                db.close()
+                
+                return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                 
+            elif actions['kind'] == 'drinks' :
+                string = ''
+                qte = ''
+                for prepare in actions['prepare'] :
+                    value_string = prepare
+                    
+                
+            else :
+                return '"Bad kind Action"',400,{'Content-Type' : 'application/json'} 
+                            
         #TODO
         query = ""
-        db = Db()
-        db.execute(query)
-        db.close()
+        #db = Db()
+        #db.execute(query)
+        #db.close()
         
         #return {"sufficientFunds" : boolean, "totalCost" : float}
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}
+
+        return json.dumps(''),200,{'Content-Type' : 'application/json'}        
+
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
