@@ -21,6 +21,30 @@ REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
 REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
          
 
+################################################################################
+### Fonction idCold
+def recetteIsCold(id_recette):
+    isCold = False
+    query ="SELECT i.Ingredient_isCold FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_id = "+str(id_recette)
+    db = Db()
+    result = db.select(query)
+    for res in result:
+        if res['isCold'] == True :
+            isCold == True
+    db.close()
+    return isCold
+
+### Fonction prixProduction
+def prixProduction(id_recette):
+    query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id =  c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_id = "+str(id_recette)+" GROUP BY (r.Recipe_id)"
+    db = Db()
+    result = db.select(query)
+    for res in result:
+        price = res['price']
+    db.close()
+    return price
+
+
 ######################~GET~###############################
 
 ## Reset BD
@@ -267,7 +291,7 @@ def postPlayer() :
                 for res in res_query :
                     recip = {"name" : res['name']  , "price" : 0, "hasAlcohol" : False, "isCold" : True}
                     recipe.append(recip)
-                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
                 #data = {"IsAccepted" : False}
                 
                 db.close()
