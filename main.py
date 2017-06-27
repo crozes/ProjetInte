@@ -328,13 +328,11 @@ def getPlayerTest():
 @app.route('/sales', methods=['POST'])
 def postSales():
     sales = request.get_json()
-    
+    print sales
     #on récupère les infos du json avant de demander une modification du stock
     sales = {"quantity":modifyStock(sales.player,sales.item,sales.quantity)}
     return json.dumps(sales),200,{'Content-Type' : 'application/json'}
 
-    
-    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
         
 ## POST Actions playerName
 @app.route('/actions/<playerName>', methods=['POST'])
