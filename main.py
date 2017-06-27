@@ -112,6 +112,9 @@ def getMap():
             drinksOffered.append(uneRecette)
         
         
+        if(overallSales==null):
+            overallSales=0.0;
+        
         info={"cash":player['player_cash'],"sales":overallSales,"profit":0,"drinksOffered":drinksOffered}
         
         playersInfo[player['player_name']]=info;
