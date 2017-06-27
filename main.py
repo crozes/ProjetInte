@@ -214,7 +214,7 @@ def getPlayerSMap(playerName):
     
 #-----------------------PLAYER_INFO-----------------------
     #infos joueur de base
-    queryPlayer = "SELECT * FROM player WHERE player_name LIKE %s;" % (playerName)
+    queryPlayer = "SELECT * FROM player WHERE player_name LIKE \'%s\';" % (playerName)
     db = Db()
     resultPlayer = db.select(queryPlayer)
     db.close()
@@ -245,7 +245,7 @@ def getPlayerSMap(playerName):
         drinksOffered=[]
         
         for recette in resultPlayerRecipes:
-            uneRecette={"name":recette['nom_recette'],"price":recette['prix_recette'],"hasAlcohol":recette['has_alcohol'],"isCold":recette['is_cold']}
+            uneRecette={"name":recette['nom_recette'],"price":prixProduction(recette['nom_recette']),"hasAlcohol":recette['has_alcohol'],"isCold":recette['is_cold']}
             drinksOffered.append(uneRecette)
         
         playerInfo={"cash":player_cash,"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
