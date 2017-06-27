@@ -72,15 +72,16 @@ def getAviableIngredients():
     
     
 ### Fonction getSales
-def getSales(name_player):
-    sales = ''
+def getSales():
+    sales = []
     query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
     db = Db()
     result = db.select(query)
     for res in result:
-        sales = res['sales']
+        uneSale={"player":,}
+        sales.append(uneSale)
     db.close()
-    return price    
+    return sales
 
 
 ######################~GET~###############################
@@ -118,7 +119,7 @@ def getTemps():
     
     for forcast in result :
         timestamp = forcast['weather_timestamp']
-        donnee = {"weather" : forcast['weather_temps'], "dnf" : forcast['weather_dnf']}
+        donnee = {"weather" : forcast['weather_temps'], "dfn" : forcast['weather_dfn']}
         meteoPrevision.append(donnee)
     
     data = {"timestamp" : timestamp, "weather" : meteoPrevision}
@@ -292,6 +293,15 @@ def getPlayerSMap(playerName):
         return json.dumps(playerSMap),200,{'Content-Type' : 'application/json'}
 
 
+## GET MAP
+@app.route("/sales")
+def getPlayersSales():
+    sales = {"sales":getSales()}
+    return json.dumps(sales),200,{'Content-Type' : 'application/json'}
+
+
+
+
 @app.route("/players")
 def getPlayerTest():
     data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
@@ -342,7 +352,7 @@ def postTemps() :
         cpt = 1
         
         for forcast in temps :
-            query = "INSERT INTO public.Weather (Weather_id, Weather_timestamp, Weather_temps, Weather_Dnf) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Weather_id) DO UPDATE SET Weather_temps = \'%s\', Weather_timestamp = %s, Weather_Dnf = %s" %(cpt,time,forcast['weather'],forcast['dnf'],forcast['weather'],time,forcast['dnf'])
+            query = "INSERT INTO public.Weather (Weather_id, Weather_timestamp, Weather_temps, Weather_dfn) VALUES (%s,%s,\'%s\',%s) ON CONFLICT (Weather_id) DO UPDATE SET Weather_temps = \'%s\', Weather_timestamp = %s, Weather_dfn = %s" %(cpt,time,forcast['weather'],forcast['dfn'],forcast['weather'],time,forcast['dfn'])
             db = Db()
             db.execute(query)
             db.close()
