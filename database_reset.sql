@@ -182,7 +182,7 @@ INSERT INTO public.Ingredient(
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
-	VALUES ('Rhum', 0.80, False, False);
+	VALUES ('Rhum', 0.80, True, False);
 
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
@@ -247,6 +247,10 @@ INSERT INTO public.MapItem(
 INSERT INTO public.Avoir(
 	Player_id, Recipe_id)
 	VALUES (1,1);
+	
+INSERT INTO public.Avoir(
+	Player_id, Recipe_id)
+	VALUES (1,2);	
 	
 INSERT INTO public.Vendre(
 	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
