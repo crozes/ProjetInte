@@ -154,6 +154,9 @@ def getPlayerSMap(playerName):
     resultPlayer = db.select(queryPlayer)
     db.close()
     
+    playerSIngredients={}
+    playerInfo={}
+    
     for player in resultPlayer:
         #ventes joueur player depuis le debut
         queryPlayerSales = "SELECT SUM(v.vendre_qte*v.vendre_prix) AS nbventesdepuisdebut FROM player AS p,vendre AS v WHERE p.player_id = %d AND v.player_id=p.player_id ;" % (player['player_id'])
@@ -184,8 +187,10 @@ def getPlayerSMap(playerName):
         
         playerInfo={"cash":player_cash,"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
     
-    map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
-    playerSMap={"map":map,"availableIngredients":,"playerInfo":}
+    
+    
+    map = {"region":REGION}
+    playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":}
     return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
     
 
