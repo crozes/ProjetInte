@@ -78,7 +78,7 @@ CREATE TABLE public.Weather(
 	Weather_id        BIGSERIAL  NOT NULL ,
 	Weather_timestamp INT   ,
 	Weather_temps     VARCHAR (255)  ,
-	Weather_dnf       INT   ,
+	Weather_dfn       INT   ,
 	CONSTRAINT prk_constraint_Weather PRIMARY KEY (Weather_id)
 )WITHOUT OIDS;
 
