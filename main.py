@@ -208,6 +208,7 @@ def getPlayerSMap(playerName):
     ranking=[]
     playerSIngredients={}
     playerInfo={}
+    itemsByPlayers={}
     
     for player in resultRank:
         ranking.append(player['player_name'])
