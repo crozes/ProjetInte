@@ -41,7 +41,7 @@ def recetteHasAlcohol(name_recette):
     db = Db()
     result = db.select(query)
     for res in result:
-        if res['hasAlcohol'] == True :
+        if res['ingredient_hasalcohol'] == True :
             hasAlcohol == True
     db.close()
     return hasAlcohol    
@@ -53,17 +53,18 @@ def prixProduction(name_recette):
     price = ''
     result = db.select(query)
     for res in result:
-        price = res['price']
+        price = res['ingredient_price']
     db.close()
     return price
     
 ### Fonction getSales
 def getSales(name_player):
+    sales = ''
     query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
     db = Db()
     result = db.select(query)
     for res in result:
-        price = res['price']
+        sales = res['sales']
     db.close()
     return price    
 
