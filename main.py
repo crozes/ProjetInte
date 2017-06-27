@@ -50,6 +50,7 @@ def recetteHasAlcohol(name_recette):
 def prixProduction(name_recette):
     query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id =  c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name = "+str(name_recette)+" GROUP BY (r.Recipe_id)"
     db = Db()
+    price = ''
     result = db.select(query)
     for res in result:
         price = res['price']
