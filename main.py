@@ -257,12 +257,17 @@ def postPlayer() :
         for player in result :
             #print player['player_name'] #Player_name
             if player['player_name'] == data['name'] :
-                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit,  FROM public.Player WHERE public.Player.Player_name LIKE "+ data['name']
-                
+                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit,  FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'"
                 res_query = db.select(query)
                 
+                data_final = ''
+                
+                recipe = []
+                
                 for res in res_query :
-                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : 0}]  }
+                    recip = {"name" : , "price" : 0, "hasAlcohol" : False, "isCold" : True}
+                    recipe.append(recip)
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['Player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
                 #data = {"IsAccepted" : False}
                 
                 db.close()
