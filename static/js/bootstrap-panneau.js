@@ -7,8 +7,7 @@ function addPanneau(num){
     nombrePanneau += 1;
     indexPanneau += 1;
     var prixPub = 50;
-    $('#list').append('<tr id="line_' + nombrePanneau + '"><td>Panneau ' + indexPanneau + '</td><td>longitude:<input id="x_' + nombrePanneau + '" value="10" class="input" type="text" name="lname"><BR>latitude:<input value="10" id="y_' + nombrePanneau + '" class="input" type="text" name="lname"></td><td><input id="surface_' + nombrePanneau + '" onkeypress="inputClick(' + nombrePanneau + ')" class="input" type="text" name="lname" value="1">m²</td><td id="tablePrixPub_' + nombrePanneau + '">50€</td><td><button type="button" id="clear_' + nombrePanneau + '" onclick="deletePanneau(' + nombrePanneau + ')" class=""><img id="logoDay1" src="SVG/trash.svg" alt="weather" height="50px" width="50px" /></button></td></tr>');
-    modifSolde();
+    $('#list').append('<tr id="line_' + nombrePanneau + '"><td>Panneau ' + indexPanneau + '</td><td>longitude:<input id="x_' + nombrePanneau + '" value="10" class="input" type="text" name="lname"><BR>latitude:<input value="10" id="y_' + nombrePanneau + '" class="input" type="text" name="lname"></td><td><input id="surface_' + nombrePanneau + '" onkeypress="inputClick(' + nombrePanneau + ')" class="input" type="text" name="lname" value="1">m²</td><td id="tablePrixPub_' + nombrePanneau + '">50€</td><td><button type="button" id="clear_' + nombrePanneau + '" onclick="deletePanneau(' + nombrePanneau + ')" class="btn"><img id="logoDay1" src="SVG/trash.svg" alt="weather" height="50px" width="50px" /></button></td></tr>');
     addPubToRecap(nombrePanneau);
 }
 
@@ -42,8 +41,19 @@ function inputClick(num){
 
 function deletePanneau(num){
     //On vide la ligne du panneau et le recap
-    $('#line_' + num).empty();
-    $('#pub_' + num).empty();
+    $('#line_' + num).remove();
+    $('#pub_' + num).remove();
+
+    //test si il existe une ligne validé
+    var valide = $('#ValideLine_' + num).val();
+    if(valide){
+        $('#ValideLine_' + num).empty();
+    }
+    
     indexPanneau -= 1;
     modifSolde();
+}
+
+function deleteValidPanneau(num){
+    $('#ValideLine_' + num).remove();
 }
