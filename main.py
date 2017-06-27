@@ -81,11 +81,11 @@ def modifyStock(playerName,recipeName,productQuantity):
             #on change la quantité en stock
             query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
             db = Db()
-            result = db.select(query)
+            result = db.execute(query)
             #on ajoute la quantité vendue
             query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_name'])
             db = Db()
-            result = db.select(query)
+            result = db.execute(query)
             db.close()
             #on calcule le profit
             query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d;" % (res['player_id'],res['recipe_id'])
@@ -97,7 +97,7 @@ def modifyStock(playerName,recipeName,productQuantity):
                 #on change le profit et le bénéfice
                 query ="UPDATE player SET player_profit = player_profit + %f;" % (resPrix['prix']*productQuantity)
                 db = Db()
-                result = db.select(query)
+                result = db.execute(query)
                 db.close()
                 
             return productQuantity
@@ -332,8 +332,8 @@ def postSales():
 
     #on récupère les infos du json avant de demander une modification du stock
     quantity=modifyStock(sales['player'],sales['item'],sales['quantity'])
-    sales = {"quantity":quantity}
-    return json.dumps(sales),200,{'Content-Type' : 'application/json'}
+    retour = {"quantity":quantity}
+    return json.dumps(retour),200,{'Content-Type' : 'application/json'}
 
         
 ## POST Actions playerName
@@ -353,7 +353,7 @@ def postActionPlayer() :
         db.close()
         
         #return {"sufficientFunds" : boolean, "totalCost" : float}
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}        
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
