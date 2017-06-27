@@ -74,8 +74,8 @@ def getMap():
     ranking=[]
     player=[]
     playersInfo= {}
-    itemsByPlayers=[]
-    drinksByPlayer=[]
+    itemsByPlayers={}
+    drinksByPlayer={}
     
     for player in resultRank:
         ranking.append(player['player_name'])
@@ -131,11 +131,11 @@ def getMap():
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
-        
+        drinks=[]
         for drink in resultPlayerRecipes:
             uneRecette={"name":drink['r.recipe_name'],"price":drink['r.recipe_sell_price'],"hasAlcohol":drink['i.ingredient_hasalcohol'],"isCold":recette['i.ingredient_iscold']}
-            unDrink={player['player_name']:uneRecette}
-            drinksByPlayer.append(unDrink)
+            drinks.append(uneRecette)
+        drinksByPlayer[player['player_name']]=drinks
         
     
     map = {"region":REGION,"ranking":ranking,"playerInfo":playersInfo,"itemsByPlayers":itemsByPlayers,"drinksByPlayer":drinksByPlayer}
