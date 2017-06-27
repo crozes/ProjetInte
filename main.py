@@ -249,7 +249,7 @@ def getPlayerSMap(playerName):
             uneRecette={"name":recette['nom_recette'],"price":prixProduction(recette['nom_recette']),"hasAlcohol":recette['has_alcohol'],"isCold":recette['is_cold']}
             drinksOffered.append(uneRecette)
         
-        playerInfo={"cash":player_cash,"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
+        playerInfo={"cash":player['player_cash'],"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
     
         queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id ;" % (player['player_id'])
         db = Db()
