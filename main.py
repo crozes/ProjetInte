@@ -77,7 +77,7 @@ def modifyStock(playerName,recipeName,productQuantity):
     db = Db()
     result = db.select(query)
     for res in result:
-        if(res['nb_stock_qte']>=productQuantity):
+        if(res['stock_qte']>=productQuantity):
             #on change la quantité en stock
             query ="UPDATE stocker SET stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
             db = Db()
