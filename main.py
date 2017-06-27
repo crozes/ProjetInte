@@ -64,10 +64,10 @@ def getAviableIngredients():
     db = Db()
     ingredients=[]
     result = db.select(query)
-    for res in result:
-    unIngredient={"name":res['ingredient_name'],"cost":res['ingredient_price'],"isCold":res['ingredient_iscold'],"hasAlcohol":res['ingredient_hasalcohol']}
-        ingredients.append(unIngredient)
     db.close()
+    for res in result:
+        unIngredient={"name":res['ingredient_name'],"cost":res['ingredient_price'],"isCold":res['ingredient_iscold'],"hasAlcohol":res['ingredient_hasalcohol']}
+        ingredients.append(unIngredient)
     return ingredients
     
     
