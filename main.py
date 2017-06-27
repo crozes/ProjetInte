@@ -95,7 +95,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             db.close()
             
             print resultProfit
-            if(resultProfit):
+            if(!resultProfit):
                 return 0
             
             #on change la quantité en stock
