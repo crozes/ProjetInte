@@ -73,7 +73,7 @@ def getAviableIngredients():
     
 ### Fonction Sales
 def modifyStock(playerName,recipeName,productQuantity):
-    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
+    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
     db = Db()
     result = db.select(query)
     for res in result:
