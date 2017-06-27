@@ -236,7 +236,7 @@ def postPlayer() :
         print random_longitude 
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_longitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.execute(query_addPlayer)
-        query_select = db.select('SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE '+ data['name'])
+        query_select = db.select("SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
         
         for res in query_select :
             query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES (\'stand\',"+res['player_latitude']+","+res['player_longitude']+",10,"+res['player_id']+")"
@@ -244,7 +244,7 @@ def postPlayer() :
             query = "INSERT INTO public.Avoir (Player_id, Recipe_id) VALUES ("+res['player_id']+",1)"
             db.execute(query)
         
-        query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE"+data['name']
+        query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE \'"+data['name']+"\'"
         
         query_select = db.select(query)
         
