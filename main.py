@@ -127,7 +127,7 @@ def getMap():
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            playersInfo[player['player_name']]=unMapItem}
+            playersInfo[player['player_name']]=unMapItem
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
