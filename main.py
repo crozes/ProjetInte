@@ -73,6 +73,15 @@ def getAviableIngredients():
     
 ### Fonction Sales
 def modifyStock(playerName,recipeName,productQuantity):
+    
+    day=0
+    #récupérer la date d'aujourd'hui
+    query ="SELECT w.weather_timestamp AS timestamp FROM weather w WHERE w.weather_dfn = 0;"
+    db = Db()
+    day = db.select(query)
+    for today in day:
+        day=int(today['timestamp'])/int(24)
+    
     query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
     db = Db()
     result = db.select(query)
@@ -88,7 +97,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             result = db.execute(query)
             db.close()
             #on calcule le profit
-            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d;" % (res['player_id'],res['recipe_id'])
+            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
             db = Db()
             result = db.select(query)
             db.close()
