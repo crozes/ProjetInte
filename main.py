@@ -79,11 +79,11 @@ def modifyStock(playerName,recipeName,productQuantity):
     for res in result:
         if(res['stock_qte']>=productQuantity):
             #on change la quantité en stock
-            query ="UPDATE stocker SET stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+            query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
             db = Db()
             result = db.select(query)
             #on ajoute la quantité vendue
-            query ="UPDATE vendre SET vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_name'])
+            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_name'])
             db = Db()
             result = db.select(query)
             db.close()
@@ -95,7 +95,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             
             for resPrix in result:
                 #on change le profit et le bénéfice
-                query ="UPDATE player SET player_profit + %f;" % (resPrix['prix']*productQuantity)
+                query ="UPDATE player SET player_profit = player_profit + %f;" % (resPrix['prix']*productQuantity)
                 db = Db()
                 result = db.select(query)
                 db.close()
