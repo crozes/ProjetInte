@@ -53,7 +53,7 @@ def prixProduction(name_recette):
     price = ''
     result = db.select(query)
     for res in result:
-        price = res['ingredient_price']
+        price = res['price']
     db.close()
     return price
     
