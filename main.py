@@ -230,9 +230,11 @@ def postNewPlayer() :
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
-        print data['name']
-        
-        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100,0,"+random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])+","+random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])+")"
+        random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
+        random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
+        print random_latitude
+        print random_longtitude
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100,0,"+random_latitude+","+random_longitude+")"
         db.execute(query_addPlayer)
         query_select = db.select('SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE '+ data['name'])
         
