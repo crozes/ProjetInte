@@ -58,7 +58,7 @@ def prixProduction(name_recette):
     return price
     
 ### Fonction getSales
-def prixProduction(name_player):
+def getSales(name_player):
     query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
     db = Db()
     result = db.select(query)
