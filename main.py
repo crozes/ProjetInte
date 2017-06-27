@@ -233,7 +233,7 @@ def postPlayer() :
         random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
         random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
         print random_latitude
-        print random_longitude
+        print random_longitude 
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.executerandom_longitude
         query_select = db.select('SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE '+ data['name'])
