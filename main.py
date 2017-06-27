@@ -23,9 +23,9 @@ REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
 
 ################################################################################
 ### Fonction idCold
-def recetteIsCold(id_recette):
+def recetteIsCold(name_recette):
     isCold = False
-    query ="SELECT i.Ingredient_isCold FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_id = "+str(id_recette)
+    query ="SELECT i.Ingredient_isCold FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_name = \'"+str(name_recette)+"\'"
     db = Db()
     result = db.select(query)
     for res in result:
@@ -33,16 +33,38 @@ def recetteIsCold(id_recette):
             isCold == True
     db.close()
     return isCold
+    
+### Fonction hasAlcohol
+def recetteHasAlcohol(name_recette):
+    hasAlcohol = False
+    query ="SELECT i.Ingredient_hasAlcohol FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_name = \'"+str(name_recette)+"\'"
+    db = Db()
+    result = db.select(query)
+    for res in result:
+        if res['hasAlcohol'] == True :
+            hasAlcohol == True
+    db.close()
+    return hasAlcohol    
 
 ### Fonction prixProduction
-def prixProduction(id_recette):
-    query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id =  c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_id = "+str(id_recette)+" GROUP BY (r.Recipe_id)"
+def prixProduction(name_recette):
+    query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id =  c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name = "+str(name_recette)+" GROUP BY (r.Recipe_id)"
     db = Db()
     result = db.select(query)
     for res in result:
         price = res['price']
     db.close()
     return price
+    
+### Fonction getSales
+def prixProduction(name_player):
+    query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
+    db = Db()
+    result = db.select(query)
+    for res in result:
+        price = res['price']
+    db.close()
+    return price    
 
 
 ######################~GET~###############################
@@ -283,17 +305,13 @@ def postPlayer() :
             if player['player_name'] == data['name'] :
                 query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit, Recipe_name  FROM public.Player p, public.Recipe r, public.Avoir a WHERE p.Player_id = a.Player_id AND a.Recipe_id = r.Recipe_id AND public.Player.Player_name LIKE \'"+ data['name']+"\'"
                 res_query = db.select(query)
-                
                 data_final = ''
-                
                 recipe = []
-                
                 for res in res_query :
-                    recip = {"name" : res['name']  , "price" : 0, "hasAlcohol" : False, "isCold" : True}
+                    recip = {"name" : res['recipe_name']  , "price" : str(prixProduction(res['recipe_name'])), "hasAlcohol" : recetteHasAlcohol(res['recipe_name']), "isCold" : recetteIsCold(res['recipe_name'])}
                     recipe.append(recip)
+                    sales = prixProduction(data['name'])
                     data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['Player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
-                #data = {"IsAccepted" : False}
-                
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
