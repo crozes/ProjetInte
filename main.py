@@ -71,17 +71,38 @@ def getAviableIngredients():
     return ingredients
     
     
-### Fonction getSales
-def getSales():
-    sales = []
-    query ="SELECT ;"
+### Fonction Sales
+def modifyStock(playerName,recipeName,productQuantity):
+    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
     db = Db()
     result = db.select(query)
     for res in result:
-        uneSale={"player":"player"}
-        sales.append(uneSale)
-    db.close()
-    return sales
+        if(res['nb_stock_qte']>=productQuantity):
+            #on change la quantité en stock
+            query ="UPDATE stocker SET stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+            db = Db()
+            result = db.select(query)
+            #on ajoute la quantité vendue
+            query ="UPDATE vendre SET vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_name'])
+            db = Db()
+            result = db.select(query)
+            db.close()
+            #on calcule le profit
+            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d;" % (res['player_id'],res['recipe_id'])
+            db = Db()
+            result = db.select(query)
+            db.close()
+            
+            for resPrix in result
+            #on change le profit et le bénéfice
+            query ="UPDATE player SET player_profit + %f;" % (resPrix['prix']*productQuantity)
+            db = Db()
+            result = db.select(query)
+            db.close()
+            
+            return productQuantity
+        else:
+            return 0
 
 
 ######################~GET~###############################
@@ -293,15 +314,6 @@ def getPlayerSMap(playerName):
         return json.dumps(playerSMap),200,{'Content-Type' : 'application/json'}
 
 
-## GET MAP
-@app.route("/sales")
-def getPlayersSales():
-    sales = {"sales":getSales()}
-    return json.dumps(sales),200,{'Content-Type' : 'application/json'}
-
-
-
-
 @app.route("/players")
 def getPlayerTest():
     data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
@@ -315,7 +327,13 @@ def getPlayerTest():
 ## POST Sales
 @app.route('/sales', methods=['POST'])
 def postSales():
-    #TODO
+    sales = request.get_json()
+    
+    #on récupère les infos du json avant de demander une modification du stock
+    sales = {"quantity":modifyStock(sales.player,sales.item,sales.quantity)}
+    return json.dumps(sales),200,{'Content-Type' : 'application/json'}
+
+    
     return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
         
 ## POST Actions playerName
