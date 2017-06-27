@@ -57,6 +57,20 @@ def prixProduction(name_recette):
     db.close()
     return price
     
+    
+### Fonction getIngredients
+def getAviableIngredients():
+    query ="SELECT * FROM ingredient "
+    db = Db()
+    ingredients=[]
+    result = db.select(query)
+    for res in result:
+    unIngredient={"name":res['ingredient_name'],"cost":res['ingredient_price'],"isCold":res['ingredient_iscold'],"hasAlcohol":res['ingredient_hasalcohol']}
+        ingredients.append(unIngredient)
+    db.close()
+    return ingredients
+    
+    
 ### Fonction getSales
 def getSales(name_player):
     query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
@@ -206,7 +220,7 @@ def getPlayerSMap(playerName):
     db.close()
     
     ranking=[]
-    playerSIngredients={}
+    playerSIngredients=getAviableIngredients()
     playerInfo={}
     itemsByPlayers={}
     
@@ -262,6 +276,7 @@ def getPlayerSMap(playerName):
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
             itemsByPlayers[player['player_name']]=unMapItem
+        
         
         
         map = {"region":REGION,"ranking":ranking,"itemsByPlayers":itemsByPlayers}
