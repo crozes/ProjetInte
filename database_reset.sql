@@ -238,7 +238,7 @@ INSERT INTO public.Composer(
 	
 INSERT INTO public.Player(
 	Player_name, Player_cash, Player_profit, Player_longitude, Player_latitude)
-	VALUES ('Toto',100,0,25,56);
+	VALUES ('Toto',150,0,25,56);
 	
 INSERT INTO public.MapItem(
 	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id)
