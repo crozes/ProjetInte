@@ -74,11 +74,11 @@ def getAviableIngredients():
 ### Fonction getSales
 def getSales():
     sales = []
-    query ="SELECT SUM (v.Vendre_qte) AS sales FROM public.Player p, public.Vendre v WHERE p.Player_id = v.Player_id AND p.Player_name LIKE \'"+str(name_player)+"\' GROUP BY p.Player_id"
+    query ="SELECT ;"
     db = Db()
     result = db.select(query)
     for res in result:
-        uneSale={"player":,}
+        uneSale={"player":"player"}
         sales.append(uneSale)
     db.close()
     return sales
