@@ -155,19 +155,18 @@ def getMap():
         resultPlayerSales = db.select(queryPlayerSales)
         db.close()
         
-        overallSales=0
+        overallSales=""
+        
         for sales in resultPlayerSales:
             overallSales=sales['nbventesdepuisdebut']
             if(overallSales==None):
-                overallSales=0.0
+                overallSales=0
         
-       #recettes du joueur player avec prix de vente
-        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_id, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
+       #recettes produites du joueur player avec prix de vente
+        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
-        
-        
         
         drinksOffered=[]
         
@@ -195,9 +194,17 @@ def getMap():
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
+        
+        #recettes connue du joueur player avec prix de prod
+        queryPlayerKnownRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette FROM avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id,a.recipe_id;"% (player['player_id'])
+        db = Db()
+        resultPlayerKnownRecipes = db.select(queryPlayerKnownRecipes)
+        db.close()
+        
+        
         drinks=[]
-        for drink in resultPlayerRecipes:
-            uneRecette={"name":drink['nom_recette'],"price":drink['prix_recette'],"hasAlcohol":drink['has_alcohol'],"isCold":recette['is_cold']}
+        for drink in resultPlayerKnownRecipes:
+            uneRecette={"name":drink['nom_recette'],"price":prixProduction(drink['nom_recette']),"hasAlcohol":drink['has_alcohol'],"isCold":recette['is_cold']}
             drinks.append(uneRecette)
         drinksByPlayer[player['player_name']]=drinks
         
