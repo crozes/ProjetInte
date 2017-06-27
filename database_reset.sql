@@ -112,10 +112,10 @@ CREATE TABLE public.Vendre(
 	Vendre_qte   INT   ,
 	Vendre_fail  INT   ,
 	Vendre_prix  FLOAT   ,
-	Vendre_date  INT   ,
+	Vendre_date  INT  NOT NULL ,
 	Player_id    INT  NOT NULL ,
 	Recipe_id    INT  NOT NULL ,
-	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id,Recipe_id)
+	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id, Recipe_id, Vendre_date)
 )WITHOUT OIDS;
 
 
@@ -246,4 +246,12 @@ INSERT INTO public.MapItem(
 
 INSERT INTO public.Avoir(
 	Player_id, Recipe_id)
-	VALUES (1,1);	
+	VALUES (1,1);
+	
+INSERT INTO public.Vendre(
+	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
+	VALUES ('sunny',23,4,8.0,154,1,1);
+	
+INSERT INTO public.Vendre(
+	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
+	VALUES ('rainny',27,4,12.0,178,1,1);		
