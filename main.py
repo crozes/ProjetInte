@@ -95,8 +95,6 @@ def modifyStock(playerName,recipeName,productQuantity):
             
             for resPrix in result:
                 #on change le profit et le bénéfice
-                print resPrix['prix']
-                print productQuantity
                 query ="UPDATE player SET player_profit = player_profit + %f WHERE player_id=%d;" % (resPrix['prix']*productQuantity,res['player_id'])
                 db = Db()
                 result = db.execute(query)
@@ -334,7 +332,6 @@ def getPlayerTest():
 @app.route('/sales', methods=['POST'])
 def postSales():
     sales = request.get_json()
-    print sales
 
     #on récupère les infos du json avant de demander une modification du stock
     quantity=modifyStock(sales['player'],sales['item'],sales['quantity'])
