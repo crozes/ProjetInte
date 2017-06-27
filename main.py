@@ -88,22 +88,27 @@ def modifyStock(playerName,recipeName,productQuantity):
     result = db.select(query)
     for res in result:
         if(res['stock_qte']>=productQuantity):
+             #on calcule le profit
+            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
+            db = Db()
+            resultProfit = db.select(query)
+            db.close()
+            
+            print resultProfit
+            if(resultProfit):
+                return 0
+            
             #on change la quantité en stock
             query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
             db = Db()
             result = db.execute(query)
             #on ajoute la quantité vendue
-            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d AND v.vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
             db = Db()
             result = db.execute(query)
             db.close()
-            #on calcule le profit
-            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
-            db = Db()
-            result = db.select(query)
-            db.close()
             
-            for resPrix in result:
+            for resPrix in resultProfit:
                 #on change le profit et le bénéfice
                 query ="UPDATE player SET player_profit = player_profit + %f WHERE player_id=%d;" % (resPrix['prix']*productQuantity,res['player_id'])
                 db = Db()
