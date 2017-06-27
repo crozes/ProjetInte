@@ -114,7 +114,7 @@ def getMap():
         
         info={"cash":player['player_cash'],"sales":overallSales,"profit":0,"drinksOffered":drinksOffered}
         
-        playersInfo.append({player['player_name']:info});
+        playersInfo[player['player_name']]=info;
         
         #-----------------------ITEMS_BY_PLAYER-----------------------
         
@@ -127,7 +127,7 @@ def getMap():
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
             unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            playersInfo[player['player_name']]=unMapItem
+            itemsByPlayers[player['player_name']]=unMapItem
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
