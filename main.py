@@ -266,7 +266,7 @@ def getPlayerSMap(playerName):
         
         map = {"region":REGION,"ranking":ranking,"itemsByPlayers":itemsByPlayers}
         playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":playerInfo}
-        return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
+        return json.dumps(playerSMap),200,{'Content-Type' : 'application/json'}
 
 
 @app.route("/players")
