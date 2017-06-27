@@ -83,7 +83,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             db = Db()
             result = db.execute(query)
             #on ajoute la quantité vendue
-            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_name'])
+            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
             db = Db()
             result = db.execute(query)
             db.close()
