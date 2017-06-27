@@ -248,9 +248,10 @@ def postPlayer() :
         
         query_select = db.select(query)
         
+        data_final = ''
+        
         for res in query_select :
             data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] }] }
-        
         
         db.close()
         
