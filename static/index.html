@@ -1,495 +1,628 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Projet 2017</title>
+		<!DOCTYPE html>
+		<html lang="en">
+		  <head>
+		    <meta charset="utf-8">
+		    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		    <meta name="viewport" content="width=device-width, initial-scale=1">
+		    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		    <title>Projet 2017</title>
 
-    <!-- Bootstrap -->
-    <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+		    <!-- Bootstrap -->
+		    <!-- Latest compiled and minified CSS -->
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
 
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script language="JavaScript" src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
-	<script language="JavaScript" src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" type="text/javascript"></script>
-	<script language="JavaScript" src="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script>
+			<!-- Latest compiled and minified JavaScript -->
+			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+			<script language="JavaScript" src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+			<script language="JavaScript" src="https://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js" type="text/javascript"></script>
+			<script language="JavaScript" src="https://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js" type="text/javascript"></script>
 
-	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+			<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-	<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css">
-	<script src="js/bootstrap-panneau.js"></script>
-	<script src="js/bootstrap-produit.js"></script>
-	
-	<link href="css/bootstrap-Meteo.css" rel="stylesheet">
-    <link href="css/weather-icons.css" rel="stylesheet">
-    <link href="css/bootstrap-Spinner.css" rel="stylesheet">
-    <link href="css/bootstrap-login.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+			<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css">
 
-  </head>
-  <body>
-  	<div id="backGris">
-  		<div class="container">
-    		<div class="row">
-        		<div class="col-md-offset-4 col-md-6">
-            		<div class="form-login">
-            			<h2>BIENVENUE</h2>
-            			<input type="text" id="pseudo" class="form-control input-sm chat-input" placeholder="Pseudo" />
-            			</br>
-            			
-            			<div class="wrapper">
-            				<span class="group-btn">     
-                				<button class="btn btn-primary btn-md" onclick="newPlayer()">Jouer <i class="fa fa-sign-in"></i></button>
-            				</span>
-            			</div>
-            		</div>
-        		</div>
-    		</div>
-		</div>
-  	</div>
+			<script src="js/bootstrap-panneau.js"></script>
+			<script src="js/bootstrap-produit.js"></script>
+			
+			<link href="css/bootstrap-Meteo.css" rel="stylesheet">
+		    <link href="css/weather-icons.css" rel="stylesheet">
+		    <link href="css/bootstrap-Spinner.css" rel="stylesheet">
+		    <link href="css/bootstrap-login.css" rel="stylesheet">
+		    <link href="style.css" rel="stylesheet">
 
-    <div id="webPage" class="col-sm-12 container">
-		<div class="row">
-			<div id="meteo" class="col-sm-3">
-				<div id="card" class="weater">
-					<div class="city-selected">
-						<article>
+		  </head>
+		  <body>
+		  	<div id="backGris">
+		  		<div class="container">
+		    		<div class="row">
+		        		<div class="col-md-offset-4 col-md-6">
+		            		<div class="form-login">
+		            			<h2>BIENVENUE</h2>
+		            			<input type="text" id="pseudo" class="form-control input-sm chat-input" placeholder="Pseudo" />
+		            			</br>
+		            			
+		            			<div class="wrapper">
+		            				<span class="group-btn">     
+		                				<button class="btn btn-primary btn-md" onclick="newPlayer()">Jouer <i class="fa fa-sign-in"></i></button>
+		            				</span>
+		            			</div>
+		            		</div>
+		        		</div>
+		    		</div>
+				</div>
+		  	</div>
 
-							<div class="info">
-								<div class="city"><span>Jour :</span> <font id="numJourCourrant">1</font> / <font id="moment"></font></div>
-								<div class="night" id="weather"></div>
-								<div class="temp" id="hour"></div>
+		    <div id="webPage" class="col-sm-12 container">
+				<div class="row">
+					<div id="meteo" class="col-sm-3">
+						<div id="card" class="weater">
+							<div class="city-selected">
+								<article>
 
-								<div class="wind">
-									
+									<div class="info">
+										<div class="city"><span>Jour :</span> <font id="numJourCourrant">1</font> / <font id="moment"></font></div>
+										<div class="night" id="weather"></div>
+										<div class="temp" id="hour"></div>
 
-									<span>ville: PERPIGNAN</span>
+										<div class="wind">
+											
+
+											<span>ville: PERPIGNAN</span>
+										</div>
+									</div>
+
+									<div class="icon">
+										<img 
+											id="logoDay1"
+		    								src="SVG/14.svg" 
+		    								alt="weather"
+		    								height="87px"
+		    								width="80px" 
+		    							/>
+									</div>
+
+								</article>
+								
+								<figure><img id="imageback" src="images/rainy.png" class="fontImage" /></figure>
+							</div>
+
+							<div class="days">
+								<div id="prevision" class="row row-no-gutter">
+									<div id="prev_1" class="col-md-4">
+									</div>
+									<div id="prev_2" class="col-md-4">
+									</div>
+									<div id="prev_3" class="col-md-4">
+									</div>
+									<div id="prev_4" class="col-md-4">
+									</div>
+									<div id="prev_5" class="col-md-4">
+									</div>
+									<div id="prev_6" class="col-md-4">
+									</div>
+									<div id="prev_7" class="col-md-4">
+									</div>
+									<div id="prev_8" class="col-md-4">
+									</div>
+									<div id="prev_9" class="col-md-4">
+									</div>
 								</div>
 							</div>
-
-							<div class="icon">
-								<img 
-									id="logoDay1"
-    								src="SVG/14.svg" 
-    								alt="weather"
-    								height="87px"
-    								width="80px" 
-    							/>
-							</div>
-
-						</article>
-						
-						<figure><img id="imageback" src="images/rainy.png" class="fontImage" /></figure>
-					</div>
-
-					<div class="days">
-						<div id="prevision" class="row row-no-gutter">
-
 						</div>
 					</div>
-				</div>
-			</div>
-			<div id="onglet" class="col-sm-7">
-				<div id="tabs">
-    				<div class="well">
-        				<ul class="nav nav-tabs">
-          					<li class="active"><a href="#Stats" data-toggle="tab">Statistiques</a></li>
-          					<li><a href="#Story" data-toggle="tab">Historique</a></li>
-          					<li><a href="#Map" data-toggle="tab" onclick="displayMap(20,20)">Carte</a></li>
-          					<li><a href="#Actions" data-toggle="tab">Actions</a></li>
-          					<li><a href="#Player" data-toggle="tab" >Joueur en partie</a></li>
-        				</ul>
+					<div id="onglet" class="col-sm-7">
+						<div id="tabs">
+		    				<div class="well">
+		        				<ul class="nav nav-tabs">
+		          					<li class="active"><a href="#Stats" data-toggle="tab">Statistiques</a></li>
+		          					<li><a href="#Story" data-toggle="tab">Historique</a></li>
+		          					<li><a href="#Map" data-toggle="tab">Carte</a></li>
+		          					<li><a href="#Actions" data-toggle="tab">Actions</a></li>
+		          					<li><a href="#Player" data-toggle="tab" >Joueur en partie</a></li>
+		        				</ul>
 
-        				<div id="myTabContent" class="tab-content">
-          					<div class="tab-pane active in" id="Stats">
-            					<fieldset>
-									<legend class="titre_tab">Toute les statistiques</legend>
-								</fieldset>
-          					</div>
-          					<div class="tab-pane fade" id="Story">
-        						<h2>Achats réalisés</h2>
-        						<div id="historiqueAchat" class="col-sm-12">
+		        				<div id="myTabContent" class="tab-content">
+		          					<div class="tab-pane active in" id="Stats">
+		            					<fieldset>
+											<legend class="titre_tab">Toute les statistiques</legend>
+										</fieldset>
+		          					</div>
+		          					<div class="tab-pane fade" id="Story">
 
-        						</div>
-        						<h2>Ventes réalisés</h2>
-        						<div id="historiqueVente" class="col-sm-12">
-        						</div>
-          					</div>
-          					<div class="tab-pane fade" id="Map">
-            					Carte du jeu :
-            					<div id="MapPlace">
+		        						<h2>Achats réalisés</h2>
+				        					<div id="historiqueAchat" class="col-sm-12">
+		        							</div>
 
-								</div>
-          					</div>
-          					<div class="tab-pane fade" id="Actions">
-            					<fieldset>
+		        						<h2>Ventes réalisés</h2>
+		        						<div id="historiqueVente" class="col-sm-12">
+		        						</div>
+		          					</div>
+		          					<div class="tab-pane fade" id="Map">
+		            					Carte du jeu :
+		            					<div id="MapPlace">
 
-            						<h2>Achat de panneaux publicitaire</h2>
-            						<div class="col-sm-12">
-										<button type="button" id="add" onclick="addPanneau()" class="btn btn-info col-sm-12">Ajouter un panneaux</button>
-             							<table class="col-sm-12 tablePub">
-             								<thead>
-             									<tr>
-             										<td class="listTitre">
-             											Panneaux
-             										</td>
-             										<td class="listTitre">
-             											Coordonnées
-             										</td>
-             										<td class="listTitre">
-             											Range
-             										</td>
-             										<td class="listTitre">
-             											Prix
-             										</td>
-             										<td class="listTitre">
-             											
-             										</td>
-             									</tr>
-             								</thead>
-             								<tbody id="list">
-             								</tbody>
-             							</table>
-									</div>
-									<h2>Achat de cocktails</h2>
-									<table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-    									<thead>
-											<tr>
-												<th>Cocktail</th>
-												<th>Prix</th>
-												<th>Alchool</th>
-												<th>Frais</th>
-												<th>Nombre à commander</th>
-											</tr>
-										</thead>
+										</div>
+		          					</div>
+		          					<div class="tab-pane fade" id="Actions">
+		            					<fieldset>
 
-										<tbody id="BuyMP">
-											
-										</tbody>
-									</table>
-									<section>
-										<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
-  									</section>		
-								</fieldset>
-          					</div>
-          					<div class="tab-pane fade" id="Player">
-           						Liste des joueur en partie avec vous :
-          					</div>
-        				</div>
-    				</div>
-				</div>
-			</div>
-			<div id="evenement" class="col-sm-2">
-				<h2>Récapitulatif</h2>
-				<p>
-					Pseudo :
-					<font id="recapPseudo"></font>
-				</p>
-				<p>
-					Jour :
-					<font id="recapJour"></font>
-				</p>
-				<p>
-					Meteo :
-					<font id="recapMeteo"></font>
-				</p>
-				<p>
-					Budget :
-					<font id="recapBudget"></font>
-				</p>
-				<p>
-					Ventes :
-					<font id="recapVentes"></font>
-				</p>
-				<p>
-					Profit :
-					<font id="recapProfit"></font>
-				</p>
-				<h3>Achats</h3>
-				<table  class="col-sm-12" id="recapTable">
-					<thead class="theadTable">
-						<tr class="col-sm-12">
-							<td class="listTitre">Produit</td>
-							<td class="listTitre">Prix</td>
-						</tr>
-					</thead>
-					<tbody class="col-sm-12 tbodyTable" id="recapAchat">
-					</tbody>
-				</table>
-				<font class="recapEnd">
-				SOLDE: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
-				</font>
-				
-            <section>
-				<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
-  			</section>	
-			</div>
-		</div>
-	</div>
+		            						<h2>Achat de panneaux publicitaire</h2>
+		            						<div class="col-sm-12">
+												<button type="button" id="add" onclick="addPanneau()" class="btn btn-info col-sm-12">Ajouter un panneaux</button>
+		             							<table class="col-sm-12 tablePub">
+		             								<thead>
+		             									<tr>
+		             										<td class="listTitre">
+		             											Panneaux
+		             										</td>
+		             										<td class="listTitre">
+		             											Coordonnées
+		             										</td>
+		             										<td class="listTitre">
+		             											Range
+		             										</td>
+		             										<td class="listTitre">
+		             											Prix
+		             										</td>
+		             										<td class="listTitre">
+		             											
+		             										</td>
+		             									</tr>
+		             								</thead>
+		             								<tbody id="list">
+		             								</tbody>
+		             							</table>
+											</div>
+											<h2>Achat de cocktails</h2>
+											<table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+		    									<thead>
+													<tr>
+														<th>Cocktail</th>
+														<th>Prix</th>
+														<th>Alchool</th>
+														<th>Frais</th>
+														<th>Prix de vente</th>
+														<th>Nombre à commander</th>
+													</tr>
+												</thead>
 
-
-	<script type="text/javascript">
-
-				var CurrentDay = 1;
-				var doOnce = false;
-
-				function newPlayer(){
-
-					var pseudoJoueur = $('#pseudo').val();
-					var dataToSend = {'name': pseudoJoueur};
-
-					alert(JSON.stringify(dataToSend));
-
-
-					//Post du nom de joueur sous la forme {'name': 'pseudo'}
-					$.ajax("http://ponderosaproject.herokuapp.com/players",{
-						type: 'POST',
-						contentType: 'application/json',
-						data: JSON.stringify(dataToSend),
-						success: function (response) {
-
-                			$('#backGris').hide();
-
-                			var myName = response.name;
-
-                			//Modification du pseudo dans l'interface
-							$('#recapPseudo').empty();
-							$('#recapPseudo').append(myName);
-
-							//Set la position du stand du joueur inscrit
-							
-							//set l'heure et le temps
-							getHourWeather();
-							var position = response.location;
-							//set la position du joueur
-							setPlayerPosition(position);
-
-							var info = response.info;
-                			//Affiche les info de la journée
-                			setPlayerInfo(response.info);
-        				}
-					});
-					setInterval(getHourWeather, 500);
-				}
-
-				function setPlayerPosition(data){
-
-					for(var index in data){
-						var posString = JSON.stringify(data[index]);
-						var posParse = JSON.parse(posString);
+												<tbody id="BuyMP">
+													
+												</tbody>
+											</table>
+											<section>
+												<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
+		  									</section>		
+										</fieldset>
+		          					</div>
+		          					<div class="tab-pane fade" id="Player">
+		           						Liste des joueur en partie avec vous :
+		          					</div>
+		        				</div>
+		    				</div>
+						</div>
+					</div>
+					<div id="evenement" class="col-sm-2">
+						<h2>Récapitulatif</h2>
+						<p>
+							Pseudo :
+							<font id="recapPseudo"></font>
+						</p>
+						<p>
+							Jour :
+							<font id="recapJour"></font>
+						</p>
+						<p>
+							Meteo :
+							<font id="recapMeteo"></font>
+						</p>
+						<p>
+							Budget :
+							<font id="recapBudget"></font>
+						</p>
+						<p>
+							Ventes :
+							<font id="recapVentes"></font>
+						</p>
+						<p>
+							Profit :
+							<font id="recapProfit"></font>
+						</p>
+						<h3>Achats</h3>
+						<table  class="col-sm-12" id="recapTable">
+							<thead class="theadTable">
+								<tr class="col-sm-12">
+									<td class="listTitre">Produit</td>
+									<td class="listTitre">Prix</td>
+								</tr>
+							</thead>
+							<tbody class="col-sm-12 tbodyTable" id="recapAchat">
+							</tbody>
+						</table>
+						<font class="recapEnd">
+						SOLDE: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
+						</font>
 						
-						var latitude = posParse.latitude;
-						var longitude = posParse.longitude;
-						$('#MapPlace').append('latitude : ' + latitude + 'longitude' + longitude);
-					}
-				}
+		            <section>
+						<button class="js-trigger-overlay" type="button" onclick="passerCommande()">Passer commande</button>
+		  			</section>	
+					</div>
+				</div>
+			</div>
 
-				function setPlayerInfo(data){
 
-					for(var index in data){
-						var infoString = JSON.stringify(data[index]);
-						var infoParse = JSON.parse(infoString);
+			<script type="text/javascript">
 
-						//Toutes mles donnée récupéré
-						var argent = infoParse.cash;
-						var ventes = infoParse.sales;
-						var profit = infoParse.profit;
-						var produits = infoParse.drinksOffered;
-						alert(infoString);
+						var CurrentDay = 1;
+						var CurrentDayPeriod = "AM";
+						var doOnce = false;
+						var pseudoJoueur = "";
 
-						for(var index2 in produits){
-							var prodString = JSON.stringify(produits[index2]);
-							var prodParse = JSON.parse(prodString);
+						//var playerActionAd = {"kind": "ad", "location": [{"latitude": 0, "longitude": 0}], "radius": 0};
+						//var playerActionDrinks = {"kind": "drinks", "prepare" : {"" : 0}, "price": {"", 0}};
 
-							//set le tableau dans les actions 
-							var nom = prodParse.name;
-							var prix = prodParse.price;
-							var alchool = prodParse.hasAlcohol;
-							var cold = prodParse.isCold;
+						function newPlayer(){
 
-							$("#BuyMP").append('<tr list_' + index2 + '"><td id="nomProd_' + index2 + '" class="col-sm-6">' + nom + '</td><td>' + prix + '€</td><td>' + alchool + '</td><td>' + cold + '</td><td class="col-sm-4"><div><div class="input-group number-spinner spinner"><span class="input-group-btn"><button onclick="prodMoins(' + index2 +')" id="prodMoins_' + index2 + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + index2 + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + index2 +')" id="prodPlus_' + index2 + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+							pseudoJoueur = $('#pseudo').val();
+							var dataToSend = {'name': pseudoJoueur};
 
-							//Demarre la table 
-							$('#datatable').dataTable();
+							alert(JSON.stringify(dataToSend));
+
+							//Post du nom de joueur sous la forme {'name': 'pseudo'}
+							$.ajax("http://ponderosaproject.herokuapp.com/players",{
+								type: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify(dataToSend),
+								success: function (response) {
+
+		                			$('#backGris').hide();
+
+		                			var myName = response.name;
+
+		                			//Modification du pseudo dans l'interface
+									$('#recapPseudo').empty();
+									$('#recapPseudo').append(myName);
+
+									//set la position du joueur
+									var position = response.location;
+									setPlayerPosition(position);
+
+									var info = response.info;
+		                			//Affiche les info de la journée
+		                			setPlayerInfo(response.info);
+		        				}
+							});
+							setInterval(getHourWeather, 2000);
+						}
+
+						function setPlayerPosition(data){
+
+							var posString = JSON.stringify(data);
+							var posParse = JSON.parse(posString);
+
+							var latitude = posParse.latitude;
+							var longitude = posParse.longitude;
+							$('#MapPlace').append(' latitude : ' + latitude + ' longitude' + longitude);
+						}
+
+						function setPlayerInfo(data){
+
+							for(var index in data){
+								var infoString = JSON.stringify(data[index]);
+								var infoParse = JSON.parse(infoString);
+
+								//Toutes mles donnée récupéré
+								var argent = infoParse.cash;
+								var ventes = infoParse.sales;
+								var profit = infoParse.profit;
+								var produits = infoParse.drinksOffered;
+								alert(infoString);
+
+								for(var index2 in produits){
+									var prodString = JSON.stringify(produits[index2]);
+									var prodParse = JSON.parse(prodString);
+
+									//set le tableau dans les actions 
+									var nom = prodParse.name;
+									var prix = prodParse.price;
+									var alchool = prodParse.hasAlcohol;
+									var cold = prodParse.isCold;
+
+									$("#BuyMP").append('<tr list_' + index2 + '"><td id="nomProd_' + index2 + '" class="col-sm-6">' + nom + '</td><td>' + prix + '€</td><td>' + alchool + '</td><td>' + cold + '</td><td><input id="prixVente_' + index2 + '" value="5" class="input" type="text" name="lname"></td><td class="col-sm-4"><div><div class="input-group number-spinner spinner"><span class="input-group-btn"><button onclick="prodMoins(' + index2 +')" id="prodMoins_' + index2 + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + index2 + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + index2 +')" id="prodPlus_' + index2 + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+
+									//Demarre la table 
+									$('#datatable').dataTable();
+								}
+								
+
+								//Modificartion dans le recap
+								$('#recapBudget').empty();
+								$('#recapBudget').append(argent);
+								$('#recapVentes').empty();
+								$('#recapVentes').append(ventes);
+								$('#recapProfit').empty();
+								$('#recapProfit').append(profit);
+							}
+							
+						}
+
+						function getHourWeather(){
+							$.ajax('http://ponderosaproject.herokuapp.com/metrology').done(function(data){
+
+								/*************RECUPERATION DES DONNEES ET STOCKAGE ***********/
+								var madata = JSON.stringify(data);
+								var maDataGet = JSON.parse(madata);
+
+								var hour = maDataGet.timestamp;
+								var temps = maDataGet.weather;
+								/*************************************************************/
+
+								//Appel de la fonction qui calcule le jour.
+								dayCalculation(hour);
+
+								var dayPeriod = CurrentDayPeriod;
+								var dayPrev = CurrentDay;
+
+								//Méteo d'aujourd'jui et prévisionnel
+								for(var index in temps){
+
+									var value = JSON.stringify(temps[index]);
+									var valueParse = JSON.parse(value);
+									var indexMeteo = valueParse.dfn;
+									var meteoTemps = valueParse.weather;
+
+									//Test si l'index est a 0 puisque c'est la méteo d'aujourd'hui qui ne change pas
+									if(indexMeteo == 0){
+										$('#weather').empty();
+										$('#weather').append(meteoTemps);
+										$('#recapMeteo').empty();
+										$('#recapMeteo').append(meteoTemps);
+
+										switch(meteoTemps){
+										case 'cloudy':
+										 	document.getElementById("logoDay1").src= "SVG/14.svg";
+											document.getElementById("imageback").src = "images/cloudy.png";
+											break;
+										case 'rainny':
+											document.getElementById("logoDay1").src= "SVG/18.svg";
+											document.getElementById("imageback").src = "images/rainy.png";
+											break;
+										case 'sunny':
+											document.getElementById("logoDay1").src= "SVG/8.svg";
+											document.getElementById("imageback").src = "images/sunny.png";
+											break;
+										case 'heatwave':
+											document.getElementById("logoDay1").src= "SVG/2.svg";
+											document.getElementById("imageback").src = "images/heatwave.png";
+											break;
+										case 'thunderstorm':
+											document.getElementById("logoDay1").src= "SVG/16.svg";
+											document.getElementById("imageback").src = "images/thunderstorm.png";
+											break;
+										default:
+											break;
+										}
+									}
+									else{
+
+										/*if(indexMeteo > 1 && dayPeriod == "PM"){
+											indexMeteo -= 1;
+										}*/
+
+										$('#prev_' + indexMeteo).empty();
+										$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrev + '</h1><h1>' + dayPeriod + '</h1><img id="imageMeteo_' + index + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+										//Permet de changer alternativement la periode des prévisions.
+										if(dayPeriod == "AM"){
+											dayPeriod = "PM";
+										}
+										else if(dayPeriod == "PM"){
+											dayPeriod = "AM";
+											dayPrev += 1;
+										}
+
+										switch(meteoTemps){
+										case 'cloudy':
+										 	document.getElementById("imageMeteo_" + index).src= "SVG/14_2.svg";
+											break;
+										case 'rainny':
+										 	document.getElementById("imageMeteo_" + index).src= "SVG/18_2.svg";
+											break;
+										case 'sunny':
+										 	document.getElementById("imageMeteo_" + index).src= "SVG/8_2.svg";
+											break;
+										case 'heatwave':
+										 	document.getElementById("imageMeteo_" + index).src= "SVG/2_2.svg";
+											break;
+										case 'thunderstorm':
+										 	document.getElementById("imageMeteo_" + index).src= "SVG/16_2.svg";
+											break;
+										default:
+											break;
+										}
+									}
+
+								}
+							});
+							
+						}
+
+						function dayCalculation(hour){
+
+							//On recup le nombre de jour et on fait le modulo pour connaitre l'heure qui nous reste
+							var nombreJour = hour / 24;
+							var resModulo = hour % 24;
+
+							if(nombreJour >= 1){
+								CurrentDay = parseInt(nombreJour);
+							}
+
+							//Changement de jour sur l'affichage 
+							$('#numJourCourrant').empty();
+							$('#numJourCourrant').append(CurrentDay);
+
+							$('#recapJour').empty();
+							$('#recapJour').append(CurrentDay);
+
+							//Changement d'heure sur l'affichage
+							$('#hour').empty();
+							$('#hour').append(resModulo + ': 00');
+
+							//On change am ou pm selon l'heure
+							if(resModulo > 12){
+								CurrentDayPeriod = "PM";
+								$('#moment').empty();
+								$('#moment').append(CurrentDayPeriod);
+
+							}
+							else{
+								CurrentDayPeriod = "AM";
+								$('#moment').empty();
+								$('#moment').append(CurrentDayPeriod);
+							}
 						}
 						
+						function passerCommande(){
 
-						//Modificartion dans le recap
-						$('#recapBudget').empty();
-						$('#recapBudget').append(argent);
-						$('#recapVentes').empty();
-						$('#recapVentes').append(ventes);
-						$('#recapProfit').empty();
-						$('#recapProfit').append(profit);
-					}
+							//recuêre le resultat des achats
+							var resultat = $('#resultat').text();
+							var resultatParse = parseInt(resultat);
+
+							//Teste si le resultat des achats et positif sinon on ne peut pas acheter
+							if(resultatParse < 0){
+								alert('Pas asser de font pour acheter vos produits. Retirez des achats pour que cela rentre dans votre budget total.');
+							}
+							else{
+
+								/* ********************************************************************************************************
+								*On fais une bande dans l'historique pour stocker les données de commande pour pouvoir y acceder plus tard
+								*/
+
+								var pubString = '';
+								var prodString;
+
+								//Si cette valeur existe alors on a deja fais une commande ce jour ci donc il faut supr
+								if($('#table_' + CurrentDay).length != 0){
+									//On vide la table pour la re remplir
+									$('#table_' + CurrentDay).remove();
+								}
+
+
+								//On crée le tableau hitorique du jour
+								$('#historiqueAchat').append('<div id="table_' + CurrentDay + '" class="col-sm-6"><div class="well"><h4 class="text-warning">Jour <font id="historiqueJour_' + CurrentDay + '">' + CurrentDay +'</font></h4><p><span class="label label-success">PUB</span></p><table><thead><tr><td>Numéro de pub</td><td>Latitude</td><td>longitude</td><td>Taille</td></tr></thead><tbody id="achatPub_' + CurrentDay + '"></tbody></table><p><span class="label label-success">PRODUITS</span></p><table><thead><tr><td>Nom produit</td><td>Latitude</td><td>longitude</td><td>Taille</td></tr></thead><tbody id="achatPub_' + CurrentDay + '"></tbody></table></div></div>');
+
+								
+								//On fait une boucle pour récupere toutes les pub et tous les produits
+								for(var i = 0 ; i < 30 ; i++){
+
+									
+									//Teste si la ligne du panneau à cet index existe
+									if($('#line_' + i).length != 0){
+
+										//On récupere toutes les info de la ligne du panneau
+										var longitude = $('#x_' + i).val();
+										var latitude = $('#y_' + i).val();
+										var surface = $('#surface_' + i).val();
+										var prixPub = $('#tablePrixPub_' + i).text();
+										var prixPubParse = parseInt(prixPub);
+
+										$('#achatPub_' + CurrentDay).append('<tr><td id="achatPubNum_' + i +'">' + i + '</td><td id="achatPubLat_' + i + '">' + latitude+ '</td><td id="achatPubLong_' + i + '">' + longitude + '</td><td id="achatPubSurf_' + i + '">' + surface + '</td></tr>');
+									}
+
+									//Deuxieme test si il y en a des panneaux validés 2
+									if($('#ValideLine_' + i).length != 0){
+
+										//On récupere toutes les info de la ligne du panneau
+										var ValLongitude = $('#ValPubLong_' + i).text();
+										var ValLatitude = $('#ValPubLat_' + i).text();
+										var ValSurface = $('#ValPubSurf_' + i).text();
+
+										$('#achatPub_' + CurrentDay).append('<tr><td id="achatPubNum_' + i +'">' + i + '</td><td id="achatPubLat_' + i + '">' + ValLatitude + '</td><td id="achatPubLong_' + i + '">' + ValLongitude + '</td><td id="achatPubSurf_' + i + '">' + ValSurface + '</td></tr>');
+									}
+
+									//Test si on a commandé un produit
+									if($('#inputProd_' + i).val() != 0){
+										var nomProd = $('#nomProd_' + i).text();
+										var prixDeVente = $('#prixVente_' + i).text();
+										var nombreProd = $('#inputProd_' + i).val();
+									}
+										
+								}
+				
+
+								/* ********************************************************************************************************/
+
+								//si il y a une commande de plus de 30 
+								for(var i = 0 ; i < 30 ; i++){
+
+									//Teste si la ligne du panneau à cet index existe
+									var x = $('#x_' + i).val();
+									if(x){
+										//On récupere toutes les info de la ligne du panneau
+										var y = $('#y_' + i).val();
+										var surface = $('#surface_' + i).val();
+										var prixPub = $('#tablePrixPub_' + i).text();
+										var prixPubParse = parseInt(prixPub);
+										$('#list').append('<tr id="ValideLine_' + i + '"><td>Panneau <font id="ValPubNum_' + i +'">' + i + '</font></td><td>longitude:<font id="ValPubLong_' + i +'">' + x + '</font><BR>latitude:<font id="ValPubLat_' + i +'">' + y + '</font></td><td><font id="ValPubSurf_' + i +'">' + surface + '</font>m²</td><td>' + prixPub + '</td><td><button type="button" id="clear_' + i + '" onclick="deleteValidPanneau(' + i + ')" class="btn"><img id="logoDay1" src="SVG/trash.svg" alt="weather" height="50px" width="50px" /></button></td></tr>');
+
+										//On supprime le panneaux qui a été renseigné 
+										deletePanneau(i);
+									}
+
+
+
+									//On enleve les pub et prod du récapitulatif
+									$('#line_' + i).remove();
+									$('#pub_' + i).remove();
+									$('#prod_' + i).remove();
+									$('#inputProd_' + i).val(0);
+								}
+
+
+								//Pour pourvoir faire la fonction getActions()
+								doOnce = false;
 					
-				}
+								//remet a jour le recapituatif d'achat
+								modifSolde();
 
-				function getHourWeather(){
-					$.ajax('http://ponderosaproject.herokuapp.com/metrology').done(function(data){
-						var madata = JSON.stringify(data);
-						var maDataGet = JSON.parse(madata);
+							}
 
-						var hour = maDataGet.timestamp;
-						var temps = maDataGet.weather;
-						$('#prevision').empty();
+						}
 
-						//Méteo d'aujourd'jui et prévisionnel
-						for(var index in temps){
-							var value = JSON.stringify(temps[index]);
-							var valueParse = JSON.parse(value);
-							var indexMeteo = valueParse.dnf;
-							var meteoTemps = valueParse.weather;
+						function envoiAction(){
 
-							if(indexMeteo == 0){
-								$('#weather').empty();
-								$('#weather').append(meteoTemps);
-								$('#recapMeteo').empty();
-								$('#recapMeteo').append(meteoTemps);
+							/*var dataToSend = '{"actions" : [';
+							var AllPub;
+							var AllProd;
 
-								switch(meteoTemps){
-								case 'cloudy':
-								 	document.getElementById("logoDay1").src= "SVG/14.svg";
-									document.getElementById("imageback").src = "images/cloudy.png";
-									break;
-								case 'rainny':
-									document.getElementById("logoDay1").src= "SVG/18.svg";
-									document.getElementById("imageback").src = "images/rainy.png";
-									break;
-								case 'sunny':
-									document.getElementById("logoDay1").src= "SVG/8.svg";
-									document.getElementById("imageback").src = "images/sunny.png";
-									break;
-								case 'heatwave':
-									document.getElementById("logoDay1").src= "SVG/2.svg";
-									document.getElementById("imageback").src = "images/heatwave.png";
-									break;
-								case 'thunderstorm':
-									document.getElementById("logoDay1").src= "SVG/16.svg";
-									document.getElementById("imageback").src = "images/thunderstorm.png";
-									break;
-								default:
-									break;
+
+							for(var i = 0; i < 50 ; i++){
+
+								//test si il existe une pub a cet index
+								var x = $('#ValLong_' + i).val();
+								if(x){
+									var y = $('#ValLat_' + i).val();
+									var surface = $('#ValSurf_' + i).val();
+									playerActionAd = '[{"kind": "ad", "location": [{"latitude": ' + y + ', "longitude": ' + x + '}], "radius": ' + surface + '}],';
+									playerActionDrinks = '[{"kind": "drinks", "prepare" : {"" : 0}, "price": {"", 0}}]}';
+									AllPub += playerActionAd;
+									AllProd += playerActionDrinks;
+									alert(dataToSend);
 								}
 							}
 
-							$('#prevision').append('<div class="col-md-4"><div class="day"><h1>JOUR ' + index + '</h1><h1>AM</h1><img id="imageMeteo_' + index + '" src="" alt="prev1"height="87px"width="80px"/></div></div>');
+							dataToSend += AllPub + '] [' + AllProd + ']}'
+
 							
 
-							switch(meteoTemps){
-							case 'cloudy':
-								 document.getElementById("imageMeteo_" + index).src= "SVG/14_2.svg";
-								break;
-							case 'rainny':
-								 document.getElementById("imageMeteo_" + index).src= "SVG/18_2.svg";
-								break;
-							case 'sunny':
-								 document.getElementById("imageMeteo_" + index).src= "SVG/8_2.svg";
-								break;
-							case 'heatwave':
-								 document.getElementById("imageMeteo_" + index).src= "SVG/2_2.svg";
-								break;
-							case 'thunderstorm':
-								 document.getElementById("imageMeteo_" + index).src= "SVG/16_2.svg";
-								break;
-							default:
-								break;
-							}
-
+							$.ajax("http://ponderosaproject.herokuapp.com/actions/" + pseudoJoueur,{
+								type: 'POST',
+								contentType: 'application/json',
+								data: JSON.stringify(dataToSend)
+							});*/
 						}
 
-						$('#hour').empty();
-						$('#hour').append(hour + ':00');
-
-
-						//On recup le nombre de jour et on fait le modulo pour connaitre l'heure qui nous reste
-						var nombreJour = hour / 24;
-						var resModulo = hour % 24;
-
-						if(nombreJour >= 1){
-							CurrentDay = parseInt(nombreJour);
-						}
-
-						//Changement de jour sur l'affichage 
-						$('#numJourCourrant').empty();
-						$('#numJourCourrant').append(CurrentDay);
-
-						$('#recapJour').empty();
-						$('#recapJour').append(CurrentDay);
-
-						//changement d'heure
-						$('#hour').empty();
-						$('#hour').append(resModulo + ':00');
-
-						//On change am ou pm selon l'heure
-						if(resModulo > 12){
-							$('#moment').empty();
-							$('#moment').append('PM');
-						}
-						else{
-							$('#moment').empty();
-							$('#moment').append('AM');
-						}
-						
-
-					});
-					
-				}
-				
-				function passerCommande(){
-
-					//recuêre le resultat des achats
-					var resultat = $('#resultat').text();
-					var resultatParse = parseInt(resultat);
-
-					//Teste si le resultat des achats et positif sinon on ne peut pas acheter
-					if(resultatParse < 0){
-						alert('Pas asser de font pour acheter vos produits. Retirez des achats pour que cela rentre dans votre budget total.');
-					}
-					else{
-
-						$('#recapBudget').empty();
-						$('#recapBudget').append('' + resultatParse);
-
-						//si il y a une commande de plus de 30 
-						for(var i = 0 ; i < 30 ; i++){
-
-							//Teste si la ligne du panneau à cet index existe
-							var x = $('#x_' + i).val();
-							if(x){
-								//On récupere toutes les info de la ligne du panneau
-								var y = $('#y_' + i).val();
-								var surface = $('#surface_' + i).val();
-								var prixPub = $('#tablePrixPub_' + i).text();
-								var prixPubParse = parseInt(prixPub);
-								$('#list').append('<tr id="ValideLine_' + i + '"><td>Panneau ' + i + '</td><td>longitude:' + x + '<BR>latitude:' + y + '</td><td>' + surface + 'm²</td><td>' + prixPub + '</td><td><button type="button" class="btn btn-info btn-circle"><i class="glyphicon glyphicon-ok"></i></button></td></tr>');
-
-								//On supprime le panneaux qui a été renseigné 
-								deletePanneau(i);
-							}
-
-							//On enleve les pub et prod du récapitulatif
-							$('#pub_' + i).remove();
-							$('#prod_' + i).remove();
-							$('#inputProd_' + i).val(0);
-						}
-
-						//On récupere le prix calculé et on le réinitialise
-						//alert(resultParse + '' + achat);
-
-						//Pour pourvoir faire la fonction getActions()
-						doOnce = false;
-			
-						//remet a jour le recapituatif d'achat
-						modifSolde();
-					}
-
-				}
-
-	</script>
-  </body>
-</html>
+			</script>
+		  </body>
+		</html>

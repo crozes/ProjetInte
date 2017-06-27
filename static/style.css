@@ -185,3 +185,7 @@ td{
 .spinner{
   width: 200px;
 }
+
+.text-warning{
+  text-align: center;
+}
