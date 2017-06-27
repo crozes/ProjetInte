@@ -73,7 +73,7 @@ def getMap():
     db.close()
     ranking=[]
     player=[]
-    playersInfo= []
+    playersInfo= {}
     itemsByPlayers=[]
     drinksByPlayer=[]
     
@@ -105,7 +105,7 @@ def getMap():
         
         
         
-        drinksOffered={}
+        drinksOffered=[]
         
         for recette in resultPlayerRecipes:
             uneRecette={"name":recette['nom_recette'],"price":recette['prix_recette'],"hasAlcohol":recette['has_alcohol'],"isCold":recette['is_cold']}
