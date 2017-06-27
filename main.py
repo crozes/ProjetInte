@@ -198,10 +198,8 @@ def getMap():
 ## GET PLAYER'S MAP
 @app.route("/map/<string:playerName>", methods=['GET'])
 def getPlayerSMap(playerName):
-
-
-
-queryRank = "SELECT * FROM player ORDER BY player_cash;"
+    
+    queryRank = "SELECT * FROM player ORDER BY player_cash;"
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
@@ -212,8 +210,8 @@ queryRank = "SELECT * FROM player ORDER BY player_cash;"
     
     for player in resultRank:
         ranking.append(player['player_name'])
-
-
+    
+    
 #-----------------------PLAYER_INFO-----------------------
     #infos joueur de base
     queryPlayer = "SELECT * FROM player WHERE player_name LIKE %s;" % (playerName)
@@ -275,8 +273,8 @@ def getPlayerTest():
     return json.dumps(data),200,{'Content-Type' : 'application/json'}
     
 ######################~/GET~###############################
-
-
+    
+    
 ######################~POST~###############################  
         
 ## POST Sales
