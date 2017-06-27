@@ -190,7 +190,7 @@ def getPlayerSMap(playerName):
     
     
     map = {"region":REGION}
-    playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":}
+    playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":playerInfo}
     return json.dumps(PlayerSMap),200,{'Content-Type' : 'application/json'}
     
 
