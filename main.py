@@ -307,12 +307,25 @@ def getPlayerTest():
 def postSales():
     #TODO
     return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
-    
-## POST Action
+        
+## POST Actions playerName
 @app.route('/actions/<playerName>', methods=['POST'])
-def postAction():
-    #TODO
-    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
+def postActionPlayer() :
+    # {'action' : [], 'simulated' : true} 
+    data = request.get_json() 
+    if data == None :
+        print request.get_data()
+        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
+    else :
+        #print data 
+        #TODO
+        query = ""
+        db = Db()
+        db.execute(query)
+        db.close()
+        
+        #return {"sufficientFunds" : boolean, "totalCost" : float}
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}        
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
@@ -408,7 +421,8 @@ def postAddIngredient() :
         db = Db()
         db.execute(query)
         db.close()
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}                             
+        return json.dumps(query),201,{'Content-Type' : 'application/json'}
+        
 
 ######################~/POST~###############################  
 
