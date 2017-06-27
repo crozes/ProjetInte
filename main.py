@@ -204,7 +204,7 @@ def postTemps() :
         
 ## POST Player
 @app.route('/players', methods=['POST'])
-def postNewPlayer() :
+def postPlayer() :
     data = request.get_json(force=True) 
     if data == None :
         #print request.get_data()
@@ -234,7 +234,7 @@ def postNewPlayer() :
         random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
         print random_latitude
         print random_longitude
-        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100,0,"+random_latitude+","+random_longitude+")"
+        query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+random_latitude+","+random_longitude+")"
         db.executerandom_longitude
         query_select = db.select('SELECT Player_id, Player_latitude FROM public.Player WHERE public.Player.Player_name LIKE '+ data['name'])
         
