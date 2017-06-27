@@ -220,7 +220,8 @@ def postNewPlayer() :
         for player in result :
             #print player['player_name'] #Player_name
             if player['player_name'] == data['name'] :
-                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit FROM public.Player WHERE public.Player.Player_name LIKE "+ data['name']
+                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit,  FROM public.Player WHERE public.Player.Player_name LIKE "+ data['name']
+                
                 res_query = db.select(query)
                 
                 for res in res_query :
@@ -230,6 +231,7 @@ def postNewPlayer() :
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
+        print data['name']
         
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_logitude) VALUES (\'"+data['name']+"\',100,0,"+random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])+","+random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])+")"
         db.execute(query_addPlayer)
@@ -238,15 +240,8 @@ def postNewPlayer() :
         for res in query_select :
             query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES (\'stand\',"+res['player_latitude']+","+res['player_longitude']+",10,"+res['player_id']+")"
             db.execute(query_addPlayer)
-            query = "INSERT INTO public.Avoir (Player_id, Ingredient_id) VALUES ("+res['player_id']+",1)"
+            query = "INSERT INTO public.Avoir (Player_id, Recipe_id) VALUES ("+res['player_id']+",1)"
             db.execute(query_addPlayer)
-        
-        
-        db.close()
-        
-        recipe = []
-        
-        #TODO limonade
         
         query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE"+data['name']
         
@@ -254,6 +249,9 @@ def postNewPlayer() :
         
         for res in query_select :
             data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] }] }
+        
+        
+        db.close()
         
         return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
         
@@ -284,7 +282,7 @@ def postOrder():
     # game over
     if budget < COST_PER_GLASS:
     # http status 412 = "Precondition Failed"
-        return '"Insufficient funds."', 412, {'Content-Type' : 'application/json'}
+        return '"Insufficient Funds."', 412, {'Content-type' : 'Application/Json'}
   
     data = request.get_json()
     # if not game over...
