@@ -25,7 +25,7 @@ REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
 ### Fonction idCold
 def recetteIsCold(name_recette):
     isCold = False
-    query ="SELECT i.Ingredient_isCold FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_name = \'"+str(name_recette)+"\'"
+    query ="SELECT i.Ingredient_isCold FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id = c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name LIKE \'"+str(name_recette)+"\'"
     db = Db()
     result = db.select(query)
     for res in result:
@@ -37,7 +37,7 @@ def recetteIsCold(name_recette):
 ### Fonction hasAlcohol
 def recetteHasAlcohol(name_recette):
     hasAlcohol = False
-    query ="SELECT i.Ingredient_hasAlcohol FROM Ingredient i, Recipe r, Composer c WHERE AND r.Recipe_name = \'"+str(name_recette)+"\'"
+    query ="SELECT i.Ingredient_hasAlcohol FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id = c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name LIKE \'"+str(name_recette)+"\'"
     db = Db()
     result = db.select(query)
     for res in result:
@@ -48,7 +48,7 @@ def recetteHasAlcohol(name_recette):
 
 ### Fonction prixProduction
 def prixProduction(name_recette):
-    query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id =  c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name LIKE \'"+str(name_recette)+"\' GROUP BY (r.Recipe_id)"
+    query ="SELECT SUM(i.Ingredient_price * c.Compose_qte) AS Price, r.Recipe_name FROM Ingredient i, Recipe r, Composer c WHERE r.Recipe_id = c.Recipe_id AND c.Ingredient_id = i.Ingredient_id AND r.Recipe_name LIKE \'"+str(name_recette)+"\' GROUP BY (r.Recipe_id)"
     db = Db()
     price = ''
     result = db.select(query)
