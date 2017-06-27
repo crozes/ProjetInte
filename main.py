@@ -93,7 +93,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             result = db.select(query)
             db.close()
             
-            for resPrix in result
+            for resPrix in result:
             #on change le profit et le bénéfice
             query ="UPDATE player SET player_profit + %f;" % (resPrix['prix']*productQuantity)
             db = Db()
