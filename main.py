@@ -329,8 +329,10 @@ def getPlayerTest():
 def postSales():
     sales = request.get_json()
     print sales
+
     #on récupère les infos du json avant de demander une modification du stock
-    sales = {"quantity":modifyStock(sales.player,sales.item,sales.quantity)}
+    quantity=modifyStock(sales.player,sales.item,sales.quantity)
+    sales = {"quantity":quantity}
     return json.dumps(sales),200,{'Content-Type' : 'application/json'}
 
         
