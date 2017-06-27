@@ -29,7 +29,7 @@ def recetteIsCold(name_recette):
     db = Db()
     result = db.select(query)
     for res in result:
-        if res['isCold'] == True :
+        if res['ingredient_iscold'] == True :
             isCold == True
     db.close()
     return isCold
