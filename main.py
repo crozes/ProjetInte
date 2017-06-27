@@ -329,7 +329,7 @@ def postPlayer() :
         for player in result :
             #print player['player_name'] #Player_name
             if player['player_name'] == data['name'] :
-                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit, Recipe_name  FROM public.Player p, public.Recipe r, public.Avoir a WHERE p.Player_id = a.Player_id AND a.Recipe_id = r.Recipe_id AND public.Player.Player_name LIKE \'"+ data['name']+"\'"
+                query = "SELECT Player_latitude, Player_longitude, Player_cash, Player_profit, Recipe_name  FROM public.Player p, public.Recipe r, public.Avoir a WHERE p.Player_id = a.Player_id AND a.Recipe_id = r.Recipe_id AND p.Player_name LIKE \'"+ data['name']+"\'"
                 res_query = db.select(query)
                 data_final = ''
                 recipe = []
