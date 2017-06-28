@@ -165,6 +165,16 @@ def getIdRecipeByName(RecipeName) :
 ###
 ### Fonction Traitement des actions minuit
 def traitementMinuit():
+    #on récupère les players
+    query_select = "SELECT Player_id FROM Player ;"
+    db = Db()
+    result = db.select(query_select)
+    
+    #on passe le profit dans cash
+    
+    
+    players
+    #on vide le stock dans vente fail
     
     return 0
 
@@ -406,7 +416,7 @@ def postSales():
         #on récupère les infos du json avant de demander une modification du stock
         salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
     
-    retour = {"sale":salesArray}
+    retour = {"sales":salesArray}
     return json.dumps(retour),200,{'Content-Type' : 'application/json'}
 
         
