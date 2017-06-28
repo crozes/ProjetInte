@@ -182,7 +182,7 @@ def getToDay() :
     today = db.select(queryPreviousTime)
     for day in today:
         today = day['weather_timestamp']
-        today = today / 24
+        today = int(today) / 24
     db.close()
     return today 
 
