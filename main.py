@@ -460,10 +460,13 @@ def postSales():
 def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
     allData = request.get_json() 
+    
     if allData == None :
         print request.get_data()
         return '"None in postActionPlayer"',400,{'Content-Type' : 'application/json'}
     else :
+        
+        print allData
         
         data = allData['actions']
         
@@ -493,10 +496,15 @@ def postActionPlayer(playerName) :
                 return json.dumps(data),201,{'Content-Type' : 'application/json'}
                  
             elif actions['kind'] == 'drinks' :
-                string = ''
-                qte = ''
+                string_drinks = ''
                 for prepare in actions['prepare'] :
-                    value_string = prepare
+                    string_drinks = prepare
+                qte = actions['prepare'][string_drinks]
+                price = actions['price'][string_drinks]
+                
+                
+                
+                    
             
             #elif actions['kind'] == 'recipe' :
             #   
