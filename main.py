@@ -198,7 +198,19 @@ def traitementMinuit():
         result = db.execute(query)
     
     return 0
-      
+    
+### Fonction GetMeteo
+def getMeteo():
+    weather_name = ''
+    query_select = "SELECT Weather_name FROM Weather WHERE Weather_dfn = 0;"
+    db = Db()
+    result = db.select(query_select)
+    
+    for weather in result:
+        weather_name = weather["weather_name"]
+        
+    return weather_name
+          
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
     
@@ -458,6 +470,7 @@ def postActionPlayer(playerName) :
         data = allData['actions']
         
         id_player = geyIdPlayerByName(playerName)
+        getTomorrow = getToDay()+1
         
         for actions in data :    
             
@@ -492,6 +505,10 @@ def postActionPlayer(playerName) :
                     string_drinks = prepare
                 qte = actions['prepare'][string_drinks]
                 price = actions['price'][string_drinks]
+                id_recipe = getIdRecipeByName(string_drinks)
+                meteo = getMeteo()
+                
+                querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
                 
                 
                 
