@@ -159,7 +159,7 @@ def getIdRecipeByName(RecipeName) :
     
     for id_recipe in result :
         recipe_id = id_recipe['recipe_id']
-        
+            
     return recipe_id      
     
     
@@ -176,14 +176,16 @@ def getCashByName(PlayerName) :
 
 ### Get Day
 def getToDay() :
-    today = ''
-    queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
+    valueDay = ''
+    queryPreviousTime = "SELECT Weather_timestamp FROM Weather WHERE Weather_dfn = 0"
     db = Db()
-    for day in queryPreviousTime:
-        today = db.select(day['prev_time'])
-        today = today / 24
+    today = db.select(queryPreviousTime)
+    for day in today:
+        valueDay = day['weather_timestamp']
+        valueDay = int(valueDay) / 24
     db.close()
-    return today 
+    
+    return valueDay 
 
 ### Fonction Traitement des actions minuit
 def traitementMinuit():
@@ -600,10 +602,12 @@ def postPlayer() :
         db.execute(query_addPlayer)
         query_select = db.select("SELECT Player_id, Player_latitude, Player_longitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
         
+        print getToDay()
+        
         for res in query_select :
-            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+str(res['player_id'])+")"
+            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+getToDay()+","+str(res['player_id'])+")"
             db.execute(query)
-            query = "INSERT INTO public.Avoir (Player_id, Recipe_id) VALUES ("+str(res['player_id'])+",1)"
+            query = "INSERT INTO public.Avoir (Player_id, Recipe_id, Avoir_date) VALUES ("+str(res['player_id'])+",1,"+str(getToDay())+")"
             db.execute(query)
         
         query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE \'"+data['name']+"\'"
