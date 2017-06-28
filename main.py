@@ -90,7 +90,7 @@ def modifyStock(playerName,recipeName,productQuantity):
     day=getToDay()
     
     #récupérer le stock correspondant pour un joueur a l'heure actuelle
-    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
+    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, v.vendre_nonvendu AS stock_qte FROM player p,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
     db = Db()
     result = db.select(query)
     for res in result:
@@ -114,7 +114,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             return jsonRetour
         
         #on change la quantité en stock
-        query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+        query ="UPDATE vendre SET vendre_nonvendu = vendre_nonvendu - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
         db = Db()
         result = db.execute(query)
         #on ajoute la quantité vendue
@@ -196,19 +196,6 @@ def traitementMinuit():
         query ="UPDATE player SET player_cash = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
         db = Db()
         result = db.execute(query)
-        
-        #on vide le stock dans vente fail pour chaque recette
-        queryRecettes = "SELECT s.recipe_id FROM stocker s, vendre v WHERE s.player_id = %d AND v.recipe_id = s.recipe_id AND v.vendre_date = %d ;" % (player['player_id'],getToDay()-1)
-        db = Db()
-        resRecettes = db.select(queryRecettes)
-        for recipe in resRecettes:
-            query ="UPDATE vendre SET vendre_fail = public.stocker.stock_qte WHERE player_id=%d AND recipe_id=%d AND v.vendre_date = %d;" % (player['player_id'],recipe['recipe_id'],getToDay()-1)
-            db = Db()
-            result = db.execute(query)
-            query ="UPDATE stocker SET stock_qte=0 WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'],recipe['recipe_id'])
-            db = Db()
-            result = db.execute(query)
-        
     
     return 0
       
