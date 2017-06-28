@@ -180,7 +180,8 @@ def getToDay() :
     queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
     db = Db()
     for day in queryPreviousTime:
-        today = db.select(day['weather_timestamp'])
+        today = db.select(day['prev_time'])
+        today = today / 24
     db.close()
     return today 
 
