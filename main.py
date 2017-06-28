@@ -75,6 +75,9 @@ def getAviableIngredients():
 def modifyStock(playerName,recipeName,productQuantity):
     
     day=0
+    #on renvoie sales avec la quantité avant le débit
+    jsonRetour={}
+    
     #récupérer la date d'aujourd'hui
     query ="SELECT w.weather_timestamp AS timestamp FROM weather w WHERE w.weather_dfn = 0;"
     db = Db()
@@ -87,36 +90,43 @@ def modifyStock(playerName,recipeName,productQuantity):
     db = Db()
     result = db.select(query)
     for res in result:
-        if(res['stock_qte']>=productQuantity):
-             #on calcule le profit
-            query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
-            db = Db()
-            resultProfit = db.select(query)
-            db.close()
-            
-            if(len(resultProfit)==0):
-                return 0
-            
-            #on change la quantité en stock
-            query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+        if(res['stock_qte']<productQuantity):
+            productQuantity=res['stock_qte']
+        
+        jsonRetour['player']=playerName
+        jsonRetour['item']=recipeName
+        jsonRetour['quantity']=productQuantity
+        
+         #on calcule le profit
+        query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
+        db = Db()
+        resultProfit = db.select(query)
+        db.close()
+        
+        if(len(resultProfit)==0):
+            jsonRetour['player']=playerName
+            jsonRetour['item']=recipeName
+            jsonRetour['quantity']=0
+            return jsonRetour
+        
+        #on change la quantité en stock
+        query ="UPDATE stocker SET stock_qte = stock_qte - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+        db = Db()
+        result = db.execute(query)
+        #on ajoute la quantité vendue
+        query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d AND vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
+        db = Db()
+        result = db.execute(query)
+        db.close()
+        
+        for resPrix in resultProfit:
+            #on change le profit et le bénéfice
+            query ="UPDATE player SET player_profit = player_profit + %f WHERE player_id=%d;" % (resPrix['prix']*productQuantity,res['player_id'])
             db = Db()
             result = db.execute(query)
-            #on ajoute la quantité vendue
-            query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d AND vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
-            db = Db()
-            result = db.execute(query)
             db.close()
             
-            for resPrix in resultProfit:
-                #on change le profit et le bénéfice
-                query ="UPDATE player SET player_profit = player_profit + %f WHERE player_id=%d;" % (resPrix['prix']*productQuantity,res['player_id'])
-                db = Db()
-                result = db.execute(query)
-                db.close()
-                
-            return productQuantity
-        else:
-            return 0
+        return jsonRetour
 
 
 ######################~GET~###############################
@@ -345,11 +355,14 @@ def getPlayerTest():
 ## POST Sales
 @app.route('/sales', methods=['POST'])
 def postSales():
-    sales = request.get_json()
-
-    #on récupère les infos du json avant de demander une modification du stock
-    quantity=modifyStock(sales['player'],sales['item'],sales['quantity'])
-    retour = {"quantity":quantity}
+    data = request.get_json()
+    sales=data['sales']
+    salesArray=[]
+    for sale in sales:
+        #on récupère les infos du json avant de demander une modification du stock
+        salesArray.append(modifyStock(sales['player'],sales['item'],sales['quantity']))
+    
+    retour = {"sale":salesArray}
     return json.dumps(retour),200,{'Content-Type' : 'application/json'}
 
         
