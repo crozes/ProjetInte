@@ -162,7 +162,28 @@ def getIdRecipeByName(RecipeName) :
         
     return recipe_id      
     
+    
+### Get Cash Player by Name
+def getCashByName(PlayerName) :
+    query_select = "SELECT Player_cash FROM Player WHERE Player_name LIKE \'"+str(PlayerName)+"\'"   
+    db = Db()
+    result = db.select(query_select)
+    cash = ""
+    for cash_player in result :
+        cash = cash_player['player_cash']    
+    return cash
 ###
+
+### Get Day
+def getToDay() :
+    today = ''
+    queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
+    db = Db()
+    for day in queryPreviousTime:
+        today = db.select(day['weather_timestamp'])
+    db.close()
+    return today 
+
 ### Fonction Traitement des actions minuit
 def traitementMinuit():
     #on récupère les players
@@ -177,7 +198,6 @@ def traitementMinuit():
     #on vide le stock dans vente fail
     
     return 0
-
       
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
@@ -434,24 +454,9 @@ def postActionPlayer(playerName) :
         
         id_player = geyIdPlayerByName(playerName)
         
-        for actions in data :
+        for actions in data :    
             
-            if actions['kind'] == 'recipe' :
-                recipes = actions['recipe']
-                name_recipe = ""
-                tab_ingredient = []
-                for recipe in recipes :
-                    name_recipe = recipe['name']
-                    for ingredient in recipe['ingredient'] :
-                        tab_ingredient.append(ingredient)
-                        
-                query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
-                db.execute(query_insert_recipe)
-                id_recipe = getIdRecipeByName(name_recipe)
-                query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
-                db.execute(query_insert_avoir)
-                
-            elif actions['kind'] == 'ad' :
+            if actions['kind'] == 'ad' :
                 location = actions['location']
                 radius = actions['radius']
                 longitude = ''
@@ -461,10 +466,15 @@ def postActionPlayer(playerName) :
                     longitude = locate['longitude']
                     latitude = locate['latitude']
                             
-                query_insert = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(id_player)+")"
+                query_insert = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+")"
                 db.execute(query)
                 db.close()
                 
+                #TODO Action on budget
+                
+                data
+                
+                #return {"sufficientFunds" : boolean, "totalCost" : float}
                 return json.dumps(data),201,{'Content-Type' : 'application/json'}
                  
             elif actions['kind'] == 'drinks' :
@@ -472,7 +482,24 @@ def postActionPlayer(playerName) :
                 qte = ''
                 for prepare in actions['prepare'] :
                     value_string = prepare
-                    
+            
+            #elif actions['kind'] == 'recipe' :
+            #   
+            #   
+            #   
+            #    recipes = actions['recipe']
+            #    name_recipe = ""
+            #    tab_ingredient = []
+            #    for recipe in recipes :
+            #        name_recipe = recipe['name']
+            #        for ingredient in recipe['ingredient'] :
+            #            tab_ingredient.append(ingredient)
+            #            
+            #    query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
+            #    db.execute(query_insert_recipe)
+            #    id_recipe = getIdRecipeByName(name_recipe)
+            #    query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
+            #    db.execute(query_insert_avoir)
                 
             else :
                 return '"Bad kind Action"',400,{'Content-Type' : 'application/json'} 
