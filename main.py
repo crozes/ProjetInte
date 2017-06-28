@@ -516,12 +516,12 @@ def postActionPlayer(playerName) :
                     db.close()
                     
                     actionCash(playerName, -price)
-                
+
                     data = {"sufficientFunds" : True, "totalCost" : price}
-                
+
                     #return {"sufficientFunds" : boolean, "totalCost" : float}
                     return json.dumps(data),201,{'Content-Type' : 'application/json'}
-                    
+
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : price}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
@@ -545,6 +545,10 @@ def postActionPlayer(playerName) :
                     
                     actionCash(playerName, -price )
                     
+                    data = {"sufficientFunds" : True, "totalCost" : price}
+
+                    #return {"sufficientFunds" : boolean, "totalCost" : float}
+                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : price}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
