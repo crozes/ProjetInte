@@ -212,19 +212,6 @@ def getMeteo():
     return weather_name
     
     
-### Get Player Cash
-def getPlayerCash(playerName) :
-    cash = ''
-    querry = "SELECT Player_cash FROM Player WHERE Player_name LIKE \'%s\'" %(playerName) 
-    
-    db = Db()
-    result = db.select(querry)
-    
-    for cash_player in result:
-        cash = cash_player['player_cash']
-          
-    return cash
-    
 ### ActionCash
 def actionCash(playerName,cash_to_add) :
     cash = ''
@@ -507,26 +494,41 @@ def postActionPlayer(playerName) :
                     longitude = locate['longitude']
                     latitude = locate['latitude']
                 
-                price = radius * radius * RANGE_PRIX
+                newPrice = (radius * radius * RANGE_PRIX)
                 
-                if getPlayerCash(playerName) > price :
+                queryPriceB4 = "SELECT * FROM mapitem WHERE MapItem_kind=\'%s\'AND MapItem_date=%d AND MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude);"
+                db = Db()
+                resultPriceB4 = db.select(queryPriceB4)
+                db.close()
+                
+                currentPrice=''
+                if (resultPriceB4==None):
+                    currentPrice =0
+                else:
+                    for prixDuMapitem in resultPriceB4:
+                        currentPrice = prixDuMapitem['mapitem_rayon']*prixDuMapitem['mapitem_rayon']*RANGE_PRIX
+                
+                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
+                diff = newPrice - currentPrice
+                
+                #donc on compare le cash avec la différence
+                if getCashByName(playerName) > diff :
                     query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (MapItem_kind,MapItem_date,MapItem_latitude,MapItem_longitude) DO UPDATE SET MapItem_kind=\'%s\',MapItem_date=%d,MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude)
                     db = Db()
                     db.execute(query)
                     db.close()
                     
-                    actionCash(playerName, -price)
+                    
+                    actionCash(playerName, -diff)
 
-                    data = {"sufficientFunds" : True, "totalCost" : price}
+                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
 
                     #return {"sufficientFunds" : boolean, "totalCost" : float}
                     return json.dumps(data),201,{'Content-Type' : 'application/json'}
 
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : price}
+                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
-                
-                #TODO Action on budget
                
                  
             elif actions['kind'] == 'drinks' :
@@ -534,23 +536,40 @@ def postActionPlayer(playerName) :
                 for prepare in actions['prepare'] :
                     string_drinks = prepare
                 qte = actions['prepare'][string_drinks]
-                price = prixProduction(string_drinks) * qte
                 
-                if getPlayerCash(playerName) > price :
+                newPrice = prixProduction(string_drinks) * qte
+                
+                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow());"
+                db = Db()
+                resultPriceB4 = db.select(queryPriceB4)
+                db.close()
+                
+                currentPrice=''
+                if (resultPriceB4==None):
+                    currentPrice =0
+                else:
+                    for prixDeLaRecipe in resultPriceB4:
+                        currentPrice = prixDeLaRecipe['vendre_prix']*prixDeLaRecipe['vendre_qte']
+                
+                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
+                diff = newPrice - currentPrice
+                
+                #donc on compare le cash avec la différence
+                if getCashByName(playerName) > diff :
                     price = actions['price'][string_drinks]
                     id_recipe = getIdRecipeByName(string_drinks)
                     meteo = getMeteo()
                     
                     querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
                     
-                    actionCash(playerName, -price )
+                    actionCash(playerName, -diff )
                     
-                    data = {"sufficientFunds" : True, "totalCost" : price}
+                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
 
                     #return {"sufficientFunds" : boolean, "totalCost" : float}
                     return json.dumps(data),201,{'Content-Type' : 'application/json'}
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : price}
+                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
                 
                     
