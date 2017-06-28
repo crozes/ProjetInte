@@ -109,27 +109,15 @@ CREATE TABLE public.Composer(
 -- Table: Vendre
 ------------------------------------------------------------
 CREATE TABLE public.Vendre(
-	Vendre_meteo VARCHAR (255)  ,
-	Vendre_qte   INT   ,
-	Vendre_fail  INT   ,
-	Vendre_prix  FLOAT   ,
-	Vendre_date  INT  NOT NULL ,
-	Player_id    INT  NOT NULL ,
-	Recipe_id    INT  NOT NULL ,
+	Vendre_meteo 	 VARCHAR (255)  ,
+	Vendre_qte   	 INT   ,
+	Vendre_nonVendu  INT   ,
+	Vendre_prix  	 FLOAT   ,
+	Vendre_date  	 INT  NOT NULL ,
+	Player_id   	 INT  NOT NULL ,
+	Recipe_id    	 INT  NOT NULL ,
 	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id, Recipe_id, Vendre_date)
 )WITHOUT OIDS;
-
-
-------------------------------------------------------------
--- Table: Stocker
-------------------------------------------------------------
-CREATE TABLE public.Stocker(
-	Stock_qte INT   ,
-	Player_id INT  NOT NULL ,
-	Recipe_id INT  NOT NULL ,
-	CONSTRAINT prk_constraint_Stocker PRIMARY KEY (Player_id,Recipe_id)
-)WITHOUT OIDS;
-
 
 
 ALTER TABLE public.MapItem ADD CONSTRAINT FK_MapItem_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
