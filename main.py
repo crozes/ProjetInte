@@ -283,7 +283,7 @@ def getMap():
                 overallSales=0
         
        #recettes produites du joueur player avec prix de vente
-        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
+        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM weather AS w,vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND v.vendre_date<=w.weather_timestamp/24 GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -318,7 +318,7 @@ def getMap():
         #-----------------------DRINKS_BY_PLAYER-----------------------
         
         #recettes connue du joueur player avec prix de prod
-        queryPlayerKnownRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette FROM avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id,a.recipe_id;"% (player['player_id'])
+        queryPlayerKnownRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette FROM weather AS w, avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND a.avoir_date<=w.weather_timestamp/24 GROUP BY r.recipe_id,a.recipe_id;"% (player['player_id'])
         db = Db()
         resultPlayerKnownRecipes = db.select(queryPlayerKnownRecipes)
         db.close()
@@ -381,7 +381,7 @@ def getPlayerSMap(playerName):
         
         
         #recettes du joueur player avec prix de vente 
-        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_id, r.recipe_name AS nom_recette FROM avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, a.recipe_id;"% (player['player_id'])
+        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_id, r.recipe_name AS nom_recette FROM weather AS w, avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND a.avoir_date<=w.weather_timestamp/24 GROUP BY r.recipe_id, a.recipe_id;"% (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -520,6 +520,9 @@ def postActionPlayer(playerName) :
 def postTemps() :
     #print request.get_data() 
     data = request.get_json(force=True) 
+    
+    previous_day=getToDay()
+    
     if data == None :
         print request.get_data()
         return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
@@ -538,18 +541,11 @@ def postTemps() :
             
             
         #on compare le jour précédent avec le jour courant
-        queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
-        db = Db()
-        resultPreviousTime = db.select(queryPreviousTime)
-        db.close()
         
-        for previous_time in resultPreviousTime:
-            timestamp_precedent=previous_time['prev_time']
-        
-        if((timestamp / 24) - (timestamp_precedent/24)>0):
+        if((timestamp / 24) - (previous_day)>0):
             traitementMinuit()
         else:
-            if((timestamp / 24) - (timestamp_precedent/24)<0):
+            if((timestamp / 24) - (previous_day)<0):
                 resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
