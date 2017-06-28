@@ -95,7 +95,7 @@ def modifyStock(playerName,recipeName,productQuantity):
         
         jsonRetour['player']=playerName
         jsonRetour['item']=recipeName
-        jsonRetour['quantity']=productQuantity
+        jsonRetour['quantity']=res['stock_qte']
         
          #on calcule le profit
         query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
