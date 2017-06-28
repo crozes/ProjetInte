@@ -114,7 +114,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             return jsonRetour
         
         #on change la quantité en stock
-        query ="UPDATE vendre SET vendre_nonvendu = vendre_nonvendu - %d WHERE player_id=%d AND recipe_id=%d;" % (productQuantity,res['player_id'],res['recipe_id'])
+        query ="UPDATE vendre SET vendre_nonvendu = vendre_nonvendu - %d WHERE player_id=%d AND recipe_id=%d AND vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
         db = Db()
         result = db.execute(query)
         #on ajoute la quantité vendue
