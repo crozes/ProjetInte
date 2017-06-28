@@ -11,7 +11,6 @@ DROP TABLE IF EXISTS public.MapItem;
 DROP TABLE IF EXISTS public.Ingredient;
 DROP TABLE IF EXISTS public.Recipe;
 DROP TABLE IF EXISTS public.Player;
-DROP TABLE IF EXISTS public.Test;
 
 ------------------------------------------------------------
 --        Script Postgre 
@@ -142,29 +141,6 @@ ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
-
-
-
-------------------------------------------------------------
--- Table: Test
-------------------------------------------------------------
-CREATE TABLE public.Test(
-	id_test 	 BIGSERIAL NOT NULL ,
-	nom_test     VARCHAR (255) ,
-	CONSTRAINT prk_constraint_test PRIMARY KEY (id_test)
-)WITHOUT OIDS;
-
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (1, 'Sprite');
-	
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (2, 'Coca');
-
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (3, 'Jus');
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
@@ -240,19 +216,19 @@ INSERT INTO public.Composer(
 	
 INSERT INTO public.Player(
 	Player_name, Player_cash, Player_profit, Player_longitude, Player_latitude)
-	VALUES ('Toto',150,0,25,56);
+	VALUES ('Toto',150,12,25,56);
 	
 INSERT INTO public.MapItem(
-	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id)
-	VALUES ('stand',25,56,10,1);
+	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
+	VALUES ('stand',25,56,10,0,1);
 
 INSERT INTO public.Avoir(
-	Player_id, Recipe_id)
-	VALUES (1,1);
+	Player_id, Recipe_id, Avoir_date)
+	VALUES (1,1,0);
 	
 INSERT INTO public.Avoir(
-	Player_id, Recipe_id)
-	VALUES (1,2);	
+	Player_id, Recipe_id, Avoir_date)
+	VALUES (1,2,0);	
 	
 INSERT INTO public.Vendre(
 	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
