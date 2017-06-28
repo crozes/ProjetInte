@@ -1,7 +1,7 @@
 ------------------------------------------------------------
 --        Script Postgre 
 ------------------------------------------------------------
-
+ 
 DROP TABLE IF EXISTS public.Vendre;
 DROP TABLE IF EXISTS public.Avoir;
 DROP TABLE IF EXISTS public.Composer;
@@ -123,7 +123,7 @@ ALTER TABLE public.MapItem ADD CONSTRAINT FK_MapItem_Player_id FOREIGN KEY (Play
 ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Ingredient_id FOREIGN KEY (Ingredient_id) REFERENCES public.Ingredient(Ingredient_id);
-ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
+ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_d FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 	
