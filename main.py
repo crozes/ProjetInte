@@ -176,15 +176,16 @@ def getCashByName(PlayerName) :
 
 ### Get Day
 def getToDay() :
-    today = ''
+    valueDay = ''
     queryPreviousTime = "SELECT weather_timestamp FROM weather WHERE weather_dfn=0;"
     db = Db()
     today = db.select(queryPreviousTime)
+    print today
     for day in today:
-        today = day['weather_timestamp']
-        today = int(today) / 24
+        valueDay = day['weather_timestamp']
+        valueDay = int(valueDay) / 24
     db.close()
-    return today 
+    return valueDay 
 
 ### Fonction Traitement des actions minuit
 def traitementMinuit():
