@@ -202,7 +202,10 @@ def traitementMinuit():
         db = Db()
         resRecettes = db.select(queryRecettes)
         for recipe in resRecettes:
-            query ="UPDATE vendre SET vendre_fail = public.stocker.stock_qte WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'],recipe['recipe_id'])
+            query ="UPDATE vendre SET vendre_fail = public.stocker.stock_qte WHERE player_id=%d AND recipe_id=%d AND v.vendre_date = %d;" % (player['player_id'],recipe['recipe_id'],getToDay()-1)
+            db = Db()
+            result = db.execute(query)
+            query ="UPDATE stocker SET stock_qte=0 WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'],recipe['recipe_id'])
             db = Db()
             result = db.execute(query)
         
