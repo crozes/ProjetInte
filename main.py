@@ -527,7 +527,7 @@ def postActionPlayer(playerName) :
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
-def postTemps() :
+def postMetrology() :
     #print request.get_data() 
     data = request.get_json(force=True) 
     
@@ -585,14 +585,12 @@ def postPlayer() :
                     recip = {"name" : res['recipe_name']  , "price" : str(prixProduction(res['recipe_name'])), "hasAlcohol" : recetteHasAlcohol(res['recipe_name']), "isCold" : recetteIsCold(res['recipe_name'])}
                     recipe.append(recip)
                     sales = prixProduction(data['name'])
-                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : {"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe }  }
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
         random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
         random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
-        print random_latitude
-        print random_longitude 
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_longitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.execute(query_addPlayer)
         query_select = db.select("SELECT Player_id, Player_latitude, Player_longitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
@@ -600,20 +598,18 @@ def postPlayer() :
         print getToDay()
         
         for res in query_select :
-            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+getToDay()+","+str(res['player_id'])+")"
+            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+str(getToDay())+","+str(res['player_id'])+")"
             db.execute(query)
             query = "INSERT INTO public.Avoir (Player_id, Recipe_id, Avoir_date) VALUES ("+str(res['player_id'])+",1,"+str(getToDay())+")"
             db.execute(query)
         
         query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE \'"+data['name']+"\'"
-        
         query_select = db.select(query)
-        
         data_final = ''
         
         for res in query_select :
-            data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] }] }
-        
+            data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : {"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] } }
+
         db.close()
         
         return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
