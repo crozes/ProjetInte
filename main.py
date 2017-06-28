@@ -315,7 +315,7 @@ def getMap():
         
         #-----------------------ITEMS_BY_PLAYER-----------------------
         
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND m.mapitem_date<=%d AND p.player_id=m.player_id ;" % (day,player['player_id'])
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id AND m.mapitem_date <= %d;" % (player['player_id'],day)
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
@@ -411,7 +411,7 @@ def getPlayerSMap(playerName):
         
         playerInfo={"cash":player['player_cash'],"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
     
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND m.mapitem_date<=%d AND p.player_id=m.player_id ;" % (day,player['player_id'])
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id AND m.mapitem_date <= %d;" % (player['player_id'],day)
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
