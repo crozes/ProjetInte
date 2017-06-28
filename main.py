@@ -193,7 +193,7 @@ def traitementMinuit():
     for player in result:
         
         #on passe le profit dans cash
-        query ="UPDATE player SET player_budget = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
+        query ="UPDATE player SET player_cash = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
         db = Db()
         result = db.execute(query)
         
