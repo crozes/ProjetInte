@@ -87,11 +87,7 @@ def modifyStock(playerName,recipeName,productQuantity):
     jsonRetour={}
     
     #récupérer la date d'aujourd'hui
-    query ="SELECT w.weather_timestamp AS timestamp FROM weather w WHERE w.weather_dfn = 0;"
-    db = Db()
-    day = db.select(query)
-    for today in day:
-        day=int(today['timestamp'])/int(24)
+    day=getToDay
     
     #récupérer le stock correspondant pour un joueur a l'heure actuelle
     query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, s.stock_qte AS stock_qte FROM player p,stocker s,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
@@ -197,10 +193,9 @@ def traitementMinuit():
     for player in result:
         
         #on passe le profit dans cash
-        query ="UPDATE player SET player_budget = player_profit, player_profit = 0 WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'])
+        query ="UPDATE player SET player_budget = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
         db = Db()
         result = db.execute(query)
-        
         
         #on vide le stock dans vente fail pour chaque recette
         queryRecettes = "SELECT s.recipe_id FROM stocker s, vendre v WHERE s.player_id = %d AND v.recipe_id = s.recipe_id AND v.vendre_date = %d ;" % (player['player_id'],getToDay()-1)
