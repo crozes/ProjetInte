@@ -159,7 +159,7 @@ def getIdRecipeByName(RecipeName) :
     
     for id_recipe in result :
         recipe_id = id_recipe['recipe_id']
-        
+            
     return recipe_id      
     
     
@@ -177,14 +177,14 @@ def getCashByName(PlayerName) :
 ### Get Day
 def getToDay() :
     valueDay = ''
-    queryPreviousTime = "SELECT weather_timestamp FROM weather WHERE weather_dfn=0;"
+    queryPreviousTime = "SELECT Weather_timestamp FROM Weather WHERE Weather_dfn = 0"
     db = Db()
     today = db.select(queryPreviousTime)
-    print today
     for day in today:
         valueDay = day['weather_timestamp']
         valueDay = int(valueDay) / 24
     db.close()
+    
     return valueDay 
 
 ### Fonction Traitement des actions minuit
