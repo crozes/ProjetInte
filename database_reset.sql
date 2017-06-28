@@ -2,7 +2,6 @@
 --        Script Postgre 
 ------------------------------------------------------------
 
-DROP TABLE IF EXISTS public.Stocker;
 DROP TABLE IF EXISTS public.Vendre;
 DROP TABLE IF EXISTS public.Avoir;
 DROP TABLE IF EXISTS public.Composer;
@@ -109,27 +108,15 @@ CREATE TABLE public.Composer(
 -- Table: Vendre
 ------------------------------------------------------------
 CREATE TABLE public.Vendre(
-	Vendre_meteo VARCHAR (255)  ,
-	Vendre_qte   INT   ,
-	Vendre_fail  INT   ,
-	Vendre_prix  FLOAT   ,
-	Vendre_date  INT  NOT NULL ,
-	Player_id    INT  NOT NULL ,
-	Recipe_id    INT  NOT NULL ,
+	Vendre_meteo 	 VARCHAR (255)  ,
+	Vendre_qte   	 INT   ,
+	Vendre_nonVendu  INT   ,
+	Vendre_prix  	 FLOAT   ,
+	Vendre_date  	 INT  NOT NULL ,
+	Player_id   	 INT  NOT NULL ,
+	Recipe_id    	 INT  NOT NULL ,
 	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id, Recipe_id, Vendre_date)
 )WITHOUT OIDS;
-
-
-------------------------------------------------------------
--- Table: Stocker
-------------------------------------------------------------
-CREATE TABLE public.Stocker(
-	Stock_qte INT   ,
-	Player_id INT  NOT NULL ,
-	Recipe_id INT  NOT NULL ,
-	CONSTRAINT prk_constraint_Stocker PRIMARY KEY (Player_id,Recipe_id)
-)WITHOUT OIDS;
-
 
 
 ALTER TABLE public.MapItem ADD CONSTRAINT FK_MapItem_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
@@ -139,8 +126,6 @@ ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Ingredient_id FOREIGN KEY
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
