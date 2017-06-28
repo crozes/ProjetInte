@@ -310,7 +310,7 @@ def getMap():
         mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
             mapitems_player.append(unMapItem)
             
         itemsByPlayers[player['player_name']]=mapitems_player
@@ -407,7 +407,7 @@ def getPlayerSMap(playerName):
         mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
             mapitems_player.append(unMapItem)
         itemsByPlayers[player['player_name']]=mapitems_player
         
