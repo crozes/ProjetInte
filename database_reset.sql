@@ -90,6 +90,7 @@ CREATE TABLE public.Weather(
 CREATE TABLE public.Avoir(
 	Player_id INT  NOT NULL ,
 	Recipe_id INT  NOT NULL ,
+	Avoir_date INT NOT NULL ,
 	CONSTRAINT prk_constraint_Avoir PRIMARY KEY (Player_id,Recipe_id)
 )WITHOUT OIDS;
 
