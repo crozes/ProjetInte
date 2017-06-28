@@ -360,7 +360,7 @@ def postSales():
     salesArray=[]
     for sale in sales:
         #on récupère les infos du json avant de demander une modification du stock
-        salesArray.append(modifyStock(sales['player'],sales['item'],sales['quantity']))
+        salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
     
     retour = {"sale":salesArray}
     return json.dumps(retour),200,{'Content-Type' : 'application/json'}
