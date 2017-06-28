@@ -271,6 +271,7 @@ def getMap():
     playersInfo= {}
     itemsByPlayers={}
     drinksByPlayer={}
+    day=getToDay()
     
     for player in resultRank:
         ranking.append(player['player_name'])
