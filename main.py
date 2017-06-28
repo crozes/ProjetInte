@@ -177,11 +177,11 @@ def getCashByName(PlayerName) :
 ### Get Day
 def getToDay() :
     today = ''
-    queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
+    queryPreviousTime = "SELECT weather_timestamp FROM weather WHERE weather.dfn=0;"
     db = Db()
     today = db.select(queryPreviousTime)
     for day in today:
-        today = day['prev_time']
+        today = day['weather_timestamp']
         today = today / 24
     db.close()
     return today 
