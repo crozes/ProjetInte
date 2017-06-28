@@ -90,7 +90,7 @@ def modifyStock(playerName,recipeName,productQuantity):
     day=getToDay()
     
     #récupérer le stock correspondant pour un joueur a l'heure actuelle
-    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, v.vendre_nonvendu AS stock_qte FROM player p,recipe r WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
+    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, v.vendre_nonvendu AS stock_qte FROM player p,recipe r , vendre v WHERE p.player_name LIKE \'%s\' AND p.player_id=s.player_id AND s.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\'" % (playerName,recipeName)
     db = Db()
     result = db.select(query)
     for res in result:
