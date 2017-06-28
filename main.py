@@ -22,7 +22,7 @@ REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
 
 ######PRIX
 #Imobilier
-RANGE_PRIX = 12
+RANGE_PRIX = 10
 
 #Recette
 CREATION_RECETTE = 700
@@ -210,6 +210,29 @@ def getMeteo():
         weather_name = weather["weather_name"]
         
     return weather_name
+    
+    
+### Get Player Cash
+def getPlayerCash(playerName) :
+    cash = ''
+    querry = "SELECT Player_cash FROM Player WHERE Player_name LIKE \'%s\'" %(playerName) 
+    
+    db = Db()
+    result = db.select(querry)
+    
+    for cash_player in result:
+        cash = cash_player['player_cash']
+          
+    return cash
+    
+### ActionCash
+def actionCash(playerName,cash_to_add) :
+    cash = ''
+    querry = "UPDATE player SET Player_cash = Player_cash + %f" % (cash_to_add) 
+    
+    db = Db()
+    result = db.execute(querry)
+    
           
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
@@ -484,33 +507,47 @@ def postActionPlayer(playerName) :
                     longitude = locate['longitude']
                     latitude = locate['latitude']
                 
-                query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (MapItem_kind,MapItem_date,MapItem_latitude,MapItem_longitude) DO UPDATE SET MapItem_kind=\'%s\',MapItem_date=%d,MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude)
-                db = Db()
-                db.execute(query)
-                db.close()
+                price = radius * radius * RANGE_PRIX
                 
-                db.execute(query)
-                db.close()
+                if getPlayerCash(playerName) > price :
+                    query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (MapItem_kind,MapItem_date,MapItem_latitude,MapItem_longitude) DO UPDATE SET MapItem_kind=\'%s\',MapItem_date=%d,MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude)
+                    db = Db()
+                    db.execute(query)
+                    db.close()
+                    
+                    actionCash(playerName, -price)
+                
+                    data = {"sufficientFunds" : True, "totalCost" : price}
+                
+                    #return {"sufficientFunds" : boolean, "totalCost" : float}
+                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                    
+                else :
+                    data = {"sufficientFunds" : False, "totalCost" : price}
+                    return json.dumps(data),200,{'Content-Type' : 'application/json'}
                 
                 #TODO Action on budget
-                
-                data
-                
-                #return {"sufficientFunds" : boolean, "totalCost" : float}
-                return json.dumps(data),201,{'Content-Type' : 'application/json'}
+               
                  
             elif actions['kind'] == 'drinks' :
                 string_drinks = ''
                 for prepare in actions['prepare'] :
                     string_drinks = prepare
                 qte = actions['prepare'][string_drinks]
-                price = actions['price'][string_drinks]
-                id_recipe = getIdRecipeByName(string_drinks)
-                meteo = getMeteo()
+                price = prixProduction(string_drinks) * qte
                 
-                querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
-                
-                
+                if getPlayerCash(playerName) > price :
+                    price = actions['price'][string_drinks]
+                    id_recipe = getIdRecipeByName(string_drinks)
+                    meteo = getMeteo()
+                    
+                    querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
+                    
+                    actionCash(playerName, -price )
+                    
+                else :
+                    data = {"sufficientFunds" : False, "totalCost" : price}
+                    return json.dumps(data),200,{'Content-Type' : 'application/json'}
                 
                     
             
