@@ -2,7 +2,6 @@
 --        Script Postgre 
 ------------------------------------------------------------
 
-DROP TABLE IF EXISTS public.Stocker;
 DROP TABLE IF EXISTS public.Vendre;
 DROP TABLE IF EXISTS public.Avoir;
 DROP TABLE IF EXISTS public.Composer;
@@ -127,8 +126,6 @@ ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Ingredient_id FOREIGN KEY
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
