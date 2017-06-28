@@ -479,7 +479,7 @@ def postActionPlayer(playerName) :
         
         data = allData['actions']
         
-        id_player = geyIdPlayerByName(playerName)
+        id_player = getIdPlayerByName(playerName)
         getTomorrow = getToDay()+1
         
         for actions in data :    
@@ -496,7 +496,7 @@ def postActionPlayer(playerName) :
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT * FROM mapitem WHERE MapItem_kind=\'%s\'AND MapItem_date=%d AND MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude)
+                queryPriceB4 = "SELECT * FROM mapitem WHERE MapItem_kind=\'%s\'AND MapItem_date=%d AND MapItem_latitude=%f,MapItem_longitude=%f;" %("ad",getTomorrow,latitude,longitude)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
@@ -539,7 +539,7 @@ def postActionPlayer(playerName) :
                 
                 newPrice = prixProduction(string_drinks) * qte
                 
-                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow())
+                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
