@@ -128,7 +128,15 @@ def modifyStock(playerName,recipeName,productQuantity):
             
         return jsonRetour
 
+### Fonction Traitement des actions minuit
+def traitementMinuit():
+    
+    return 0
 
+### Fonction Traitement d'un pb de metrology
+def resetMetrology():
+    
+    return 0
 ######################~GET~###############################
 
 ## Reset BD
@@ -449,6 +457,22 @@ def postTemps() :
             db.execute(query)
             db.close()
             cpt += 1;
+            
+            
+        #on compare le jour précédent avec le jour courant
+        queryPreviousTime = "SELECT w.weather_timestamp AS prev_time FROM weather WHERE w.dfn=0;"
+        db = Db()
+        resultPreviousTime = db.select(queryPreviousTime)
+        db.close()
+        
+        for previous_time in resultPreviousTime:
+            timestamp_precedent=previous_time['prev_time']
+        
+        if((timestamp / 24) - (timestamp_precedent/24)>0):
+            traitementMinuit()
+        else:
+            if((timestamp / 24) - (timestamp_precedent/24)<0):
+                resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
