@@ -532,7 +532,7 @@ def postActionPlayer(playerName) :
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
-def postTemps() :
+def postMetrology() :
     #print request.get_data() 
     data = request.get_json(force=True) 
     
