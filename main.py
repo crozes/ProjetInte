@@ -192,11 +192,23 @@ def traitementMinuit():
     db = Db()
     result = db.select(query_select)
     
-    #on passe le profit dans cash
-    
-    
-    players
-    #on vide le stock dans vente fail
+    for player in result:
+        
+        #on passe le profit dans cash
+        query ="UPDATE player SET player_budget = player_profit, player_profit = 0 WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'])
+        db = Db()
+        result = db.execute(query)
+        
+        
+        #on vide le stock dans vente fail pour chaque recette
+        queryRecettes = "SELECT s.recipe_id FROM stocker s, vendre v WHERE s.player_id = %d AND v.recipe_id = s.recipe_id AND v.vendre_date = %d ;" % (player['player_id'],getToDay()-1)
+        db = Db()
+        resRecettes = db.select(queryRecettes)
+        for recipe in resRecettes:
+            query ="UPDATE vendre SET vendre_fail = public.stocker.stock_qte WHERE player_id=%d AND recipe_id=%d;" % (player['player_id'],recipe['recipe_id'])
+            db = Db()
+            result = db.execute(query)
+        
     
     return 0
       
@@ -540,13 +552,13 @@ def postTemps() :
             db.close()
             cpt += 1;
             
-            
+        today=getToDay()
         #on compare le jour précédent avec le jour courant
         
-        if((timestamp / 24) - (previous_day)>0):
+        if(today - previous_day>0):
             traitementMinuit()
         else:
-            if((timestamp / 24) - (previous_day)<0):
+            if(today - previous_day<0):
                 resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
