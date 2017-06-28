@@ -134,7 +134,7 @@ def modifyStock(playerName,recipeName,productQuantity):
 
 ### Get id Player by Name
 def getIdPlayerByName(PlayerName) :
-    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'"+str(playerName)+"\'"
+    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'%s\'" % (playerName)
                 
     db = Db()
     result = db.select(query_select)
@@ -465,7 +465,7 @@ def postSales():
 
         
 ## POST Actions playerName
-@app.route('/actions/<playerName>', methods=['POST'])
+@app.route('/actions/<string:playerName>', methods=['POST'])
 def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
     allData = request.get_json() 
