@@ -19,6 +19,14 @@ CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
 REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
 
 REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
+
+######PRIX
+#Imobilier
+RANGE_PRIX = 12
+
+#Recette
+CREATION_RECETTE = 700
+ACHAT_NOUVELLE_RECETTE = CREATION_RECETTE + 300
          
 
 ################################################################################
@@ -128,7 +136,35 @@ def modifyStock(playerName,recipeName,productQuantity):
             
         return jsonRetour
 
+### Get id Player by Name
+def getIdPlayerByName(PlayerName) :
+    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'"+str(playerName)+"\'"
+                
+    db = Db()
+    result = db.select(query_select)
+    player_id = ""
+    
+    for id_player in result :
+        player_id = id_player['player_id']
+        
+    return player_id 
+    
+### Get id Player by Name
+def getIdRecipeByName(RecipeName) :
+    query_select = "SELECT Recipe_id FROM Recipe WHERE Recipe_name LIKE \'"+str(RecipeName)+"\'"
+                
+    db = Db()
+    result = db.select(query_select)
+    recipe_id = ""
+    
+    for id_recipe in result :
+        recipe_id = id_recipe['recipe_id']
+        
+    return recipe_id      
+    
+###
 
+      
 ######################~GET~###############################
 
 ## Reset BD
@@ -373,15 +409,29 @@ def postActionPlayer(playerName) :
     allData = request.get_json() 
     if allData == None :
         print request.get_data()
-        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
+        return '"None in postActionPlayer"',400,{'Content-Type' : 'application/json'}
     else :
         
         data = allData['actions']
         
+        id_player = geyIdPlayerByName(playerName)
+        
         for actions in data :
             
             if actions['kind'] == 'recipe' :
-                data=''
+                recipes = actions['recipe']
+                name_recipe = ""
+                tab_ingredient = []
+                for recipe in recipes :
+                    name_recipe = recipe['name']
+                    for ingredient in recipe['ingredient'] :
+                        tab_ingredient.append(ingredient)
+                        
+                query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
+                db.execute(query_insert_recipe)
+                id_recipe = getIdRecipeByName(name_recipe)
+                query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
+                db.execute(query_insert_avoir)
                 
             elif actions['kind'] == 'ad' :
                 location = actions['location']
@@ -393,16 +443,7 @@ def postActionPlayer(playerName) :
                     longitude = locate['longitude']
                     latitude = locate['latitude']
                             
-                query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'"+str(playerName)+"\'"
-                            
-                db = Db()
-                result = db.select(query_select)
-                player_id = ""
-                
-                for id_player in result :
-                    player_id = id_player['player_id']
-                
-                query_insert = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(player_id)+")"
+                query_insert = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(id_player)+")"
                 db.execute(query)
                 db.close()
                 
