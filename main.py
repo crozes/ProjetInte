@@ -637,6 +637,9 @@ def postMetrology() :
     
     previous_day=getToDay()
     
+    if (type(previous_day) is str):
+        previous_day=0
+    
     if (data == None) :
         print request.get_data()
         return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
@@ -653,16 +656,13 @@ def postMetrology() :
             db.close()
             cpt += 1;
             
-        today=getToDay()
+        today=int(getToDay())
         #on compare le jour précédent avec le jour courant
         
-        if (type(previous_day) is str):
-            previous_day==0
-        
-        if(int(today) - int(previous_day)>0):
+        if(today - previous_day>0):
             traitementMinuit()
         else:
-            if(int(today) - int(previous_day)<0):
+            if(today - previous_day<0):
                 resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
