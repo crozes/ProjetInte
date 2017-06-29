@@ -656,6 +656,11 @@ def postMetrology() :
         today=getToDay()
         #on compare le jour précédent avec le jour courant
         
+        print "today"
+        print today
+        print "previous_day"
+        print previous_day
+        
         if(int(today) - int(previous_day)>0):
             traitementMinuit()
         else:
