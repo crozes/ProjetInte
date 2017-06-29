@@ -499,7 +499,7 @@ def postActionPlayer(playerName) :
         today = int(getToDay())
         getTomorrow = today+1
         
-        for actions in data :    
+        for actions in data :
             
             if actions['kind'] == 'ad' :
                 location = actions['location']
@@ -513,51 +513,23 @@ def postActionPlayer(playerName) :
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude= %.2f AND MapItem_longitude= %.2f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
-                print queryPriceB4
-                db = Db()
-                resultPriceB4 = db.select(queryPriceB4)
-                db.close()
-                
-                currentPrice =0.0
-                for rayonDuMapitem in resultPriceB4:
-                    print "rayon du mapitem"
-                    print rayonDuMapitem['mapitem_rayon']
-                    currentPrice = float(rayonDuMapitem['mapitem_rayon'])*float(rayonDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
-                print "newPrice"
-                print newPrice
-                print "currentPrice"
-                print currentPrice
-                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
-                print "diff"
-                print diff
-                
+              
                 #donc on compare le cash avec la différence
-                if getCashByName(playerName) > diff :
-                
-                    query =''
-                
-                    id_mapitem = getIdMapitemByInfos(id_player,latitude,longitude)
-                    if(id_mapitem==0):
-                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getTomorrow)+","+str(id_player)+");"
-                    else:
-                        query = "UPDATE mapitem SET mapitem_rayon = mapitem_rayon + (%f) WHERE mapitem_id=%d;" %(diff,id_mapitem)
+                if getCashByName(playerName) > newPrice :
+                    
+                    query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getTomorrow)+","+str(id_player)+");"
                         
                     db = Db()
                     db.execute(query)
                     db.close()
                     
                     
-                    actionCash(playerName, -diff)
+                    actionCash(playerName, -newPrice)
 
-                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
-
-                    #return {"sufficientFunds" : boolean, "totalCost" : float}
-                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                   totalCost += newPrice
 
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    data = {"sufficientFunds" : False, "totalCost" : 0}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
                
                  
@@ -569,42 +541,32 @@ def postActionPlayer(playerName) :
                 
                 newPrice = prixProduction(string_drinks) * qte
                 
-                queryPriceB4 = "SELECT vendre_prix, vendre_qte FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
-                db = Db()
-                resultPriceB4 = db.select(queryPriceB4)
-                db.close()
-                
-                currentPrice=''
-                currentPrice =0.0
-                for prixDeLaRecipe in resultPriceB4:
-                    currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
-                
-                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
                 
                 #donc on compare le cash avec la différence
-                if getCashByName(playerName) > diff :
+                if getCashByName(playerName) > newPrice :
                     price = actions['price'][string_drinks]
                     id_recipe = getIdRecipeByName(string_drinks)
+                    
                     meteo = getMeteo()
-                    
-                    id_vendre = getIdCommandeByInfos(id_player,id_recette)
-                    if(id_vendre==0):
                         query = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+");"
-                    else:
-                        query = "UPDATE vendre SET Vendre_qte = 0, Vendre_prix = "+str(price)+" WHERE Vendre_date = "+str(getTomorrow)+" AND Player_id = "+str(id_player)+" AND Recipe_id ="+str(id_recipe)+";" %(diff,id_mapitem)
                     
-                    actionCash(playerName, -diff )
+                    db = Db()
+                    db.execute(query)
+                    db.close()
                     
-                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
-
-                    #return {"sufficientFunds" : boolean, "totalCost" : float}
-                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                    
+                    
+                    actionCash(playerName, -newPrice )
+                    totalCost += newPrice
+                    
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    data = {"sufficientFunds" : False, "totalCost" : 0}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
-                
-                    
+        
+        
+        data = {"sufficientFunds" : True, "totalCost" : totalCost}
+                    #return {"sufficientFunds" : boolean, "totalCost" : float}
+        return json.dumps(data),201,{'Content-Type' : 'application/json'}
             
             #elif actions['kind'] == 'recipe' :
             #   
