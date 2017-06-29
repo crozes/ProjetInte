@@ -515,9 +515,8 @@ def postSales():
         #on récupère les infos du json avant de demander une modification du stock
         salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
     
-    
+    noSale={}
     if(len(salesArray)==0):
-        noSale={}
         noSale['player']=sale['player']
         noSale['item']=sale['item']
         noSale['quantity']=0
