@@ -6,6 +6,7 @@ from db import Db
 from flask_cors import CORS
 import json, os, psycopg2, urlparse
 import random
+import math
 
 app = Flask(__name__)
 app.debug = True
