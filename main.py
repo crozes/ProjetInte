@@ -104,10 +104,7 @@ def modifyStock(playerName,recipeName,productQuantity):
             return jsonRetour
     
     for res in result:
-        print "stock du player"
-        print result
-        print "qte"
-        print result['stock_qte']
+        
         if(res['stock_qte']<productQuantity):
             productQuantity=res['stock_qte']
         
