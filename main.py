@@ -279,8 +279,9 @@ def dropAction(playerName) :
     
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
-    
+    route_dbinit()
     return 0
+    
 ######################~GET~###############################
 
 ## Reset BD
