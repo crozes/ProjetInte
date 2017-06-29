@@ -502,10 +502,11 @@ def postActionPlayer(playerName) :
                 db.close()
                 
                 currentPrice=''
-                if (resultPriceB4==None):
+                if (len(resultPriceB4)==0):
                     currentPrice =0
                 else:
-                    for prixDuMapitem in resultPriceB4:
+                    for prixDuMapitem in resultPriceB4:*
+                        print prixDuMapitem['mapitem_rayon']
                         currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 print "newPrice"
                 print newPrice
