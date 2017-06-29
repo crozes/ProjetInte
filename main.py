@@ -96,6 +96,13 @@ def modifyStock(playerName,recipeName,productQuantity):
     query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, v.vendre_nonvendu AS stock_qte FROM player p,recipe r , vendre v WHERE p.player_name LIKE \'%s\' AND p.player_id=v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\' AND v.vendre_date=%d" % (playerName,recipeName,day)
     db = Db()
     result = db.select(query)
+    
+    if(len(result)==0):
+            jsonRetour['player']=playerName
+            jsonRetour['item']=recipeName
+            jsonRetour['quantity']=0
+            return jsonRetour
+    
     for res in result:
         print "stock du player"
         print result
