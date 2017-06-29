@@ -24,6 +24,8 @@ REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
 #Imobilier
 RANGE_PRIX = 10
 
+FACTEUR_INFLUENCE = 20
+
 #Recette
 CREATION_RECETTE = 700
 ACHAT_NOUVELLE_RECETTE = CREATION_RECETTE + 300
@@ -376,7 +378,7 @@ def getMap():
         mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":((item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)/FACTEUR_INFLUENCE)}
             mapitems_player.append(unMapItem)
             
         itemsByPlayers[player['player_name']]=mapitems_player
@@ -473,7 +475,7 @@ def getPlayerSMap(playerName):
         mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":((item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)/FACTEUR_INFLUENCE)}
             mapitems_player.append(unMapItem)
         itemsByPlayers[player['player_name']]=mapitems_player
         
