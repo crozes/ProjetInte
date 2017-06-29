@@ -521,7 +521,7 @@ def postActionPlayer(playerName) :
         dropAction(playerName)
         
         if(len(data)==0):
-            retour = {"suppression":"OK"}
+            retour = {"sufficientFunds" : True, "totalCost" : 0}
             return json.dumps(retour),200,{'Content-Type' : 'application/json'}
             
         id_player = getIdPlayerByName(playerName)
@@ -560,6 +560,7 @@ def postActionPlayer(playerName) :
 
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : 0}
+                    dropAction(playerName)
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
                
                  
@@ -591,6 +592,7 @@ def postActionPlayer(playerName) :
                     
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : 0}
+                    dropAction(playerName)
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
 
 
