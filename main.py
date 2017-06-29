@@ -514,6 +514,7 @@ def postActionPlayer(playerName) :
                 newPrice = (radius * radius * RANGE_PRIX)
                 
                 queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude= %.2f AND MapItem_longitude= %.2f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
+                print queryPriceB4
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
