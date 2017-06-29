@@ -503,7 +503,7 @@ def postActionPlayer(playerName) :
                 
                 currentPrice=''
                 if (len(resultPriceB4)==0):
-                    currentPrice =0
+                    currentPrice =0.0
                 else:
                     for prixDuMapitem in resultPriceB4:
                         print prixDuMapitem['mapitem_rayon']
