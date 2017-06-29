@@ -240,8 +240,8 @@ def dropAction(playerName) :
     value_map = 0
     value_drinks = 0
     tomorrow = int(getToDay()) + 1
-    querry_select_map = "SELECT MapItem_id, MapItem_rayon FROM MapItem WHERE MapItem_date = "+ tomorrow
-    querry_select_drinks = "SELECT Vendre_id, Vendre_qte, Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND Vendre_date = "+ tomorrow
+    querry_select_map = "SELECT MapItem_id, MapItem_rayon FROM MapItem WHERE MapItem_date = "+ str(tomorrow)
+    querry_select_drinks = "SELECT Vendre_id, Vendre_qte, Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND Vendre_date = "+ str(tomorrow)
 
     db = Db()
     result_map = db.select(querry_select_map)
