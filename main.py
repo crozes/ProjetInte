@@ -517,6 +517,8 @@ def postActionPlayer(playerName) :
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
                 
+                print "diff"
+                print diff
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
                     query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (MapItem_kind,MapItem_date,MapItem_latitude,MapItem_longitude) DO UPDATE SET MapItem_kind=\'%s\',MapItem_date=%d,MapItem_latitude=%f AND MapItem_longitude=%f;" %("ad",getTomorrow,latitude,longitude)
