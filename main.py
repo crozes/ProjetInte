@@ -509,7 +509,7 @@ def postActionPlayer(playerName) :
                         currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
+                diff = float(newPrice) - float(currentPrice)
                 
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
@@ -552,7 +552,7 @@ def postActionPlayer(playerName) :
                         currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
+                diff = float(newPrice) - float(currentPrice)
                 
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
