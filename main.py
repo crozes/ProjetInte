@@ -262,7 +262,7 @@ def dropAction(playerName) :
         for res_drinks in result_drinks :
             value_drinks = prixProduction(res_drinks["recipe_name"]) * res_drinks["vendre_qte"]
             actionCash(playerName,value_drinks,db)
-            querry_delete_vendre = "DELETE FROM Vendre WHERE Recipe_id = "+str(res_drinks["recipe_id"]+"AND Player_ID ="+str(res_drinks["player_id"])+"AND Vendre_date = "+str(tomorrow))
+            querry_delete_vendre = "DELETE FROM Vendre WHERE Recipe_id = "+str(res_drinks["recipe_id"])+"AND Player_ID ="+str(res_drinks["player_id"])+"AND Vendre_date = "+str(tomorrow)
             db.execute(querry_delete_vendre)
     
     db.close()
@@ -632,10 +632,10 @@ def postMetrology() :
         today=getToDay()
         #on compare le jour précédent avec le jour courant
         
-        if(today - previous_day>0):
+        if(int(today) - int(previous_day)>0):
             traitementMinuit()
         else:
-            if(today - previous_day<0):
+            if(int(today) - int(previous_day)<0):
                 resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
