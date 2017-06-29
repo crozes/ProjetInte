@@ -1,13 +1,13 @@
 var nombrePanneau = 0;
 var indexPanneau = 0;
-var prix = 50;
+var prix = 10;
 
 function addPanneau(num){
 
     nombrePanneau += 1;
     indexPanneau += 1;
     var prixPub = 50;
-    $('#list').append('<tr id="line_' + nombrePanneau + '"><td>Panneau ' + indexPanneau + '</td><td>longitude:<input id="x_' + nombrePanneau + '" value="10" class="input" type="text" name="lname"><BR>latitude:<input value="10" id="y_' + nombrePanneau + '" class="input" type="text" name="lname"></td><td><input id="surface_' + nombrePanneau + '" onkeypress="inputClick(' + nombrePanneau + ')" class="input" type="text" name="lname" value="1">m²</td><td id="tablePrixPub_' + nombrePanneau + '">50€</td><td><button type="button" id="clear_' + nombrePanneau + '" onclick="deletePanneau(' + nombrePanneau + ')" class="btn"><img id="logoDay1" src="SVG/trash.svg" alt="weather" height="50px" width="50px" /></button></td></tr>');
+    $('#list').append('<tr id="line_' + nombrePanneau + '"><td>Panneau ' + indexPanneau + '</td><td>longitude:<input id="x_' + nombrePanneau + '" value="10" class="input" type="text" name="lname"><BR>latitude:<input value="10" id="y_' + nombrePanneau + '" class="input" type="text" name="lname"></td><td><input id="surface_' + nombrePanneau + '" onkeypress="inputClick(' + nombrePanneau + ')" class="input" type="text" name="lname" value="1">m²</td><td id="tablePrixPub_' + nombrePanneau + '">' + prix + '€</td><td><button type="button" id="clear_' + nombrePanneau + '" onclick="deletePanneau(' + nombrePanneau + ')" class="btn"><img id="logoDay1" src="SVG/trash.svg" alt="weather" height="50px" width="50px" /></button></td></tr>');
     addPubToRecap(nombrePanneau);
 }
 
@@ -26,7 +26,7 @@ function inputClick(num){
     $('#surface_' + num).on('input',function(){
         var data = $('#surface_' + num).val(); 
         var surface = parseInt(data);
-        var result = surface * prix;
+        var result = ((surface * surface) * prix);
 
         //On modifie le récap pour ce panneau
         $('#pub_' + num).empty();
