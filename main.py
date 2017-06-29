@@ -674,8 +674,8 @@ def postPlayer() :
         #on met le rayon d'apparition autour du centre entre 40 et 70 unités
         rayon = random.uniform(40,70)
         
-        random_longitude = rayon * cos(theta)
-        random_latitude = rayon * sin(theta)
+        random_longitude = rayon * math.cos(theta)
+        random_latitude = rayon * math.sin(theta)
         
         #random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
         #random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
