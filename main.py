@@ -497,11 +497,16 @@ def getPlayerSMap(playerName):
 def postSales():
     data = request.get_json()
     sales=data['sales']
+    
+    print "entrée json"
+    print sales
+    
     salesArray=[]
     for sale in sales:
         #on récupère les infos du json avant de demander une modification du stock
         salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
-        
+    
+    
     if(len(salesArray)==0):
         noSale={}
         noSale['player']="none"
@@ -509,6 +514,9 @@ def postSales():
         noSale['quantity']=0
         salesArray.append(noSale)
         
+    print "salesArray"
+    print salesArray
+    
     retour = {"sales":salesArray}
     return json.dumps(retour),200,{'Content-Type' : 'application/json'}
 
