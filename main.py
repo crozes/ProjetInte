@@ -518,7 +518,7 @@ def postActionPlayer(playerName) :
         
         data = allData['actions']
         
-        #DROP toutes les lignes du player a la date de demain######################################################"
+        dropAction(playerName)
             
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
@@ -547,7 +547,6 @@ def postActionPlayer(playerName) :
                     db = Db()
                     db.execute(query)
                     db.close()
-                    
                     
                     actionCash(playerName, -newPrice)
 
