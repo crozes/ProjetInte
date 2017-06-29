@@ -57,7 +57,7 @@
 										<div class="wind">
 											
 
-											<span>ville: PERPIGNAN</span>
+											<span>ville: TOULOUSE</span>
 										</div>
 									</div>
 
@@ -131,11 +131,11 @@
 		            					Carte du jeu :
 		            					<div id="MapPlace">
 		            						<canvas id="myCanvas" width="800" height="500" >
-		            							<img id="stand" width="40" height="40"src="images/map.png" alt="stand"> 
+		            							<img id="mapBack" src="images/map.png" alt="map"> 
 											</canvas>
 											<h4>Legende :</h4>
-											<p>Stand de limonade :<img id="map" width="800" height="500"src="images/stand.png" alt="map"></p>
-											<p>Vos panneaux publicitaires :<img id="ad" width="40" height="40"src="images/pub.png" alt="pun"></p>
+											<p>Stand de limonade :<img id="stand" width="40" height="40"src="images/stand.png" alt="stand"></p>
+											<p>Vos panneaux publicitaires :<img id="ad" width="40" height="40"src="images/pub.png" alt="pub"></p>
 										</div>
 		          					</div>
 		          					<div class="tab-pane fade" id="Actions">
@@ -382,9 +382,11 @@
 								dayCalculation(hour);
 
 								var dayPeriod = CurrentDayPeriod;
+								var dayPeriodChange;
 								var dayPrev = CurrentDay;
+								var dayPrevChange;
 
-								//Méteo d'aujourd'jui et prévisionnel
+								//Boucle pour avoir chaque prévision de chaque jour suivant
 								for(var index in temps){
 
 									var value = JSON.stringify(temps[index]);
@@ -393,74 +395,365 @@
 									var meteoTemps = valueParse.weather;
 
 									//Test si l'index est a 0 puisque c'est la méteo d'aujourd'hui qui ne change pas
-									if(indexMeteo == 0){
-										$('#weather').empty();
-										$('#weather').append(meteoTemps);
-										$('#recapMeteo').empty();
-										$('#recapMeteo').append(meteoTemps);
+									switch(indexMeteo){
+										case 0:
+											$('#weather').empty();
+											$('#weather').append(meteoTemps);
+											$('#recapMeteo').empty();
+											$('#recapMeteo').append(meteoTemps);
 
-										switch(meteoTemps){
-										case 'cloudy':
-										 	document.getElementById("logoDay1").src= "SVG/14.svg";
-											document.getElementById("imageback").src = "images/cloudy.png";
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("logoDay1").src= "SVG/14.svg";
+												document.getElementById("imageback").src = "images/cloudy.png";
+												break;
+											case 'rainny':
+												document.getElementById("logoDay1").src= "SVG/18.svg";
+												document.getElementById("imageback").src = "images/rainy.png";
+												break;
+											case 'sunny':
+												document.getElementById("logoDay1").src= "SVG/8.svg";
+												document.getElementById("imageback").src = "images/sunny.png";
+												break;
+											case 'heatwave':
+												document.getElementById("logoDay1").src= "SVG/2.svg";
+												document.getElementById("imageback").src = "images/heatwave.png";
+												break;
+											case 'thunderstorm':
+												document.getElementById("logoDay1").src= "SVG/16.svg";
+												document.getElementById("imageback").src = "images/thunderstorm.png";
+												break;
+											default:
+												break;
+											}
 											break;
-										case 'rainny':
-											document.getElementById("logoDay1").src= "SVG/18.svg";
-											document.getElementById("imageback").src = "images/rainy.png";
+										case 1:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "PM";
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 1;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
 											break;
-										case 'sunny':
-											document.getElementById("logoDay1").src= "SVG/8.svg";
-											document.getElementById("imageback").src = "images/sunny.png";
+										case 2:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 1;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 1;
+												
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
 											break;
-										case 'heatwave':
-											document.getElementById("logoDay1").src= "SVG/2.svg";
-											document.getElementById("imageback").src = "images/heatwave.png";
+										case 3:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 1;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 2;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
 											break;
-										case 'thunderstorm':
-											document.getElementById("logoDay1").src= "SVG/16.svg";
-											document.getElementById("imageback").src = "images/thunderstorm.png";
+										case 4:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 2;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 2;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
 											break;
-										default:
+										case 5:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 2;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 3;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
 											break;
-										}
+										case 6:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 3;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 3;
+												
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
+											break;
+										case 7:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 3;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 4;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
+											break;
+										case 8:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 4;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 4;
+												
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
+											break;
+										case 9:
+											var dayPrevChange = dayPrev;
+											if(dayPeriod == "AM"){
+												dayPeriodChange = "PM";
+												dayPrevChange = dayPrev + 4;
+											}
+											else if(dayPeriod == "PM"){
+												dayPeriodChange = "AM";
+												dayPrevChange = dayPrev + 5;
+											}
+
+											$('#prev_' + indexMeteo).empty();
+											$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrevChange + '</h1><h1>' + dayPeriodChange + '</h1><img id="imageMeteo_' + indexMeteo + '" src="" alt="prev1"height="87px"width="80px"/></div>');
+
+
+											//Permet de changer les images de la prev
+											switch(meteoTemps){
+											case 'cloudy':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/14_2.svg";
+												break;
+											case 'rainny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/18_2.svg";
+												break;
+											case 'sunny':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/8_2.svg";
+												break;
+											case 'heatwave':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/2_2.svg";
+												break;
+											case 'thunderstorm':
+											 	document.getElementById("imageMeteo_" + indexMeteo).src= "SVG/16_2.svg";
+												break;
+											default:
+												break;
+											}
+											break;
 									}
-									else{
-
-
-										$('#prev_' + indexMeteo).empty();
-										$('#prev_' + indexMeteo).append('<div class="day"><h1>JOUR ' + dayPrev + '</h1><h1>' + dayPeriod + '</h1><img id="imageMeteo_' + index + '" src="" alt="prev1"height="87px"width="80px"/></div>');
-
-										//Permet de changer alternativement la periode des prévisions.
-										if(dayPeriod == "AM"){
-											dayPeriod = "PM";
-										}
-										else if(dayPeriod == "PM"){
-											dayPeriod = "AM";
-											dayPrev += 1;
-										}
-
-										//Permet de changer les images de la prev
-										switch(meteoTemps){
-										case 'cloudy':
-										 	document.getElementById("imageMeteo_" + index).src= "SVG/14_2.svg";
-											break;
-										case 'rainny':
-										 	document.getElementById("imageMeteo_" + index).src= "SVG/18_2.svg";
-											break;
-										case 'sunny':
-										 	document.getElementById("imageMeteo_" + index).src= "SVG/8_2.svg";
-											break;
-										case 'heatwave':
-										 	document.getElementById("imageMeteo_" + index).src= "SVG/2_2.svg";
-											break;
-										case 'thunderstorm':
-										 	document.getElementById("imageMeteo_" + index).src= "SVG/16_2.svg";
-											break;
-										default:
-											break;
-										}
-									}
-
 								}
 							});
 						}
@@ -688,6 +981,11 @@
 							//Canvas
 							var canvas = document.getElementById("myCanvas");
 
+							//Affichage de la map
+							var imgBackGround =document.getElementById('mapBack');
+    						var objetCanvasBack = canvas.getContext("2d");
+							objetCanvasBack.drawImage(imgBackGround, 0, 0);
+
 							//
 
    							/*************RECUPERATION DES DONNEES ET TRAITEMENT ***********/
@@ -719,18 +1017,19 @@
 									if(AllinfoPlayerParse.kind == 'stand'){
 
 										var latitude = getLatitude(AllinfoPlayerParse.location);
-										var longitude = getLatitude(AllinfoPlayerParse.location);
+										var longitude = getLongitude(AllinfoPlayerParse.location);
 										var objetCanvas = canvas.getContext("2d");
-    									var img = document.getElementById("stand");
-    									alert(latitude);
+    									var img = new Image();
+    									img.src = 'images/stand.png';
    										objetCanvas.drawImage(img, longitude, latitude);
 									}
 									else if(AllinfoPlayerParse.kind == 'ad'){
 
 										var latitude = getLatitude(AllinfoPlayerParse.location);
-										var longitude = getLatitude(AllinfoPlayerParse.location);
+										var longitude = getLongitude(AllinfoPlayerParse.location);
 										var objetCanvas = canvas.getContext("2d");
-    									var img = document.getElementById("ad");
+    									var img = new Image();
+    									img.src = 'images/pub.png';
    										objetCanvas.drawImage(img, longitude, latitude);
 									}
 								}
