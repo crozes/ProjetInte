@@ -668,8 +668,16 @@ def postPlayer() :
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
-        random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
-        random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
+        #on genère le point autour du centre (0,0)
+        theta = random.uniform(0,2*3.14159)
+        #on met le rayon d'apparition autour du centre entre 40 et 70 unités
+        rayon = random.uniform(40,70)
+        
+        random_longitude = rayon * cos(theta)
+        random_latitude = rayon * sin(theta)
+        
+        #random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
+        #random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_longitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.execute(query_addPlayer)
         query_select = db.select("SELECT Player_id, Player_latitude, Player_longitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
