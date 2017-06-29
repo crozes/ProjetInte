@@ -162,7 +162,7 @@ def getIdRecipeByName(RecipeName) :
 
 ### Get id mapitem by infos
 def getIdMapitemByInfos(playerId,latitude,longitude) :
-    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d, mapitem_date=%d, mapitem_latitude=%f, mapitem_longitude=%f" % (playerId,latitude,longitude) 
+    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d, mapitem_date=%d, mapitem_latitude=%f, mapitem_longitude=%f" % (playerId;getToDay(),latitude,longitude) 
                 
     db = Db()
     result = db.select(query_select)
