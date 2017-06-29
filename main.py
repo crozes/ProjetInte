@@ -490,7 +490,9 @@ def postActionPlayer(playerName) :
         print allData
         
         data = allData['actions']
-        
+        if(len(data)==0):
+            #DROP toutes les lignes du player a la date de demain######################################################"
+            
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
         getTomorrow = today+1
