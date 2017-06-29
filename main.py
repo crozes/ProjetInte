@@ -504,8 +504,8 @@ def postSales():
         
     if(len(salesArray)==0):
         noSale={}
-        noSale['player']=playerName
-        noSale['item']=recipeName
+        noSale['player']="none"
+        noSale['item']="norecipe"
         noSale['quantity']=0
         salesArray.append(noSale)
         
