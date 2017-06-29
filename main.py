@@ -526,7 +526,7 @@ def postActionPlayer(playerName) :
                     
                     actionCash(playerName, -newPrice)
 
-                   totalCost += newPrice
+                    totalCost += newPrice
 
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : 0}
