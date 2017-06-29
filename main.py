@@ -241,7 +241,7 @@ def dropAction(playerName) :
     value_drinks = 0
     tomorrow = int(getToDay()) + 1
     querry_select_map = "SELECT MapItem_id, MapItem_rayon FROM MapItem WHERE MapItem_date = "+ str(tomorrow)
-    querry_select_drinks = "SELECT v.Vendre_id, v.Vendre_qte, r.Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND v.Vendre_date = "+ str(tomorrow)
+    querry_select_drinks = "SELECT  v.Player_id, v.Recipe_id, v.Vendre_qte, r.Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND v.Vendre_date = "+ str(tomorrow)
 
     db = Db()
     result_map = db.select(querry_select_map)
@@ -259,7 +259,7 @@ def dropAction(playerName) :
         for res_drinks in result_drinks :
             value_drinks = prixProduction(res_drinks["recipe_name"]) * res_drinks["vendre_qte"]
             actionCash(playerName,value_drinks,db)
-            querry_delete_vendre = "DELETE FROM Vendre WHERE Vendre_id = "+str(res_drinks["vendre_id"])
+            querry_delete_vendre = "DELETE FROM Vendre WHERE Recipe_id = "+str(res_drinks["recipe_id"]+"AND Player_ID ="+str(res_drinks["player_id"])+"AND Vendre_date = "+str(tomorrow))
             db.execute(querry_delete_vendre)
     
     db.close()
