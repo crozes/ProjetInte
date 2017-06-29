@@ -233,7 +233,7 @@ def getMeteo():
 ### ActionCash
 def actionCash(playerName,cash_to_add) :
     cash = ''
-    querry = "UPDATE player SET Player_cash = Player_cash + %f" % (cash_to_add) 
+    querry = "UPDATE player SET Player_cash = Player_cash + %f WHERE player_id=%d" % (cash_to_add,getIdPlayerByName(playerName)) 
     
     db = Db()
     result = db.execute(querry)
