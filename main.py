@@ -546,10 +546,10 @@ def postActionPlayer(playerName) :
                         
                     db = Db()
                     db.execute(query)
-                    db.close()
                     
-                    actionCash(playerName, -newPrice)
+                    actionCash(playerName, -newPrice, db)
 
+                    db.close()
                     totalCost += newPrice
 
                 else :
