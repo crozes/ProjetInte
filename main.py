@@ -568,17 +568,15 @@ def postActionPlayer(playerName) :
                 
                 newPrice = prixProduction(string_drinks) * qte
                 
-                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
+                queryPriceB4 = "SELECT vendre_prix, vendre_qte FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
                 
                 currentPrice=''
-                if (resultPriceB4==None):
-                    currentPrice =0
-                else:
-                    for prixDeLaRecipe in resultPriceB4:
-                        currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
+                currentPrice =0.0
+                for prixDeLaRecipe in resultPriceB4:
+                    currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
@@ -589,7 +587,11 @@ def postActionPlayer(playerName) :
                     id_recipe = getIdRecipeByName(string_drinks)
                     meteo = getMeteo()
                     
-                    querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
+                    id_vendre = getIdCommandeByInfos(id_player,id_recette)
+                    if(id_vendre==0):
+                        query = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+");"
+                    else:
+                        query = "UPDATE vendre SET Vendre_qte = 0, Vendre_prix = "+str(price)+" WHERE Vendre_date = "+str(getTomorrow)+" AND Player_id = "+str(id_player)+" AND Recipe_id ="+str(id_recipe)+";" %(diff,id_mapitem)
                     
                     actionCash(playerName, -diff )
                     
