@@ -168,14 +168,14 @@ def getIdMapitemByInfos(playerId,latitude,longitude) :
     result = db.select(query_select)
     mapitem_id = ''
     
-    if(result==None):
+    if(len(result)==0):
         mapitem_id=0
     else:
-        for mapitem_id in result :
-            mapitem_id = mapitem_id['mapitem_id']
+        for mapitem in result :
+            mapitem_id = int(mapitem['mapitem_id'])
     print "mapitem_id"
     print mapitem_id
-    return int(mapitem_id)
+    return mapitem_id
 
 ### Get Cash Player by Name
 def getCashByName(PlayerName) :
