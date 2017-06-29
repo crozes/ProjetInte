@@ -506,7 +506,7 @@ def postActionPlayer(playerName) :
                     currentPrice =0
                 else:
                     for prixDuMapitem in resultPriceB4:
-                        currentPrice = prixDuMapitem['mapitem_rayon']*prixDuMapitem['mapitem_rayon']*RANGE_PRIX
+                        currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
@@ -549,7 +549,7 @@ def postActionPlayer(playerName) :
                     currentPrice =0
                 else:
                     for prixDeLaRecipe in resultPriceB4:
-                        currentPrice = prixDeLaRecipe['vendre_prix']*prixDeLaRecipe['vendre_qte']
+                        currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
