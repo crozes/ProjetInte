@@ -543,7 +543,7 @@ def postActionPlayer(playerName) :
                 
                     id_mapitem = getIdMapitemByInfos(id_player,latitude,longitude)
                     if(id_mapitem==0):
-                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+")
+                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+");"
                     else:
                         query = "UPDATE mapitem SET mapitem_rayon = mapitem_rayon + (%f) WHERE mapitem_id=%d;" %(diff,id_mapitem)
                         
