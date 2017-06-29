@@ -60,10 +60,10 @@ CREATE TABLE public.Ingredient(
 CREATE TABLE public.MapItem(
 	MapItem_id        BIGSERIAL  NOT NULL ,
 	MapItem_kind      VARCHAR (255)  ,
-	MapItem_latitude  FLOAT   NOT NULL,
-	MapItem_longitude FLOAT   NOT NULL,
+	MapItem_latitude  FLOAT   ,
+	MapItem_longitude FLOAT   ,
 	MapItem_rayon     FLOAT   ,
-	MapItem_date      INT   NOT NULL,
+	MapItem_date      INT   ,
 	Player_id         INT   NOT NULL,
 	CONSTRAINT prk_constraint_MapItem PRIMARY KEY (MapItem_id)
 )WITHOUT OIDS;
@@ -224,8 +224,8 @@ INSERT INTO public.Vendre(
 	
 INSERT INTO public.MapItem(
 	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
-	VALUES ('ad',400,200,5.0,48,1);
+	VALUES ('ad',400,200,5.0,0,1);
 	
 INSERT INTO public.MapItem(
 	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
-	VALUES ('ad',100,300,8.0,56,1);	
+	VALUES ('ad',100,300,8.0,0,1);	
