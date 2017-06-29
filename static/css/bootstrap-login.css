@@ -1,4 +1,5 @@
 #backGris{
+    position: absolute;
     z-index: 3;
     height: 100%;
     width: 100%;
@@ -17,7 +18,7 @@
 
 
 .container {
-    padding: 50px;
+    padding: 25px;
     position: absolute;
 }
 
@@ -34,6 +35,11 @@
     margin-top: 150px;
 }
 
+.col-centered{
+    float: none;
+    margin:0 auto;
+}
+
 h2 { 
  border:0 solid #fff; 
  border-bottom-width:1px;
@@ -42,8 +48,7 @@ h2 {
 }
 
 .form-control {
-    border-radius: 10px;
-    margin:0 auto;
+
 }
 
 .wrapper {

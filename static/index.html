@@ -23,23 +23,21 @@
 		  </head>
 		  <body>
 		  	<div id="backGris">
-		  		<div class="container">
-		    		<div class="row">
-		        		<div class="col-md-offset-4 col-md-6">
-		            		<div class="form-login">
-		            			<h2>BIENVENUE</h2>
-		            			<input type="text" id="pseudo" class="form-control input-sm chat-input" placeholder="Pseudo" />
-		            			</br>
-		            			
-		            			<div class="wrapper">
-		            				<span class="group-btn">     
-		                				<button class="btn btn-primary btn-md" onclick="newPlayer()">Jouer <i class="fa fa-sign-in"></i></button>
-		            				</span>
-		            			</div>
-		            		</div>
-		        		</div>
-		    		</div>
-				</div>
+	    		<div class="row pageLogin">
+	        		<div class="col-md-6 col-centered" >
+	            		<div class="form-login">
+	            			<h2>BIENVENUE</h2>
+	            			<input type="text" id="pseudo" class="form-control input-sm chat-input" placeholder="Pseudo" />
+	            			</br>
+	            			
+	            			<div class="wrapper">
+	            				<span class="group-btn">     
+	                				<button class="btn btn-primary btn-md" onclick="newPlayer()">Jouer <i class="fa fa-sign-in"></i></button>
+	            				</span>
+	            			</div>
+	            		</div>
+	        		</div>
+	    		</div>
 		  	</div>
 
 		    <div id="webPage" class="col-sm-12 container">
@@ -950,11 +948,23 @@
 
 							dataToSend += ']}';
 
+							//Data envoyée
+							alert(dataToSend);
+
 							//Envoie des données au server
 							$.ajax("http://ponderosaproject.herokuapp.com/actions/" + pseudoJoueur,{
 								type: 'POST',
 								contentType: 'application/json',
 								data: JSON.stringify(dataToSend)
+								success: function (response) {
+
+
+		                			var isMoneyOk = response.sufficientFunds;
+		                			if(!isMoneyOk){
+		                				alert('pas asser de sous sous dans la po poche');
+		                			}
+
+		        				}
 							});
 						}
 
