@@ -656,12 +656,7 @@ def postMetrology() :
         today=getToDay()
         #on compare le jour précédent avec le jour courant
         
-        print "today"
-        print today
-        print "previous_day"
-        print previous_day
-        print type(previous_day)
-        if (previous_day==None or previous_day==''):
+        if (type(previous_day) is str):
             previous_day==0
         
         if(int(today) - int(previous_day)>0):
