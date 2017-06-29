@@ -523,7 +523,7 @@ def postActionPlayer(playerName) :
                 for rayonDuMapitem in resultPriceB4:
                     print "rayon du mapitem"
                     print rayonDuMapitem['mapitem_rayon']
-                    currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
+                    currentPrice = float(rayonDuMapitem['mapitem_rayon'])*float(rayonDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 print "newPrice"
                 print newPrice
                 print "currentPrice"
