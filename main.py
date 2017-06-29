@@ -247,7 +247,7 @@ def dropAction(playerName) :
     result_map = db.select(querry_select_map)
     
     
-    if result_map.legth() != 0 :
+    if len(result_map) != 0 :
         for res_map in result_map :
             value_map = int(res_map['mapitem_rayon'])*int(res_map['mapitem_rayon'])*RANGE_PRIX
             actionCash(playerName,value_map,db)
@@ -255,7 +255,7 @@ def dropAction(playerName) :
             db.execute(querry_delete_map)
     
     result_drinks = db.select(querry_select_drinks)
-    if result_drinks.legth() != 0 :
+    if len(result_drinks) != 0 :
         for res_drinks in result_drinks :
             value_drinks = prixProduction(res_drinks["recipe_name"]) * res_drinks["vendre_qte"]
             actionCash(playerName,value_drinks,db)
