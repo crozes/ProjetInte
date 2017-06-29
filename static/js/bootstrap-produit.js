@@ -1,7 +1,8 @@
-var prixProd = 5;
 
 function prodMoins(num){
     var oldValue = $('#inputProd_' + num).val();
+    var prix = $('#PrixProduit_' + num).text();
+    var prixProd = parseFloat(prix);
     var valueParse = parseInt(oldValue);
     if(valueParse == 0){
     }
@@ -14,15 +15,20 @@ function prodMoins(num){
     else{
         var nom = $('#nomProd_' + num).text();
         var newValue = valueParse - 1;
+        var prixglobal = newValue * prixProd;
+        prixglobal = prixglobal.toFixed(2);
         $('#inputProd_' + num).val(newValue);
         $('#prod_' + num).empty();
-        $('#prod_' + num).append('<td>' + nom + '</td><td id="prixProd_' + num + '">' + (newValue * prixProd )+'€</td>');
+        $('#prod_' + num).append('<td>' + nom + '</td><td id="prixProd_' + num + '">' + prixglobal +'€</td>');
         modifSolde();
     }
 }
 
 function prodPlus(num){
     var oldValue = $('#inputProd_' + num).val();
+    var prix = $('#PrixProduit_' + num).text();
+    var prixProd = parseFloat(prix);
+    prixProd = prixProd.toFixed(2);
     var valueParse = parseInt(oldValue);
     var newValue = valueParse + 1;
     var nom = $('#nomProd_' + num).text();
@@ -31,6 +37,7 @@ function prodPlus(num){
     }
 
     var prixglobal = newValue * prixProd;
+    prixglobal = prixglobal.toFixed(2);
     $('#prod_' + num).empty();
     $('#prod_' + num).append('<td>' + nom + '</td><td id="prixProd_' + num + '">' + prixglobal +'€</td>');
     $('#inputProd_' + num).val(newValue);

@@ -249,7 +249,7 @@
 							</tbody>
 						</table>
 						<font class="recapEnd">
-						SOLDE: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
+						PREV: <font id="budgetTotal"></font> - <font id="achatTotal">0</font> = <font id="resultat"></font>€
 						</font>
 						
 		            <section>
@@ -304,6 +304,7 @@
 		                			//Affiche les info de la journée
 		                			setPlayerInfo(response.info);
 
+		                			//Permet d'afficher la map et d'avoir la position du stand
 		                			getAllInfoOnDayChange();
 		        				}
 							});
@@ -353,7 +354,7 @@
 								var cold = prodParse.isCold;
 
 								//Ajout des produit a la table
-								$("#AllProduct").append('<tr id="list_' + index2 + '"><td id="nomProd_' + index2 + '" class="col-sm-6">' + nom + '</td><td>' + prix + '€</td><td>' + alchool + '</td><td>' + cold + '</td><td><input id="prixVente_' + index2 + '" value="5" class="input" type="text" name="lname"></td><td class="col-sm-4"><div><div class="input-group number-spinner spinner"><span class="input-group-btn"><button onclick="prodMoins(' + index2 +')" id="prodMoins_' + index2 + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + index2 + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + index2 +')" id="prodPlus_' + index2 + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
+								$("#AllProduct").append('<tr id="list_' + index2 + '"><td id="nomProd_' + index2 + '" class="col-sm-6">' + nom + '</td><td id="PrixProduit_' + index2 + '" >' + prix + '€</td><td>' + alchool + '</td><td>' + cold + '</td><td><input id="prixVente_' + index2 + '" value="5" class="input" type="text" name="lname"></td><td class="col-sm-4"><div><div class="input-group number-spinner spinner"><span class="input-group-btn"><button onclick="prodMoins(' + index2 +')" id="prodMoins_' + index2 + '" class="btn btn-default buttonMoins" data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button></span><input id="inputProd_' + index2 + '" type="text" class="form-control text-center" value="0"><span class="input-group-btn"><button onclick="prodPlus(' + index2 +')" id="prodPlus_' + index2 + '" class="btn btn-default buttonPlus" data-dir="up"><span class="glyphicon glyphicon-plus"></span></button></span></div></div></td></tr>');
 							}
 							
 
@@ -794,6 +795,11 @@
 								CurrentDayPeriod = "AM";
 								$('#moment').empty();
 								$('#moment').append(CurrentDayPeriod);
+							}
+
+							//Des que ca passe au jour suivant
+							if(resModulo <= 4){
+								getAllInfoOnDayChange();
 							}
 						}
 
