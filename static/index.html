@@ -124,6 +124,7 @@
 		        						<h2>Ventes réalisés</h2>
 		        						<div id="historiqueVente" class="col-sm-12">
 		        						</div>
+		        						.
 		          					</div>
 		          					<div class="tab-pane fade" id="Map">
 		            					Carte du jeu :
@@ -269,6 +270,8 @@
 						var CurrentDayPeriod = "AM";
 						var doOnce = false;
 						var pseudoJoueur = "";
+						var getDailyInfo = true;
+						var OnTimeFunction = true;
 
 						//var playerActionAd = {"kind": "ad", "location": [{"latitude": 0, "longitude": 0}], "radius": 0};
 						//var playerActionDrinks = {"kind": "drinks", "prepare" : {"" : 0}, "price": {"", 0}};
@@ -302,8 +305,6 @@
 		                			//Affiche les info de la journée
 		                			setPlayerInfo(response.info);
 
-		                			//Permet d'afficher la map et d'avoir la position du stand
-		                			getAllInfoOnDayChange();
 		        				}
 							});
 							setInterval(getHourWeather, 2000);
@@ -766,10 +767,15 @@
 							//Change le jour
 							if(nombreJour >= 1){
 								CurrentDay = parseInt(nombreJour);
-							}
 
-							
-							
+								if(OnTimeFunction){
+									//Permet d'afficher la map et d'avoir la position du stand
+		                			getAllInfoOnDayChange();
+
+		                			OnTimeFunction = false;
+								}
+								
+							}
 
 							//Changement de jour sur l'affichage 
 							$('#numJourCourrant').empty();
@@ -796,38 +802,31 @@
 							}
 
 							//Des que ca passe au jour suivant
-							if(resModulo <= 4){
+							if(resModulo < 1 && getDailyInfo){
+								getDailyInfo = false;
 								getAllInfoOnDayChange();
 							}
+							else if(resModulo > 1){
+								getDailyInfo = true;
+							}
 						}
-
-
 						
 						function passerCommande(){
 
-							//recuêre le resultat des achats
-							var resultat = $('#resultat').text();
-							var resultatParse = parseInt(resultat);
-
-							//Teste si le resultat des achats et positif sinon on ne peut pas acheter
-							
-
-							/* ********************************************************************************************************
-							*On fais une bande dans l'historique pour stocker les données de commande pour pouvoir y acceder plus tard
-							*/
+							/**Différente actions sur l'interface quand on clique sur "Passer Commande" ICI**/
 
 							var pubString = '';
 							var prodString;
 
 							//Si cette valeur existe alors on a deja fais une commande ce jour ci donc il faut supr
-							if($('#table_' + CurrentDay).length != 0){
+							if($('#tableAchat_' + CurrentDay).length != 0){
 								//On vide la table pour la re remplir
-								$('#table_' + CurrentDay).remove();
+								$('#tableAchat_' + CurrentDay).remove();
 							}
 
 
 							//On crée le tableau hitorique du jour
-							$('#historiqueAchat').append('<div id="table_' + CurrentDay + '" class="col-sm-6"><div class="well"><h4 class="text-warning">Jour <font id="historiqueJour_' + CurrentDay + '">' + CurrentDay +'</font></h4><p><span class="label label-success">PUB</span></p><table><thead><tr><td>Numéro de pub</td><td>Lat</td><td>long</td><td>Taille</td></tr></thead><tbody id="achatPub_' + CurrentDay + '"></tbody></table><p><span class="label label-success">PRODUITS</span></p><table><thead><tr><td>Nom produit</td><td>Nombre acheté</td><td>Prix de vente</td></tr></thead><tbody id="achatProd_' + CurrentDay + '"></tbody></table></div></div>');
+							$('#historiqueAchat').append('<div id="tableAchat_' + CurrentDay + '" class="col-sm-6"><div class="well"><h2 class="text-warning">Jour <font id="historiqueJour_' + CurrentDay + '">' + CurrentDay +'</font></h2><p><span class="label label-success">PUB</span></p><table><thead><tr><td>Numéro de pub</td><td>Lat</td><td>long</td><td>Taille</td></tr></thead><tbody id="achatPub_' + CurrentDay + '"></tbody></table><p><span class="label label-success">PRODUITS</span></p><table><thead><tr><td>Nom produit</td><td>Nombre acheté</td><td>Prix de vente</td></tr></thead><tbody id="achatProd_' + CurrentDay + '"></tbody></table></div></div>');
 
 							
 							//On fait une boucle pour récupere toutes les pub et tous les produits
@@ -877,8 +876,16 @@
 
 							/* ********************************************************************************************************/
 
-							//Creation des panneaux pour les rendre validé 
-							for(var i = 0 ; i < 30 ; i++){
+
+							//Pour pourvoir faire la fonction getActions()
+							doOnce = false;
+
+							//remet a jour le recapituatif d'achat
+							modifSolde();
+
+
+            				//Creation des panneaux pour les rendre validé 
+            				for(var i = 0 ; i < 30 ; i++){
 
 								//Teste si la ligne du panneau à cet index existe
 								var x = $('#x_' + i).val();
@@ -902,14 +909,7 @@
 								$('#prod_' + i).remove();
 								$('#inputProd_' + i).val(0);
 							}
-
-
-							//Pour pourvoir faire la fonction getActions()
-							doOnce = false;
-
-							//remet a jour le recapituatif d'achat
-							modifSolde();
-							
+							/******************************************/
 
 							//Envoie les données au server
 							sendActionToServer();
@@ -918,6 +918,7 @@
 						function sendActionToServer(){
 
 							var dataToSend = '{"actions" : [';
+							var asProdOrPub = false;
 
 							//Boucle pour avoir les pub et les produits
 							for(var i = 0; i < 30 ; i++){
@@ -929,7 +930,8 @@
 										var longitude = $('#achatPubLong_' + CurrentDay + '_' + i).text();
 										var surface = $('#achatPubSurf_' + CurrentDay + '_' + i).text();
 
-										dataToSend += '{"kind": "ad", "location": [{"latitude": ' + latitude + ', "longitude":' + longitude + '}], "radius": ' + surface + '}';
+										dataToSend += '{"kind": "ad", "location": [{"latitude": ' + latitude + ', "longitude":' + longitude + '}], "radius": ' + surface + '},';
+										asProdOrPub = true;
 									}
 								}
 
@@ -941,29 +943,41 @@
 										var nombre = $('#achatProdNombre_' + CurrentDay + '_' + i).text();
 										var prix = $('#achatProdPrix_' + CurrentDay + '_' + i).text();
 
-										dataToSend += '{"kind": "drinks", "prepare" : {"' + nom + '" : ' + nombre + '}, "price": {"' + nom + '", ' + prix + '}}';
+										dataToSend += '{"kind": "drinks", "prepare" : {"' + nom + '" : ' + nombre + '}, "price": {"' + nom + '": ' + prix + '}},';
+										asProdOrPub = true;
 									}
 								}
 							}
 
-							dataToSend += ']}';
+							//Permet de suppr la derniere virgule
+							if(asProdOrPub){
+								dataToSend = dataToSend.substring(0,dataToSend.length-1);
+							}
 
-							//Data envoyée
-							alert(dataToSend);
+							dataToSend += ']}';
 
 							//Envoie des données au server
 							$.ajax("http://ponderosaproject.herokuapp.com/actions/" + pseudoJoueur,{
 								type: 'POST',
 								contentType: 'application/json',
-								data: JSON.stringify(dataToSend)
+								data: dataToSend,
 								success: function (response) {
 
-
+									//Teste si il y a asser d'argent si
 		                			var isMoneyOk = response.sufficientFunds;
+
 		                			if(!isMoneyOk){
 		                				alert('pas asser de sous sous dans la po poche');
 		                			}
+		                			else{
 
+
+
+		                				/* ********************************************************************************************************
+										*On fais une bande dans l'historique pour stocker les données de commande pour pouvoir y acceder plus tard
+										*/
+
+		                			}
 		        				}
 							});
 						}
@@ -972,7 +986,6 @@
 						function getAllInfoOnDayChange(){
 							$.ajax('http://ponderosaproject.herokuapp.com/map/' + pseudoJoueur).done(function(data){
 
-								alert(JSON.stringify(data));
 								/*************RECUPERATION DES DONNEES ET TRAITEMENT ***********/
 								var madata = JSON.stringify(data);
 								var maDataGet = JSON.parse(madata);
@@ -987,6 +1000,18 @@
 
 								//Fais un update sur la map (remet a jour les positions etc)
 								updateMap(map);
+
+								//Genere un tableau de ventes pour la journée
+								addSellData(info);
+
+								for(var i = 0; i < 30 ; i++){
+									if($('#ValideLine_' + i).length != 0){
+										$('#ValideLine_' + i).remove();
+									}
+									if($('#line_' + i).length != 0){
+										$('#line_' + i).remove();
+									}
+								}
 
 								/*************************************************************/
 							});
@@ -1026,7 +1051,6 @@
 									var infoPlayerString = infoPlayer[index2];
 									var AllinfoPlayerString = JSON.stringify(infoPlayerString);
 									var AllinfoPlayerParse = JSON.parse(AllinfoPlayerString);
-									alert(AllinfoPlayerParse.kind);
 
 									//A ce stade la nous sont dans les info d'un joueur
 									//Nous avons acces a toutes les données du stand et des publicités
@@ -1054,6 +1078,34 @@
 							/*************************************************************/
 						}
 
+						function addSellData(info){
+							//Traitement des données
+							var infoString = JSON.stringify(info);
+							var infoParse = JSON.parse(infoString);
+
+							//Toutes mles donnée récupéré
+							var sales = infoParse.sales;
+							var drinks = infoParse.drinksOffered;
+
+
+							//On crée le tableau hitorique du jour
+							$('#historiqueVente').append('<div id="tableVente_' + CurrentDay + '" class="col-sm-6"><div class="well"><h2 class="text-info">Jour <font id="historiqueVenteJour_' + CurrentDay + '">' + CurrentDay +'</font></h2><p><span class="label label-info">VENTES DE LA JOURNEE</span></p><table><thead><tr><td>Produits vendu</td><td>Nombre de vente</td></tr></thead><tbody id="venteProd_' + CurrentDay + '"></tbody></table></div></div>');
+
+							var stringToPut = '<tr><td>';
+
+
+							for(var index2 in drinks){
+								var prodString = JSON.stringify(drinks[index2]);
+								var prodParse = JSON.parse(prodString);
+
+								var nom = prodParse.name;
+
+								
+								stringToPut += nom + '<BR>';
+							}
+
+							$('#venteProd_' + CurrentDay).append(stringToPut + '</td><td>' + sales + '</td></tr>');
+						}
 
 						//Appelé par : getAllInfoOnDayChange()
 						function setRanking(map){
