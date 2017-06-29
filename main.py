@@ -231,14 +231,40 @@ def getMeteo():
     
     
 ### ActionCash
-def actionCash(playerName,cash_to_add) :
-    cash = ''
+def actionCash(playerName,cash_to_add, db) :
     querry = "UPDATE player SET Player_cash = Player_cash + %f WHERE player_id=%d" % (cash_to_add,getIdPlayerByName(playerName)) 
-    
+    db.execute(querry)
+
+### DROP Action demain
+def dropAction(playerName) :
+    value_map = 0
+    value_drinks = 0
+    tomorrow = int(getToDay()) + 1
+    querry_select_map = "SELECT MapItem_id, MapItem_rayon FROM MapItem WHERE MapItem_date = "+ tomorrow
+    querry_select_drinks = "SELECT Vendre_id, Vendre_qte, Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND Vendre_date = "+ tomorrow
+
     db = Db()
-    result = db.execute(querry)
+    result_map = db.select(querry_select_map)
     
-          
+    
+    if result_map.legth() != 0 :
+        for res_map in result_map :
+            value_map = int(res_map['mapitem_rayon'])*int(res_map['mapitem_rayon'])*RANGE_PRIX
+            actionCash(playerName,value_map,db)
+            querry_delete_map = "DELETE FROM MapItem WHERE MapItem_id ="+str(res_map['mapItem_id'])
+            db.execute(querry_delete_map)
+    
+    result_drinks = db.select(querry_select_drinks)
+    if result_drinks.legth() != 0 :
+        for res_drinks in result_drinks :
+            value_drinks = prixProduction(res_drinks["recipe_name"]) * res_drinks["vendre_qte"]
+            actionCash(playerName,value_drinks,db)
+            querry_delete_vendre = "DELETE FROM Vendre WHERE Vendre_id = "+str(res_drinks["vendre_id"])
+            db.execute(querry_delete_vendre)
+    
+    db.close()
+
+    
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
     
@@ -491,9 +517,8 @@ def postActionPlayer(playerName) :
         print allData
         
         data = allData['actions']
-        if(len(data)==0):
-            return '{"status":"OK"}',200,{'Content-Type' : 'application/json'}
-            #DROP toutes les lignes du player a la date de demain######################################################"
+        
+        #DROP toutes les lignes du player a la date de demain######################################################"
             
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
