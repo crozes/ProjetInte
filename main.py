@@ -162,7 +162,7 @@ def getIdRecipeByName(RecipeName) :
 
 ### Get id mapitem by infos
 def getIdMapitemByInfos(playerId,latitude,longitude) :
-    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d AND mapitem_date=%d AND mapitem_latitude=%f AND mapitem_longitude=%f" % (playerId,getToDay(),latitude,longitude) 
+    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d AND mapitem_date=%d AND mapitem_latitude=%f AND mapitem_longitude=%f" % (playerId,int(getToDay())+1,latitude,longitude) 
                 
     db = Db()
     result = db.select(query_select)
@@ -508,24 +508,22 @@ def postActionPlayer(playerName) :
                 latitude = ''
                 
                 for locate in location :
-                    longitude = locate['longitude']
-                    latitude = locate['latitude']
+                    longitude = float(locate['longitude'])
+                    latitude = float(locate['latitude'])
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
+                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude= %.2f AND MapItem_longitude= %.2f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
+                print queryPriceB4
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
                 
-                currentPrice=''
-                if (len(resultPriceB4)==0):
-                    currentPrice =0.0
-                else:
-                    for rayonDuMapitem in resultPriceB4:
-                        print "rayon du mapitem"
-                        print rayonDuMapitem['mapitem_rayon']
-                        currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
+                currentPrice =0.0
+                for rayonDuMapitem in resultPriceB4:
+                    print "rayon du mapitem"
+                    print rayonDuMapitem['mapitem_rayon']
+                    currentPrice = float(rayonDuMapitem['mapitem_rayon'])*float(rayonDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 print "newPrice"
                 print newPrice
                 print "currentPrice"
@@ -542,7 +540,7 @@ def postActionPlayer(playerName) :
                 
                     id_mapitem = getIdMapitemByInfos(id_player,latitude,longitude)
                     if(id_mapitem==0):
-                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+");"
+                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getTomorrow)+","+str(id_player)+");"
                     else:
                         query = "UPDATE mapitem SET mapitem_rayon = mapitem_rayon + (%f) WHERE mapitem_id=%d;" %(diff,id_mapitem)
                         
@@ -571,17 +569,15 @@ def postActionPlayer(playerName) :
                 
                 newPrice = prixProduction(string_drinks) * qte
                 
-                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
+                queryPriceB4 = "SELECT vendre_prix, vendre_qte FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
                 
                 currentPrice=''
-                if (resultPriceB4==None):
-                    currentPrice =0
-                else:
-                    for prixDeLaRecipe in resultPriceB4:
-                        currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
+                currentPrice =0.0
+                for prixDeLaRecipe in resultPriceB4:
+                    currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
                 
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
@@ -592,7 +588,11 @@ def postActionPlayer(playerName) :
                     id_recipe = getIdRecipeByName(string_drinks)
                     meteo = getMeteo()
                     
-                    querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
+                    id_vendre = getIdCommandeByInfos(id_player,id_recette)
+                    if(id_vendre==0):
+                        query = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+");"
+                    else:
+                        query = "UPDATE vendre SET Vendre_qte = 0, Vendre_prix = "+str(price)+" WHERE Vendre_date = "+str(getTomorrow)+" AND Player_id = "+str(id_player)+" AND Recipe_id ="+str(id_recipe)+";" %(diff,id_mapitem)
                     
                     actionCash(playerName, -diff )
                     
