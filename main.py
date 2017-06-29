@@ -586,42 +586,11 @@ def postActionPlayer(playerName) :
                 else :
                     data = {"sufficientFunds" : False, "totalCost" : 0}
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
-        
-        
-        data = {"sufficientFunds" : True, "totalCost" : totalCost}
-                    #return {"sufficientFunds" : boolean, "totalCost" : float}
-        return json.dumps(data),201,{'Content-Type' : 'application/json'}
-            
-            #elif actions['kind'] == 'recipe' :
-            #   
-            #   
-            #   
-            #    recipes = actions['recipe']
-            #    name_recipe = ""
-            #    tab_ingredient = []
-            #    for recipe in recipes :
-            #        name_recipe = recipe['name']
-            #        for ingredient in recipe['ingredient'] :
-            #            tab_ingredient.append(ingredient)
-            #            
-            #    query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
-            #    db.execute(query_insert_recipe)
-            #    id_recipe = getIdRecipeByName(name_recipe)
-            #    query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
-            #    db.execute(query_insert_avoir)
-                
-            else :
-                return '"Bad kind Action"',400,{'Content-Type' : 'application/json'} 
-                            
-        #TODO
-        query = ""
-        #db = Db()
-        #db.execute(query)
-        #db.close()
-        
-        #return {"sufficientFunds" : boolean, "totalCost" : float}
 
-        return json.dumps(''),200,{'Content-Type' : 'application/json'}        
+
+        data = {"sufficientFunds" : True, "totalCost" : totalCost}
+        #return {"sufficientFunds" : boolean, "totalCost" : float}
+        return json.dumps(data),201,{'Content-Type' : 'application/json'}
 
         
 ## POST Metrology
