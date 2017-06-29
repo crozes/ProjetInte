@@ -211,7 +211,7 @@ def traitementMinuit():
     for player in result:
         
         #on passe le profit dans cash
-        query ="UPDATE player SET player_cash = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
+        query ="UPDATE player SET player_cash = player_cash + player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
         db = Db()
         result = db.execute(query)
     
@@ -220,25 +220,51 @@ def traitementMinuit():
 ### Fonction GetMeteo
 def getMeteo():
     weather_name = ''
-    query_select = "SELECT Weather_name FROM Weather WHERE Weather_dfn = 0;"
+    query_select = "SELECT Weather_temps FROM Weather WHERE Weather_dfn = 0;"
     db = Db()
     result = db.select(query_select)
     
     for weather in result:
-        weather_name = weather["weather_name"]
+        weather_name = weather["weather_temps"]
         
     return weather_name
     
     
 ### ActionCash
-def actionCash(playerName,cash_to_add) :
-    cash = ''
+def actionCash(playerName,cash_to_add, db) :
     querry = "UPDATE player SET Player_cash = Player_cash + %f WHERE player_id=%d" % (cash_to_add,getIdPlayerByName(playerName)) 
-    
+    db.execute(querry)
+
+### DROP Action demain
+def dropAction(playerName) :
+    value_map = 0
+    value_drinks = 0
+    tomorrow = int(getToDay()) + 1
+    querry_select_map = "SELECT MapItem_id, MapItem_rayon FROM MapItem WHERE MapItem_date = "+ str(tomorrow)
+    querry_select_drinks = "SELECT  v.Player_id, v.Recipe_id, v.Vendre_qte, r.Recipe_name FROM Vendre v, Recipe r WHERE v.Recipe_id = r.Recipe_id   AND v.Vendre_date = "+ str(tomorrow)
+
     db = Db()
-    result = db.execute(querry)
+    result_map = db.select(querry_select_map)
     
-          
+    
+    if len(result_map) != 0 :
+        for res_map in result_map :
+            value_map = int(res_map['mapitem_rayon'])*int(res_map['mapitem_rayon'])*RANGE_PRIX
+            actionCash(playerName,value_map,db)
+            querry_delete_map = "DELETE FROM MapItem WHERE MapItem_id ="+str(res_map['mapitem_id'])
+            db.execute(querry_delete_map)
+    
+    result_drinks = db.select(querry_select_drinks)
+    if len(result_drinks) != 0 :
+        for res_drinks in result_drinks :
+            value_drinks = prixProduction(res_drinks["recipe_name"]) * res_drinks["vendre_qte"]
+            actionCash(playerName,value_drinks,db)
+            querry_delete_vendre = "DELETE FROM Vendre WHERE Recipe_id = "+str(res_drinks["recipe_id"]+"AND Player_ID ="+str(res_drinks["player_id"])+"AND Vendre_date = "+str(tomorrow))
+            db.execute(querry_delete_vendre)
+    
+    db.close()
+
+    
 ### Fonction Traitement d'un pb de metrology
 def resetMetrology():
     
@@ -481,7 +507,7 @@ def postSales():
 @app.route('/actions/<string:playerName>', methods=['POST'])
 def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
-    allData = request.get_json() 
+    allData = request.get_json(force=True)
     
     if allData == None :
         print request.get_data()
@@ -491,15 +517,21 @@ def postActionPlayer(playerName) :
         print allData
         
         data = allData['actions']
+        
+        print data
+        dropAction(playerName)
+        
         if(len(data)==0):
-            return '{"status":"OK"}',200,{'Content-Type' : 'application/json'}
-            #DROP toutes les lignes du player a la date de demain######################################################"
+            retour = {"sufficientFunds" : True, "totalCost" : 0}
+            return json.dumps(retour),200,{'Content-Type' : 'application/json'}
             
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
         getTomorrow = today+1
+        totalCost=0
         
-        for actions in data :    
+        
+        for actions in data :
             
             if actions['kind'] == 'ad' :
                 location = actions['location']
@@ -513,51 +545,23 @@ def postActionPlayer(playerName) :
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude= %.2f AND MapItem_longitude= %.2f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
-                print queryPriceB4
-                db = Db()
-                resultPriceB4 = db.select(queryPriceB4)
-                db.close()
-                
-                currentPrice =0.0
-                for rayonDuMapitem in resultPriceB4:
-                    print "rayon du mapitem"
-                    print rayonDuMapitem['mapitem_rayon']
-                    currentPrice = float(rayonDuMapitem['mapitem_rayon'])*float(rayonDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
-                print "newPrice"
-                print newPrice
-                print "currentPrice"
-                print currentPrice
-                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
-                print "diff"
-                print diff
-                
+              
                 #donc on compare le cash avec la différence
-                if getCashByName(playerName) > diff :
-                
-                    query =''
-                
-                    id_mapitem = getIdMapitemByInfos(id_player,latitude,longitude)
-                    if(id_mapitem==0):
-                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getTomorrow)+","+str(id_player)+");"
-                    else:
-                        query = "UPDATE mapitem SET mapitem_rayon = mapitem_rayon + (%f) WHERE mapitem_id=%d;" %(diff,id_mapitem)
+                if getCashByName(playerName) > newPrice :
+                    
+                    query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getTomorrow)+","+str(id_player)+");"
                         
                     db = Db()
                     db.execute(query)
+                    
+                    actionCash(playerName, -newPrice, db)
+
                     db.close()
-                    
-                    
-                    actionCash(playerName, -diff)
-
-                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
-
-                    #return {"sufficientFunds" : boolean, "totalCost" : float}
-                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                    totalCost += newPrice
 
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    data = {"sufficientFunds" : False, "totalCost" : 0}
+                    dropAction(playerName)
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
                
                  
@@ -569,73 +573,33 @@ def postActionPlayer(playerName) :
                 
                 newPrice = prixProduction(string_drinks) * qte
                 
-                queryPriceB4 = "SELECT vendre_prix, vendre_qte FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
-                db = Db()
-                resultPriceB4 = db.select(queryPriceB4)
-                db.close()
-                
-                currentPrice=''
-                currentPrice =0.0
-                for prixDeLaRecipe in resultPriceB4:
-                    currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
-                
-                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
-                diff = newPrice - currentPrice
                 
                 #donc on compare le cash avec la différence
-                if getCashByName(playerName) > diff :
+                if getCashByName(playerName) > newPrice :
                     price = actions['price'][string_drinks]
                     id_recipe = getIdRecipeByName(string_drinks)
+                    
                     meteo = getMeteo()
+                    query = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+");"
                     
-                    id_vendre = getIdCommandeByInfos(id_player,id_recette)
-                    if(id_vendre==0):
-                        query = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+");"
-                    else:
-                        query = "UPDATE vendre SET Vendre_qte = 0, Vendre_prix = "+str(price)+" WHERE Vendre_date = "+str(getTomorrow)+" AND Player_id = "+str(id_player)+" AND Recipe_id ="+str(id_recipe)+";" %(diff,id_mapitem)
+                    db = Db()
+                    db.execute(query)
+                    actionCash(playerName, -newPrice ,db)
+                    db.close()
                     
-                    actionCash(playerName, -diff )
                     
-                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
-
-                    #return {"sufficientFunds" : boolean, "totalCost" : float}
-                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                    
+                    totalCost += newPrice
+                    
                 else :
-                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    data = {"sufficientFunds" : False, "totalCost" : 0}
+                    dropAction(playerName)
                     return json.dumps(data),200,{'Content-Type' : 'application/json'}
-                
-                    
-            
-            #elif actions['kind'] == 'recipe' :
-            #   
-            #   
-            #   
-            #    recipes = actions['recipe']
-            #    name_recipe = ""
-            #    tab_ingredient = []
-            #    for recipe in recipes :
-            #        name_recipe = recipe['name']
-            #        for ingredient in recipe['ingredient'] :
-            #            tab_ingredient.append(ingredient)
-            #            
-            #    query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
-            #    db.execute(query_insert_recipe)
-            #    id_recipe = getIdRecipeByName(name_recipe)
-            #    query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
-            #    db.execute(query_insert_avoir)
-                
-            else :
-                return '"Bad kind Action"',400,{'Content-Type' : 'application/json'} 
-                            
-        #TODO
-        query = ""
-        #db = Db()
-        #db.execute(query)
-        #db.close()
-        
-        #return {"sufficientFunds" : boolean, "totalCost" : float}
 
-        return json.dumps(''),200,{'Content-Type' : 'application/json'}        
+
+        data = {"sufficientFunds" : True, "totalCost" : totalCost}
+        #return {"sufficientFunds" : boolean, "totalCost" : float}
+        return json.dumps(data),201,{'Content-Type' : 'application/json'}
 
         
 ## POST Metrology
