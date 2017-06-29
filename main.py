@@ -134,7 +134,7 @@ def modifyStock(playerName,recipeName,productQuantity):
 
 ### Get id Player by Name
 def getIdPlayerByName(PlayerName) :
-    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'%s\'" % (playerName)
+    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'%s\'" % (PlayerName)
                 
     db = Db()
     result = db.select(query_select)
