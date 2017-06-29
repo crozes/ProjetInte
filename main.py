@@ -6,6 +6,7 @@ from db import Db
 from flask_cors import CORS
 import json, os, psycopg2, urlparse
 import random
+import math
 
 app = Flask(__name__)
 app.debug = True
@@ -317,7 +318,7 @@ def getTemps():
 ## GET MAP
 @app.route("/map", methods=['GET'])
 def getMap():
-    queryRank = "SELECT * FROM player ORDER BY player_cash DESC;"
+    queryRank = "SELECT * FROM player ORDER BY player_cash ASC;"
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
@@ -668,8 +669,16 @@ def postPlayer() :
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
-        random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
-        random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
+        #on genère le point autour du centre (0,0)
+        theta = random.uniform(0,2*3.14159)
+        #on met le rayon d'apparition autour du centre entre 100 et 200 unités
+        rayon = random.uniform(100,250)
+        
+        random_longitude = rayon * math.cos(theta)+400
+        random_latitude = rayon * math.sin(theta)+250
+        
+        #random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
+        #random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_longitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.execute(query_addPlayer)
         query_select = db.select("SELECT Player_id, Player_latitude, Player_longitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
