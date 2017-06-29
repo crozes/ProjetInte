@@ -8,6 +8,8 @@
 		    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		    <title>Projet 2017</title>
 
+		    <link rel="shortcut icon" href="" src="images/logoCitron.jpg">
+
 		    <!-- Bootstrap -->
 		    <!-- Latest compiled and minified CSS -->
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
@@ -102,19 +104,19 @@
 						<div id="tabs">
 		    				<div class="well">
 		        				<ul class="nav nav-tabs">
-		          					<li class="active"><a href="#Stats" data-toggle="tab" onclick="changePageSize(false)">Statistiques</a></li>
-		          					<li><a href="#Story" data-toggle="tab" onclick="changePageSize(false)">Historique</a></li>
-		          					<li><a href="#Map" data-toggle="tab" onclick="changePageSize(true)">Carte</a></li>
+		          					<!--<li class="active"><a href="#Stats" data-toggle="tab" onclick="changePageSize(false)">Statistiques</a></li>-->
+		          					<li><a href="#Map" data-toggle="tab" onclick="changePageSize(true)">Accueil</a></li>
 		          					<li><a href="#Actions" data-toggle="tab" onclick="changePageSize(false)">Actions</a></li>
+		          					<li><a href="#Story" data-toggle="tab" onclick="changePageSize(false)">Historique</a></li>
 		          					<li><a href="#Player" data-toggle="tab" onclick="changePageSize(false)">Joueur en partie</a></li>
 		        				</ul>
 
 		        				<div id="myTabContent" class="tab-content">
-		          					<div class="tab-pane active in" id="Stats">
+		          					<!--<div class="tab-pane active in" id="Stats">
 		            					<fieldset>
 											<legend class="titre_tab">Toute les statistiques</legend>
 										</fieldset>
-		          					</div>
+		          					</div>-->
 		          					<div class="tab-pane fade" id="Story">
 
 		        						<h2>Achats réalisés</h2>
@@ -127,14 +129,76 @@
 		        						.
 		          					</div>
 		          					<div class="tab-pane fade" id="Map">
-		            					Carte du jeu :
+			          					<div class="col-sm-12">
+			          						<div class="col-sm-6">
+			          							<div class="offer offer-info">
+			          								<div class="shape">
+			          									<div class="shape-text">
+			          										<span class="glyphicon  glyphicon-home"></span>							
+			          									</div>
+			          								</div>
+			          								<div class="offer-content">
+			          									<h3 class="lead">
+			          										Pseudo : <label class="label label-info"> Toto</label>
+			          									</h3>
+			          									<h3 class="lead">
+			          										Jour : <label class="label label-info"> 124</label>
+			          									</h3>
+			          									<h3 class="lead">
+			          										Meteo : <label class="label label-info"> SUNNY</label>
+			          									</h3>
+			          								</div>
+			          							</div>
+			          						</div>
+			          						<div class="col-sm-6">
+			          							<div class="offer offer-success">
+			          								<div class="shape">
+			          									<div class="shape-text">
+			          										<span class="glyphicon glyphicon glyphicon-th"></span>							
+			          									</div>
+			          								</div>
+			          								<div class="offer-content">
+			          									<h3 class="lead">
+			          										success : <label class="label label-success"> 323</label>
+			          									</h3>
+			          									
+			          								</div>
+			          							</div>
+			          						</div>
+			          					</div>
+			          					<hr>
 		            					<div id="MapPlace">
-		            						<canvas id="myCanvas" width="800" height="500" >
+		            						<canvas id="myCanvas" width="800" height="530" >
 		            							<img id="mapBack" src="images/map.png" alt="map"> 
 											</canvas>
 											<h4>Legende :</h4>
 											<p>Stand de limonade :<img id="stand" width="40" height="40"src="images/stand.png" alt="stand"></p>
 											<p>Vos panneaux publicitaires :<img id="ad" width="40" height="40"src="images/pub.png" alt="pub"></p>
+											<font id='selfPosition'></font>
+											<script type="text/javascript">
+												function writeMessage(canvas, message) {
+										        var context = canvas.getContext('2d');
+										        context.clearRect(10, 500, canvas.width, canvas.height);
+										        context.font = '18pt Calibri';
+										        context.fillStyle = 'black';
+										        context.fillText(message, 10, 520);
+										      }
+										      function getMousePos(canvas, evt) {
+										        var rect = canvas.getBoundingClientRect();
+										        return {
+										          x: evt.clientX - rect.left,
+										          y: evt.clientY - rect.top
+										        };
+										      }
+										      var canvas = document.getElementById('myCanvas');
+										      var context = canvas.getContext('2d');
+
+										      canvas.addEventListener('mousemove', function(evt) {
+										        var mousePos = getMousePos(canvas, evt);
+										        var message = 'Longitude : ' + mousePos.x.toFixed(0) + '   ,   Latitude : ' + mousePos.y.toFixed(0);
+										        writeMessage(canvas, message);
+										      }, false);
+											</script>
 										</div>
 		          					</div>
 		          					<div class="tab-pane fade" id="Actions">
@@ -299,6 +363,10 @@
 
 									//set la position du joueur
 									var position = response.location;
+									var latitude = getLatitude(position);
+									var longitude = getLongitude(position);
+									$('#selfPosition').empty();
+									$('#selfPosition').append('Votre position : LATITUDE (' + latitude + ')  |  LONGITUDE (' + longitude + ')');
 									//setPlayerPosition(position);
 
 									var info = response.info;
