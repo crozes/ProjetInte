@@ -519,6 +519,10 @@ def postActionPlayer(playerName) :
         data = allData['actions']
         
         dropAction(playerName)
+        
+        if(len(data)==0):
+            retour = {"suppression":"OK"}
+            return json.dumps(retour),200,{'Content-Type' : 'application/json'}
             
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
