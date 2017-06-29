@@ -660,7 +660,7 @@ def postMetrology() :
         print today
         print "previous_day"
         print previous_day
-        type(previous_day)
+        print type(previous_day)
         if (previous_day==None or previous_day==''):
             previous_day==0
         
