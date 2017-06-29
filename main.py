@@ -523,6 +523,8 @@ def postActionPlayer(playerName) :
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
         getTomorrow = today+1
+        totalCost=0
+        
         
         for actions in data :
             
