@@ -491,6 +491,7 @@ def postActionPlayer(playerName) :
         
         data = allData['actions']
         if(len(data)==0):
+            return '{"status":"OK"}',200,{'Content-Type' : 'application/json'}
             #DROP toutes les lignes du player a la date de demain######################################################"
             
         id_player = getIdPlayerByName(playerName)
