@@ -1106,6 +1106,9 @@
 									if($('#line_' + i).length != 0){
 										$('#line_' + i).remove();
 									}
+									if($('#prod_' + i).length != 0){
+										$('#prod_' + i).remove();
+									}
 								}
 
 								/*************************************************************/
@@ -1182,7 +1185,7 @@
 
 
 							//On crée le tableau hitorique du jour
-							$('#historiqueVente').append('<div id="tableVente_' + CurrentDay + '" class="col-sm-6"><div class="well"><h2 class="text-info">Jour <font id="historiqueVenteJour_' + CurrentDay + '">' + CurrentDay +'</font></h2><p><span class="label label-info">VENTES DE LA JOURNEE</span></p><table><thead><tr><td>Produits vendu</td><td>Nombre de vente</td></tr></thead><tbody id="venteProd_' + CurrentDay + '"></tbody></table></div></div>');
+							$('#historiqueVente').append('<div id="tableVente_' + CurrentDay + '" class="col-sm-6"><div class="well"><h2 class="text-info">Jour <font id="historiqueVenteJour_' + CurrentDay + '">' + (CurrentDay - 1) +'</font></h2><p><span class="label label-info">VENTES DE LA JOURNEE</span></p><table><thead><tr><td>Produits vendu</td><td>Total du nombre de vente</td></tr></thead><tbody id="venteProd_' + CurrentDay + '"></tbody></table></div></div>');
 
 							var stringToPut = '<tr><td>';
 
