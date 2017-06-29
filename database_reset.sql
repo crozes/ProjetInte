@@ -1,8 +1,7 @@
 ------------------------------------------------------------
 --        Script Postgre 
 ------------------------------------------------------------
-
-DROP TABLE IF EXISTS public.Stocker;
+ 
 DROP TABLE IF EXISTS public.Vendre;
 DROP TABLE IF EXISTS public.Avoir;
 DROP TABLE IF EXISTS public.Composer;
@@ -11,12 +10,10 @@ DROP TABLE IF EXISTS public.MapItem;
 DROP TABLE IF EXISTS public.Ingredient;
 DROP TABLE IF EXISTS public.Recipe;
 DROP TABLE IF EXISTS public.Player;
-DROP TABLE IF EXISTS public.Test;
 
 ------------------------------------------------------------
 --        Script Postgre 
 ------------------------------------------------------------
-
 
 
 ------------------------------------------------------------
@@ -66,6 +63,7 @@ CREATE TABLE public.MapItem(
 	MapItem_latitude  FLOAT   ,
 	MapItem_longitude FLOAT   ,
 	MapItem_rayon     FLOAT   ,
+	MapItem_date      INT   ,
 	Player_id         INT   ,
 	CONSTRAINT prk_constraint_MapItem PRIMARY KEY (MapItem_id)
 )WITHOUT OIDS;
@@ -89,6 +87,7 @@ CREATE TABLE public.Weather(
 CREATE TABLE public.Avoir(
 	Player_id INT  NOT NULL ,
 	Recipe_id INT  NOT NULL ,
+	Avoir_date INT NOT NULL ,
 	CONSTRAINT prk_constraint_Avoir PRIMARY KEY (Player_id,Recipe_id)
 )WITHOUT OIDS;
 
@@ -108,61 +107,24 @@ CREATE TABLE public.Composer(
 -- Table: Vendre
 ------------------------------------------------------------
 CREATE TABLE public.Vendre(
-	Vendre_meteo VARCHAR (255)  ,
-	Vendre_qte   INT   ,
-	Vendre_fail  INT   ,
-	Vendre_prix  FLOAT   ,
-	Vendre_date  INT  NOT NULL ,
-	Player_id    INT  NOT NULL ,
-	Recipe_id    INT  NOT NULL ,
+	Vendre_meteo 	 VARCHAR (255)  ,
+	Vendre_qte   	 INT   ,
+	Vendre_nonVendu  INT   ,
+	Vendre_prix  	 FLOAT   ,
+	Vendre_date  	 INT  NOT NULL ,
+	Player_id   	 INT  NOT NULL ,
+	Recipe_id    	 INT  NOT NULL ,
 	CONSTRAINT prk_constraint_Vendre PRIMARY KEY (Player_id, Recipe_id, Vendre_date)
 )WITHOUT OIDS;
-
-
-------------------------------------------------------------
--- Table: Stocker
-------------------------------------------------------------
-CREATE TABLE public.Stocker(
-	Stock_qte INT   ,
-	Player_id INT  NOT NULL ,
-	Recipe_id INT  NOT NULL ,
-	CONSTRAINT prk_constraint_Stocker PRIMARY KEY (Player_id,Recipe_id)
-)WITHOUT OIDS;
-
 
 
 ALTER TABLE public.MapItem ADD CONSTRAINT FK_MapItem_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Avoir ADD CONSTRAINT FK_Avoir_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Ingredient_id FOREIGN KEY (Ingredient_id) REFERENCES public.Ingredient(Ingredient_id);
-ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
+ALTER TABLE public.Composer ADD CONSTRAINT FK_Composer_Recipe_d FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
 ALTER TABLE public.Vendre ADD CONSTRAINT FK_Vendre_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Player_id FOREIGN KEY (Player_id) REFERENCES public.Player(Player_id);
-ALTER TABLE public.Stocker ADD CONSTRAINT FK_Stocker_Recipe_id FOREIGN KEY (Recipe_id) REFERENCES public.Recipe(Recipe_id);
-
-
-
-------------------------------------------------------------
--- Table: Test
-------------------------------------------------------------
-CREATE TABLE public.Test(
-	id_test 	 BIGSERIAL NOT NULL ,
-	nom_test     VARCHAR (255) ,
-	CONSTRAINT prk_constraint_test PRIMARY KEY (id_test)
-)WITHOUT OIDS;
-
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (1, 'Sprite');
-	
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (2, 'Coca');
-
-INSERT INTO public.Test(
-	id_test, nom_test)
-	VALUES (3, 'Jus');
 	
 INSERT INTO public.Ingredient(
 	Ingredient_name, Ingredient_price, Ingredient_hasAlcohol, Ingredient_isCold)
@@ -238,24 +200,24 @@ INSERT INTO public.Composer(
 	
 INSERT INTO public.Player(
 	Player_name, Player_cash, Player_profit, Player_longitude, Player_latitude)
-	VALUES ('Toto',150,0,25,56);
+	VALUES ('Toto',150,12,25,56);
 	
 INSERT INTO public.MapItem(
-	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id)
-	VALUES ('stand',25,56,10,1);
+	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
+	VALUES ('stand',25,56,10,0,1);
 
 INSERT INTO public.Avoir(
-	Player_id, Recipe_id)
-	VALUES (1,1);
+	Player_id, Recipe_id, Avoir_date)
+	VALUES (1,1,0);
 	
 INSERT INTO public.Avoir(
-	Player_id, Recipe_id)
-	VALUES (1,2);	
+	Player_id, Recipe_id, Avoir_date)
+	VALUES (1,2,0);	
 	
 INSERT INTO public.Vendre(
-	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
+	Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id)
 	VALUES ('sunny',23,4,8.0,154,1,1);
 	
 INSERT INTO public.Vendre(
-	Vendre_meteo, Vendre_qte, Vendre_fail, Vendre_prix, Vendre_date, Player_id, Recipe_id)
+	Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id)
 	VALUES ('rainny',27,4,12.0,178,1,1);		

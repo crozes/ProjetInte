@@ -16,9 +16,17 @@ CORS(app)
  
 CENTER_COORDINATES = {"latitude":250.0,"longitude":400.0}
 
-REGION_COORDINATES_SPAN = {"latitudeSpan":500.0,"longitudeSpan":800.0}
+REGION_COORDINATES_SPAN = {"latitudeSpan":800.0,"longitudeSpan":500.0}
 
 REGION = {"center":CENTER_COORDINATES,"span":REGION_COORDINATES_SPAN}
+
+######PRIX
+#Imobilier
+RANGE_PRIX = 10
+
+#Recette
+CREATION_RECETTE = 700
+ACHAT_NOUVELLE_RECETTE = CREATION_RECETTE + 300
          
 
 ################################################################################
@@ -71,19 +79,152 @@ def getAviableIngredients():
     return ingredients
     
     
-### Fonction getSales
-def getSales():
-    sales = []
-    query ="SELECT ;"
+### Fonction Sales
+def modifyStock(playerName,recipeName,productQuantity):
+    
+    day=0
+    #on renvoie sales avec la quantité avant le débit
+    jsonRetour={}
+    
+    #récupérer la date d'aujourd'hui
+    day=getToDay()
+    
+    #récupérer le stock correspondant pour un joueur a l'heure actuelle
+    query ="SELECT p.player_id AS player_id, r.recipe_id AS recipe_id, v.vendre_nonvendu AS stock_qte FROM player p,recipe r , vendre v WHERE p.player_name LIKE \'%s\' AND p.player_id=v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_name LIKE \'%s\' AND v.vendre_date=%d" % (playerName,recipeName,day)
     db = Db()
     result = db.select(query)
     for res in result:
-        uneSale={"player":"player"}
-        sales.append(uneSale)
+        if(res['stock_qte']<productQuantity):
+            productQuantity=res['stock_qte']
+        
+        jsonRetour['player']=playerName
+        jsonRetour['item']=recipeName
+        jsonRetour['quantity']=res['stock_qte']
+        
+         #on calcule le profit
+        query ="SELECT v.vendre_prix AS prix FROM player p,vendre v,recipe r WHERE p.player_id=%d AND p.player_id=v.player_id AND r.recipe_id=v.recipe_id AND r.recipe_id=%d AND v.vendre_date=%d;" % (res['player_id'],res['recipe_id'],day)
+        db = Db()
+        resultProfit = db.select(query)
+        db.close()
+        
+        if(len(resultProfit)==0):
+            jsonRetour['player']=playerName
+            jsonRetour['item']=recipeName
+            jsonRetour['quantity']=0
+            return jsonRetour
+        
+        #on change la quantité en stock
+        query ="UPDATE vendre SET vendre_nonvendu = vendre_nonvendu - %d WHERE player_id=%d AND recipe_id=%d AND vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
+        db = Db()
+        result = db.execute(query)
+        #on ajoute la quantité vendue
+        query ="UPDATE vendre SET vendre_qte =vendre_qte + %d WHERE player_id=%d AND recipe_id=%d AND vendre_date=%d;" % (productQuantity,res['player_id'],res['recipe_id'],day)
+        db = Db()
+        result = db.execute(query)
+        db.close()
+        
+        for resPrix in resultProfit:
+            #on change le profit et le bénéfice
+            query ="UPDATE player SET player_profit = player_profit + %f WHERE player_id=%d;" % (resPrix['prix']*productQuantity,res['player_id'])
+            db = Db()
+            result = db.execute(query)
+            db.close()
+            
+        return jsonRetour
+
+### Get id Player by Name
+def getIdPlayerByName(PlayerName) :
+    query_select = "SELECT Player_id FROM Player WHERE Player_name LIKE \'%s\'" % (PlayerName)
+                
+    db = Db()
+    result = db.select(query_select)
+    player_id = ""
+    
+    for id_player in result :
+        player_id = id_player['player_id']
+        
+    return player_id 
+    
+### Get id Player by Name
+def getIdRecipeByName(RecipeName) :
+    query_select = "SELECT Recipe_id FROM Recipe WHERE Recipe_name LIKE \'"+str(RecipeName)+"\'"
+                
+    db = Db()
+    result = db.select(query_select)
+    recipe_id = ""
+    
+    for id_recipe in result :
+        recipe_id = id_recipe['recipe_id']
+            
+    return recipe_id      
+    
+    
+### Get Cash Player by Name
+def getCashByName(PlayerName) :
+    query_select = "SELECT Player_cash FROM Player WHERE Player_name LIKE \'"+str(PlayerName)+"\'"   
+    db = Db()
+    result = db.select(query_select)
+    cash = ""
+    for cash_player in result :
+        cash = cash_player['player_cash']    
+    return cash
+###
+
+### Get Day
+def getToDay() :
+    valueDay = ''
+    queryPreviousTime = "SELECT Weather_timestamp FROM Weather WHERE Weather_dfn = 0"
+    db = Db()
+    today = db.select(queryPreviousTime)
+    for day in today:
+        valueDay = day['weather_timestamp']
+        valueDay = int(valueDay) / 24
     db.close()
-    return sales
+    
+    return valueDay 
 
-
+### Fonction Traitement des actions minuit
+def traitementMinuit():
+    #on récupère les players
+    query_select = "SELECT Player_id FROM Player ;"
+    db = Db()
+    result = db.select(query_select)
+    
+    for player in result:
+        
+        #on passe le profit dans cash
+        query ="UPDATE player SET player_cash = player_profit, player_profit = 0 WHERE player_id=%d ;" % (player['player_id'])
+        db = Db()
+        result = db.execute(query)
+    
+    return 0
+    
+### Fonction GetMeteo
+def getMeteo():
+    weather_name = ''
+    query_select = "SELECT Weather_name FROM Weather WHERE Weather_dfn = 0;"
+    db = Db()
+    result = db.select(query_select)
+    
+    for weather in result:
+        weather_name = weather["weather_name"]
+        
+    return weather_name
+    
+    
+### ActionCash
+def actionCash(playerName,cash_to_add) :
+    cash = ''
+    querry = "UPDATE player SET Player_cash = Player_cash + %f" % (cash_to_add) 
+    
+    db = Db()
+    result = db.execute(querry)
+    
+          
+### Fonction Traitement d'un pb de metrology
+def resetMetrology():
+    
+    return 0
 ######################~GET~###############################
 
 ## Reset BD
@@ -139,6 +280,7 @@ def getMap():
     playersInfo= {}
     itemsByPlayers={}
     drinksByPlayer={}
+    day=getToDay()
     
     for player in resultRank:
         ranking.append(player['player_name'])
@@ -164,7 +306,7 @@ def getMap():
                 overallSales=0
         
        #recettes produites du joueur player avec prix de vente
-        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
+        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM weather AS w,vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND v.vendre_date<=w.weather_timestamp/24 GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -182,22 +324,24 @@ def getMap():
         
         #-----------------------ITEMS_BY_PLAYER-----------------------
         
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id ;" % (player['player_id'])
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id AND m.mapitem_date <= %d;" % (player['player_id'],day)
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
         
-        
+        mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            itemsByPlayers[player['player_name']]=unMapItem
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
+            mapitems_player.append(unMapItem)
+            
+        itemsByPlayers[player['player_name']]=mapitems_player
         
         
         #-----------------------DRINKS_BY_PLAYER-----------------------
         
         #recettes connue du joueur player avec prix de prod
-        queryPlayerKnownRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette FROM avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id,a.recipe_id;"% (player['player_id'])
+        queryPlayerKnownRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_name AS nom_recette FROM weather AS w, avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND a.avoir_date<=w.weather_timestamp/24 GROUP BY r.recipe_id,a.recipe_id;"% (player['player_id'])
         db = Db()
         resultPlayerKnownRecipes = db.select(queryPlayerKnownRecipes)
         db.close()
@@ -227,6 +371,7 @@ def getPlayerSMap(playerName):
     db = Db()
     resultRank = db.select(queryRank)
     db.close()
+    day=getToDay()
     
     ranking=[]
     playerSIngredients=getAviableIngredients()
@@ -260,7 +405,7 @@ def getPlayerSMap(playerName):
         
         
         #recettes du joueur player avec prix de vente 
-        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_id, r.recipe_name AS nom_recette,v.vendre_prix AS prix_recette FROM vendre AS v,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = v.player_id AND v.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id GROUP BY r.recipe_id, v.vendre_prix;"% (player['player_id'])
+        queryPlayerRecipes = "SELECT BOOL(COUNT(nullif(i.ingredient_iscold, false))>0) AS is_cold, BOOL(COUNT(nullif(i.ingredient_hasalcohol, false))>0) AS has_alcohol, r.recipe_id, r.recipe_name AS nom_recette FROM weather AS w, avoir AS a,player AS p, recipe AS r, composer AS c, ingredient AS i WHERE p.player_id=%d AND p.player_id = a.player_id AND a.recipe_id=r.recipe_id AND r.recipe_id=c.recipe_id AND c.ingredient_id = i.ingredient_id AND a.avoir_date<=w.weather_timestamp/24 GROUP BY r.recipe_id, a.recipe_id;"% (player['player_id'])
         db = Db()
         resultPlayerRecipes = db.select(queryPlayerRecipes)
         db.close()
@@ -275,31 +420,24 @@ def getPlayerSMap(playerName):
         
         playerInfo={"cash":player['player_cash'],"sales":overallSales,"profit":player['player_profit'],"drinksOffered":drinksOffered}
     
-        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id ;" % (player['player_id'])
+        queryItemsByPlayers = "SELECT * FROM player AS p,mapitem AS m WHERE p.player_id = %d AND p.player_id=m.player_id AND m.mapitem_date <= %d;" % (player['player_id'],day)
         db = Db()
         resultPlayerInfo = db.select(queryItemsByPlayers)
         db.close()
         
         
+        mapitems_player = []
         for item in resultPlayerInfo:
             locationMapItem = {"latitude":item['mapitem_latitude'],"longitude":item['mapitem_longitude']}
-            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":item['mapitem_rayon']}
-            itemsByPlayers[player['player_name']]=unMapItem
+            unMapItem={"kind":item['mapitem_kind'],"owner":player['player_name'],"location":locationMapItem,"influence":(item['mapitem_rayon']*item['mapitem_rayon']*RANGE_PRIX)}
+            mapitems_player.append(unMapItem)
+        itemsByPlayers[player['player_name']]=mapitems_player
         
         
         
         map = {"region":REGION,"ranking":ranking,"itemsByPlayers":itemsByPlayers}
         playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":playerInfo}
         return json.dumps(playerSMap),200,{'Content-Type' : 'application/json'}
-
-
-## GET MAP
-@app.route("/sales")
-def getPlayersSales():
-    sales = {"sales":getSales()}
-    return json.dumps(sales),200,{'Content-Type' : 'application/json'}
-
-
 
 
 @app.route("/players")
@@ -315,33 +453,173 @@ def getPlayerTest():
 ## POST Sales
 @app.route('/sales', methods=['POST'])
 def postSales():
-    #TODO
-    return json.dumps("coucou"),200,{'Content-Type' : 'application/json'}
+    data = request.get_json()
+    sales=data['sales']
+    salesArray=[]
+    for sale in sales:
+        #on récupère les infos du json avant de demander une modification du stock
+        salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
+    
+    retour = {"sales":salesArray}
+    return json.dumps(retour),200,{'Content-Type' : 'application/json'}
+
         
 ## POST Actions playerName
-@app.route('/actions/<playerName>', methods=['POST'])
-def postActionPlayer() :
+@app.route('/actions/<string:playerName>', methods=['POST'])
+def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
-    data = request.get_json() 
-    if data == None :
+    allData = request.get_json() 
+    
+    if allData == None :
         print request.get_data()
-        return '"None in postIngredient"',400,{'Content-Type' : 'application/json'}
+        return '"None in postActionPlayer"',400,{'Content-Type' : 'application/json'}
     else :
-        #print data 
+        
+        print allData
+        
+        data = allData['actions']
+        
+        id_player = getIdPlayerByName(playerName)
+        getTomorrow = getToDay()+1
+        
+        for actions in data :    
+            
+            if actions['kind'] == 'ad' :
+                location = actions['location']
+                radius = float(actions['radius'])
+                longitude = ''
+                latitude = ''
+                
+                for locate in location :
+                    longitude = locate['longitude']
+                    latitude = locate['latitude']
+                
+                newPrice = (radius * radius * RANGE_PRIX)
+                
+                queryPriceB4 = "SELECT * FROM mapitem WHERE MapItem_kind=\'%s\'AND MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f;" %("ad",getTomorrow,latitude,longitude)
+                db = Db()
+                resultPriceB4 = db.select(queryPriceB4)
+                db.close()
+                
+                currentPrice=''
+                if (len(resultPriceB4)==0):
+                    currentPrice =0.0
+                else:
+                    for prixDuMapitem in resultPriceB4:
+                        print prixDuMapitem['mapitem_rayon']
+                        currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
+                print "newPrice"
+                print newPrice
+                print type(newPrice)
+                print "currentPrice"
+                print currentPrice
+                print type(currentPrice)
+                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
+                diff = newPrice - currentPrice
+                
+                #donc on compare le cash avec la différence
+                if getCashByName(playerName) > diff :
+                    query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (MapItem_kind,MapItem_date,MapItem_latitude,MapItem_longitude) DO UPDATE SET MapItem_kind=\'%s\',MapItem_date=%d,MapItem_latitude=%f AND MapItem_longitude=%f;" %("ad",getTomorrow(),latitude,longitude)
+                    db = Db()
+                    db.execute(query)
+                    db.close()
+                    
+                    
+                    actionCash(playerName, -diff)
+
+                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
+
+                    #return {"sufficientFunds" : boolean, "totalCost" : float}
+                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+
+                else :
+                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    return json.dumps(data),200,{'Content-Type' : 'application/json'}
+               
+                 
+            elif actions['kind'] == 'drinks' :
+                string_drinks = ''
+                for prepare in actions['prepare'] :
+                    string_drinks = prepare
+                qte = actions['prepare'][string_drinks]
+                
+                newPrice = prixProduction(string_drinks) * qte
+                
+                queryPriceB4 = "SELECT * FROM vendre WHERE recipe_id=%d AND player_id = %d AND vendre_date=%d;" %(getIdRecipeByName(actions['prepare']),getIdPlayerByName(playerName),getTomorrow)
+                db = Db()
+                resultPriceB4 = db.select(queryPriceB4)
+                db.close()
+                
+                currentPrice=''
+                if (resultPriceB4==None):
+                    currentPrice =0
+                else:
+                    for prixDeLaRecipe in resultPriceB4:
+                        currentPrice = float(prixDeLaRecipe['vendre_prix'])*float(prixDeLaRecipe['vendre_qte'])
+                
+                #si on est couramment à un prix de 0, la différence correspond au nouveau prix
+                diff = newPrice - currentPrice
+                
+                #donc on compare le cash avec la différence
+                if getCashByName(playerName) > diff :
+                    price = actions['price'][string_drinks]
+                    id_recipe = getIdRecipeByName(string_drinks)
+                    meteo = getMeteo()
+                    
+                    querry_insert_vendre = "INSERT INTO public.Vendre (Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id) VALUES (\'"+str(meteo)+"\',0,"+str(qte)+","+str(price)+","+str(getTomorrow)+","+str(id_player)+","+str(id_recipe)+") ON CONFLICT (Player_id,Vendre_date,Recipe_id) DO UPDATE SET Vendre_meteo = \'"+str(meteo)+"\' ,Vendre_qte = 0, Vendre_nonVendu = "+str(qte)+", Vendre_prix = "+str(price)+", Vendre_date = "+str(getTomorrow)+", Player_id = "+str(id_player)+", Recipe_id ="+str(id_recipe)+";"
+                    
+                    actionCash(playerName, -diff )
+                    
+                    data = {"sufficientFunds" : True, "totalCost" : currentPrice+diff}
+
+                    #return {"sufficientFunds" : boolean, "totalCost" : float}
+                    return json.dumps(data),201,{'Content-Type' : 'application/json'}
+                else :
+                    data = {"sufficientFunds" : False, "totalCost" : currentPrice}
+                    return json.dumps(data),200,{'Content-Type' : 'application/json'}
+                
+                    
+            
+            #elif actions['kind'] == 'recipe' :
+            #   
+            #   
+            #   
+            #    recipes = actions['recipe']
+            #    name_recipe = ""
+            #    tab_ingredient = []
+            #    for recipe in recipes :
+            #        name_recipe = recipe['name']
+            #        for ingredient in recipe['ingredient'] :
+            #            tab_ingredient.append(ingredient)
+            #            
+            #    query_insert_recipe = "INSERT INTO Recipe (Recipe_name,Recipe_pricePurchase) VALUES (\'"+name_recipe+"\’,"+str(ACHAT_NOUVELLE_RECETTE)+")"
+            #    db.execute(query_insert_recipe)
+            #    id_recipe = getIdRecipeByName(name_recipe)
+            #    query_insert_avoir = "INSERT INTO Avoir (Player_id,Recipe_id) VALUES ("+id_player+","+id_recipe+")"
+            #    db.execute(query_insert_avoir)
+                
+            else :
+                return '"Bad kind Action"',400,{'Content-Type' : 'application/json'} 
+                            
         #TODO
         query = ""
-        db = Db()
-        db.execute(query)
-        db.close()
+        #db = Db()
+        #db.execute(query)
+        #db.close()
         
         #return {"sufficientFunds" : boolean, "totalCost" : float}
-        return json.dumps(query),201,{'Content-Type' : 'application/json'}        
+
+        return json.dumps(''),200,{'Content-Type' : 'application/json'}        
+
         
 ## POST Metrology
 @app.route('/metrology', methods=['POST'])
-def postTemps() :
+def postMetrology() :
     #print request.get_data() 
     data = request.get_json(force=True) 
+    
+    previous_day=getToDay()
+    
     if data == None :
         print request.get_data()
         return '"None in postTemps verifier le Header"',400,{'Content-Type' : 'application/json'}
@@ -357,6 +635,15 @@ def postTemps() :
             db.execute(query)
             db.close()
             cpt += 1;
+            
+        today=getToDay()
+        #on compare le jour précédent avec le jour courant
+        
+        if(today - previous_day>0):
+            traitementMinuit()
+        else:
+            if(today - previous_day<0):
+                resetMetrology()
         
         return json.dumps(data),201,{'Content-Type' : 'application/json'} 
         
@@ -385,33 +672,31 @@ def postPlayer() :
                     recip = {"name" : res['recipe_name']  , "price" : str(prixProduction(res['recipe_name'])), "hasAlcohol" : recetteHasAlcohol(res['recipe_name']), "isCold" : recetteIsCold(res['recipe_name'])}
                     recipe.append(recip)
                     sales = prixProduction(data['name'])
-                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe}]  }
+                    data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : {"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'],"drinksOffered" : recipe }  }
                 db.close()
                 return json.dumps(data_final),200,{'Content-Type' : 'application/json'}
         
         random_longitude = random.uniform(0,REGION_COORDINATES_SPAN['longitudeSpan'])
         random_latitude = random.uniform(0,REGION_COORDINATES_SPAN['latitudeSpan'])
-        print random_latitude
-        print random_longitude 
         query_addPlayer = "INSERT INTO public.Player (Player_name, Player_cash, Player_profit, Player_latitude, Player_longitude) VALUES (\'"+data['name']+"\',100.0,0.0,"+str(random_latitude)+","+str(random_longitude)+")"
         db.execute(query_addPlayer)
         query_select = db.select("SELECT Player_id, Player_latitude, Player_longitude FROM public.Player WHERE public.Player.Player_name LIKE \'"+ data['name']+"\'")
         
+        print getToDay()
+        
         for res in query_select :
-            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+str(res['player_id'])+")"
+            query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES (\'stand\',"+str(res['player_latitude'])+","+str(res['player_longitude'])+",10,"+str(getToDay())+","+str(res['player_id'])+")"
             db.execute(query)
-            query = "INSERT INTO public.Avoir (Player_id, Recipe_id) VALUES ("+str(res['player_id'])+",1)"
+            query = "INSERT INTO public.Avoir (Player_id, Recipe_id, Avoir_date) VALUES ("+str(res['player_id'])+",1,"+str(getToDay())+")"
             db.execute(query)
         
         query = "SELECT p.Player_latitude, p.Player_longitude, p.Player_cash, p.Player_profit FROM public.Player p WHERE p.Player_name LIKE \'"+data['name']+"\'"
-        
         query_select = db.select(query)
-        
         data_final = ''
         
         for res in query_select :
-            data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : [{"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] }] }
-        
+            data_final = {"name" : data['name'], "location" : {"latitude" : res['player_latitude'], "longitude" : res['player_longitude']}, "info" : {"cash" : res['player_cash'], "sales" : 0, "profit" : res['player_profit'], "drinksOffered" : [{"name" : "Limonade", "price" : 0, "hasAlcohol" : False, "isCold" : True}] } }
+
         db.close()
         
         return json.dumps(data_final),201,{'Content-Type' : 'application/json'} 
