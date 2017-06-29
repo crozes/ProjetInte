@@ -251,7 +251,7 @@ def dropAction(playerName) :
         for res_map in result_map :
             value_map = int(res_map['mapitem_rayon'])*int(res_map['mapitem_rayon'])*RANGE_PRIX
             actionCash(playerName,value_map,db)
-            querry_delete_map = "DELETE FROM MapItem WHERE MapItem_id ="+str(res_map['mapItem_id'])
+            querry_delete_map = "DELETE FROM MapItem WHERE MapItem_id ="+str(res_map['mapitem_id'])
             db.execute(querry_delete_map)
     
     result_drinks = db.select(querry_select_drinks)
