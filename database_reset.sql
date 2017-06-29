@@ -60,8 +60,8 @@ CREATE TABLE public.Ingredient(
 CREATE TABLE public.MapItem(
 	MapItem_id        BIGSERIAL  NOT NULL ,
 	MapItem_kind      VARCHAR (255)  ,
-	MapItem_latitude  FLOAT   ,
-	MapItem_longitude FLOAT   ,
+	MapItem_latitude  FLOAT   NOT NULL,
+	MapItem_longitude FLOAT   NOT NULL,
 	MapItem_rayon     FLOAT   ,
 	MapItem_date      INT   NOT NULL,
 	Player_id         INT   NOT NULL,
@@ -220,4 +220,12 @@ INSERT INTO public.Vendre(
 	
 INSERT INTO public.Vendre(
 	Vendre_meteo, Vendre_qte, Vendre_nonVendu, Vendre_prix, Vendre_date, Player_id, Recipe_id)
-	VALUES ('rainny',27,4,12.0,178,1,1);		
+	VALUES ('rainny',27,4,12.0,178,1,1);
+	
+INSERT INTO public.MapItem(
+	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
+	VALUES ('ad',400,200,5.0,48,1);
+	
+INSERT INTO public.MapItem(
+	MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id)
+	VALUES ('ad',100,300,8.0,56,1);	
