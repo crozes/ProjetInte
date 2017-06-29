@@ -173,8 +173,9 @@ def getIdMapitemByInfos(playerId,latitude,longitude) :
     else:
         for mapitem_id in result :
             mapitem_id = mapitem_id['mapitem_id']
-    
-    return mapitem_id
+    print "mapitem_id"
+    print mapitem_id
+    return int(mapitem_id)
 
 ### Get Cash Player by Name
 def getCashByName(PlayerName) :
@@ -526,13 +527,12 @@ def postActionPlayer(playerName) :
                         currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 print "newPrice"
                 print newPrice
-                print type(newPrice)
                 print "currentPrice"
                 print currentPrice
-                print type(currentPrice)
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
-                
+                print "diff"
+                print diff
                 
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
