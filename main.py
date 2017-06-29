@@ -111,6 +111,7 @@ def modifyStock(playerName,recipeName,productQuantity):
         db.close()
         
         if(len(resultProfit)==0):
+            print "il n y en a pas"
             jsonRetour['player']=playerName
             jsonRetour['item']=recipeName
             jsonRetour['quantity']=0
