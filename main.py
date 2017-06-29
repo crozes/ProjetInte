@@ -508,12 +508,12 @@ def postActionPlayer(playerName) :
                 latitude = ''
                 
                 for locate in location :
-                    longitude = locate['longitude']
-                    latitude = locate['latitude']
+                    longitude = float(locate['longitude'])
+                    latitude = float(locate['latitude'])
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude="+str(latitude)+" AND MapItem_longitude="+str(longitude)+" AND player_id=%d;" %(getTomorrow,id_player)
+                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude= "+str(latitude)+" AND MapItem_longitude= "+str(longitude)+" AND player_id=%d;" %(getTomorrow,id_player)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
