@@ -97,6 +97,10 @@ def modifyStock(playerName,recipeName,productQuantity):
     db = Db()
     result = db.select(query)
     for res in result:
+        print "stock du player"
+        print result
+        print "qte"
+        print result['stock_qte']
         if(res['stock_qte']<productQuantity):
             productQuantity=res['stock_qte']
         
@@ -110,8 +114,8 @@ def modifyStock(playerName,recipeName,productQuantity):
         resultProfit = db.select(query)
         db.close()
         
+        print len(resultProfit)
         if(len(resultProfit)==0):
-            print "il n y en a pas"
             jsonRetour['player']=playerName
             jsonRetour['item']=recipeName
             jsonRetour['quantity']=0
