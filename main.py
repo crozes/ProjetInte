@@ -507,10 +507,10 @@ def postSales():
         salesArray.append(modifyStock(sale['player'],sale['item'],sale['quantity']))
     
     
-    if(salesArray==None):
+    if(len(salesArray)==0):
         noSale={}
-        noSale['player']="none"
-        noSale['item']="norecipe"
+        noSale['player']=sale['player']
+        noSale['item']=sale['item']
         noSale['quantity']=0
         salesArray.append(noSale)
         
