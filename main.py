@@ -220,12 +220,12 @@ def traitementMinuit():
 ### Fonction GetMeteo
 def getMeteo():
     weather_name = ''
-    query_select = "SELECT Weather_name FROM Weather WHERE Weather_dfn = 0;"
+    query_select = "SELECT Weather_temps FROM Weather WHERE Weather_dfn = 0;"
     db = Db()
     result = db.select(query_select)
     
     for weather in result:
-        weather_name = weather["weather_name"]
+        weather_name = weather["weather_temps"]
         
     return weather_name
     
