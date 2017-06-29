@@ -35,7 +35,6 @@ function prodPlus(num){
     $('#prod_' + num).append('<td>' + nom + '</td><td id="prixProd_' + num + '">' + prixglobal +'€</td>');
     $('#inputProd_' + num).val(newValue);
     modifSolde();
-    
 }
 
 function modifSolde(){
@@ -64,6 +63,5 @@ function modifSolde(){
 
     var resultat = budgetParse - total;
     $('#resultat').text(resultat);
-
 }
 
