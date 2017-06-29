@@ -507,7 +507,7 @@ def postSales():
 @app.route('/actions/<string:playerName>', methods=['POST'])
 def postActionPlayer(playerName) :
     # {'action' : [], 'simulated' : true} 
-    allData = request.get_json() 
+    allData = request.get_json(force=True)
     
     if allData == None :
         print request.get_data()
@@ -518,6 +518,7 @@ def postActionPlayer(playerName) :
         
         data = allData['actions']
         
+        print data
         dropAction(playerName)
         
         if(len(data)==0):
