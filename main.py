@@ -159,6 +159,23 @@ def getIdRecipeByName(RecipeName) :
     return recipe_id      
     
     
+
+### Get id mapitem by infos
+def getIdMapitemByInfos(playerId,latitude,longitude) :
+    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d, mapitem_date=%d, mapitem_latitude=%f, mapitem_longitude=%f" % (playerId,latitude,longitude) 
+                
+    db = Db()
+    result = db.select(query_select)
+    mapitem_id = ''
+    
+    if(result==None):
+        mapitem_id=0
+    else:
+        for mapitem_id in result :
+            mapitem_id = mapitem_id['mapitem_id']
+    
+    return mapitem_id
+
 ### Get Cash Player by Name
 def getCashByName(PlayerName) :
     query_select = "SELECT Player_cash FROM Player WHERE Player_name LIKE \'"+str(PlayerName)+"\'"   
@@ -518,11 +535,18 @@ def postActionPlayer(playerName) :
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
                 
-                print "diff"
-                print diff
+                
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
-                    query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (player_id,MapItem_date,mapitem_latitude,mapitem_longitude) DO UPDATE SET mapitem_rayon = mapitem_rayon + (%f) WHERE player_id=%d AND MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f AND mapitem_kind='ad';" %(diff,id_player,getTomorrow,latitude,longitude)
+                
+                    query =''
+                
+                    id_mapitem = getIdMapitemByInfos(id_player,latitude,longitude)
+                    if(id_mapitem==0):
+                        query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+")
+                    else:
+                        query = "UPDATE mapitem SET mapitem_rayon = mapitem_rayon + (%f) WHERE mapitem_id=%d;" %(diff,id_mapitem)
+                        
                     db = Db()
                     db.execute(query)
                     db.close()
