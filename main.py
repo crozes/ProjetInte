@@ -162,18 +162,19 @@ def getIdRecipeByName(RecipeName) :
 
 ### Get id mapitem by infos
 def getIdMapitemByInfos(playerId,latitude,longitude) :
-    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d, mapitem_date=%d, mapitem_latitude=%f, mapitem_longitude=%f" % (playerId,latitude,longitude) 
+    query_select = "SELECT mapitem_id FROM mapitem WHERE player_id = %d AND mapitem_date=%d AND mapitem_latitude=%f AND mapitem_longitude=%f" % (playerId,getToDay(),latitude,longitude) 
                 
     db = Db()
     result = db.select(query_select)
     mapitem_id = ''
     
-    if(result==None):
+    if(len(result)==0):
         mapitem_id=0
     else:
-        for mapitem_id in result :
-            mapitem_id = mapitem_id['mapitem_id']
-    
+        for mapitem in result :
+            mapitem_id = int(mapitem['mapitem_id'])
+    print "mapitem_id"
+    print mapitem_id
     return mapitem_id
 
 ### Get Cash Player by Name
@@ -232,7 +233,7 @@ def getMeteo():
 ### ActionCash
 def actionCash(playerName,cash_to_add) :
     cash = ''
-    querry = "UPDATE player SET Player_cash = Player_cash + %f" % (cash_to_add) 
+    querry = "UPDATE player SET Player_cash = Player_cash + %f WHERE player_id=%d" % (cash_to_add,getIdPlayerByName(playerName)) 
     
     db = Db()
     result = db.execute(querry)
@@ -456,11 +457,6 @@ def getPlayerSMap(playerName):
         playerSMap={"map":map,"availableIngredients":playerSIngredients,"playerInfo":playerInfo}
         return json.dumps(playerSMap),200,{'Content-Type' : 'application/json'}
 
-
-@app.route("/players")
-def getPlayerTest():
-    data = {"name" : "Toto", "location" : [{"latitude" : 23, "longitude" : 12}], "info" : [{"cash" : 1000.59, "sales" : 10, "profit" : 15.23, "drinksOffered" : [{"name" : "Limonade", "price" : 2.59, "hasAlcohol" : False, "isCold" : True},{"name" : "Mojito", "price" : 4.20, "hasAlcohol" : True, "isCold" : True}] }] }
-    return json.dumps(data),200,{'Content-Type' : 'application/json'}
     
 ######################~/GET~###############################
     
@@ -495,7 +491,10 @@ def postActionPlayer(playerName) :
         print allData
         
         data = allData['actions']
-        
+        if(len(data)==0):
+            return '{"status":"OK"}',200,{'Content-Type' : 'application/json'}
+            #DROP toutes les lignes du player a la date de demain######################################################"
+            
         id_player = getIdPlayerByName(playerName)
         today = int(getToDay())
         getTomorrow = today+1
@@ -514,7 +513,7 @@ def postActionPlayer(playerName) :
                 
                 newPrice = (radius * radius * RANGE_PRIX)
                 
-                queryPriceB4 = "SELECT * FROM mapitem WHERE MapItem_kind=\'%s\'AND MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f;" %("ad",getTomorrow,latitude,longitude)
+                queryPriceB4 = "SELECT mapitem_rayon FROM mapitem WHERE MapItem_kind='ad' AND MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f AND player_id=%d;" %(getTomorrow,latitude,longitude,id_player)
                 db = Db()
                 resultPriceB4 = db.select(queryPriceB4)
                 db.close()
@@ -523,18 +522,18 @@ def postActionPlayer(playerName) :
                 if (len(resultPriceB4)==0):
                     currentPrice =0.0
                 else:
-                    for prixDuMapitem in resultPriceB4:
-                        print prixDuMapitem['mapitem_rayon']
+                    for rayonDuMapitem in resultPriceB4:
+                        print "rayon du mapitem"
+                        print rayonDuMapitem['mapitem_rayon']
                         currentPrice = float(prixDuMapitem['mapitem_rayon'])*float(prixDuMapitem['mapitem_rayon'])*float(RANGE_PRIX)
                 print "newPrice"
                 print newPrice
-                print type(newPrice)
                 print "currentPrice"
                 print currentPrice
-                print type(currentPrice)
                 #si on est couramment à un prix de 0, la différence correspond au nouveau prix
                 diff = newPrice - currentPrice
-                
+                print "diff"
+                print diff
                 
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
