@@ -522,7 +522,7 @@ def postActionPlayer(playerName) :
                 print diff
                 #donc on compare le cash avec la différence
                 if getCashByName(playerName) > diff :
-                    query = "INSERT INTO public.MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (player_id,MapItem_date,mapitem_latitude,mapitem_longitude) DO UPDATE SET mapitem_rayon = mapitem_rayon + (%f) WHERE MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f AND mapitem_kind='ad';" %(diff,getTomorrow,latitude,longitude)
+                    query = "INSERT INTO MapItem (MapItem_kind, MapItem_latitude, MapItem_longitude, MapItem_rayon, MapItem_date, Player_id) VALUES ('ad',"+str(latitude)+","+str(longitude)+","+str(radius)+","+str(getToDay())+","+str(id_player)+") ON CONFLICT (player_id,MapItem_date,mapitem_latitude,mapitem_longitude) DO UPDATE SET mapitem_rayon = mapitem_rayon + (%f) WHERE MapItem_date=%d AND MapItem_latitude=%f AND MapItem_longitude=%f AND mapitem_kind='ad';" %(diff,getTomorrow,latitude,longitude)
                     db = Db()
                     db.execute(query)
                     db.close()
